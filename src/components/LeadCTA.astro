@@ -1,0 +1,100 @@
+---
+---
+<section id="lead-form" class="py-20 lg:py-28 bg-brand-background" aria-labelledby="cta-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl mx-auto">
+      <div class="animate-fade-in-up rounded-2xl p-[1px] bg-gradient-to-br from-brand-navy/15 via-brand-cyan/10 to-brand-navy/15 shadow-sm">
+        <div class="bg-white rounded-2xl p-8 lg:p-10">
+        <div class="text-center mb-8">
+          <h2 id="cta-title" class="text-2xl lg:text-3xl font-bold text-brand-text mb-3">Chcete to probrat?</h2>
+          <p class="text-brand-muted">
+            Napište nám a domluvíme termín nezávazné konzultace. Odpovíme do 24 hodin.
+          </p>
+        </div>
+
+        <form
+          id="lead-form-el"
+          class="space-y-5"
+          aria-label="Kontaktní formulář"
+        >
+          <div>
+            <label for="lead-name" class="block text-sm font-semibold text-brand-text mb-1.5">Jméno</label>
+            <input
+              type="text"
+              id="lead-name"
+              name="name"
+              required
+              autocomplete="name"
+              class="w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-text placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent transition-shadow"
+              placeholder="Jan Novák"
+            />
+          </div>
+          <div>
+            <label for="lead-contact" class="block text-sm font-semibold text-brand-text mb-1.5">Telefon nebo e-mail</label>
+            <input
+              type="text"
+              id="lead-contact"
+              name="contact"
+              required
+              autocomplete="email"
+              inputmode="email"
+              class="w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-text placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent transition-shadow"
+              placeholder="jan@email.cz nebo +420 123 456 789"
+            />
+          </div>
+          <div>
+            <label for="lead-message" class="block text-sm font-semibold text-brand-text mb-1.5">Zpráva</label>
+            <textarea
+              id="lead-message"
+              name="message"
+              rows="4"
+              class="w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-text placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent transition-shadow resize-none"
+              placeholder="Stručně popište, s čím vám můžeme pomoci..."
+            ></textarea>
+          </div>
+          <div class="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="lead-consent"
+              name="consent"
+              required
+              class="mt-1 w-4 h-4 rounded border-brand-border text-brand-navy focus:ring-brand-cyan"
+            />
+            <label for="lead-consent" class="text-sm text-brand-muted">
+              Souhlasím se zpracováním osobních údajů za účelem odpovědi na dotaz. <a href="/gdpr" class="text-brand-navy hover:underline">Více o ochraně údajů</a>.
+            </label>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-4 px-6 rounded-2xl bg-brand-navy text-white font-bold hover:bg-brand-navy/90 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2 transition-colors"
+          >
+            Odeslat
+          </button>
+        </form>
+
+        <div id="lead-success" class="hidden text-center py-8">
+          <div class="w-16 h-16 rounded-full bg-brand-cyan/20 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-text mb-2">Zpráva odeslána</h3>
+          <p class="text-brand-muted">Ozveme se vám co nejdříve.</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('lead-form-el')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = document.getElementById('lead-form-el') as HTMLFormElement;
+    const success = document.getElementById('lead-success');
+    if (form && success) {
+      form.classList.add('hidden');
+      success.classList.remove('hidden');
+    }
+  });
+</script>

@@ -1,0 +1,52 @@
+---
+const cards = [
+  {
+    title: 'Jednotlivci & rodiny',
+    desc: 'Chcete mít finance pod kontrolou a jasný plán do budoucna. Bez složitostí, s důvěrou.',
+    icon: 'users',
+  },
+  {
+    title: 'Podnikatelé',
+    desc: 'Optimalizace osobních i firemních financí, daňová efektivita a ochrana majetku.',
+    icon: 'briefcase',
+  },
+  {
+    title: 'Firmy',
+    desc: 'Firemní benefity, penzijní připojištění, pojištění klíčových lidí. Komplexní řešení pro vaši firmu.',
+    icon: 'building',
+  },
+];
+
+const icons: Record<string, string> = {
+  users: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+  briefcase: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+  building: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+};
+---
+<section id="pro-koho" class="py-20 lg:py-28 bg-white" aria-labelledby="audience-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 animate-fade-in-up">
+      <h2 id="audience-title" class="text-3xl lg:text-4xl font-bold text-brand-text mb-4">Pro koho</h2>
+      <p class="text-brand-muted max-w-2xl mx-auto text-lg">
+        Naše služby jsou určeny těm, kteří očekávají profesionální přístup a dlouhodobý vztah.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      {cards.map((card, i) => (
+        <div
+          class="animate-fade-in-up bg-brand-background rounded-2xl border border-brand-border p-8 shadow-sm hover:shadow-md transition-shadow"
+          data-delay={String(i)}
+        >
+          <div class="w-12 h-12 rounded-xl bg-brand-navy/5 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={icons[card.icon] || icons.users} />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-text mb-3">{card.title}</h3>
+          <p class="text-brand-muted leading-relaxed">{card.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

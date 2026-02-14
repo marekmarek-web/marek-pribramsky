@@ -1,0 +1,30 @@
+---
+const testimonials = [
+  { initials: 'JP', text: 'Profesionální přístup, jasná doporučení. Po letech zmatků mám konečně přehled o financích.', type: 'Rodina' },
+  { initials: 'MK', text: 'Jako podnikatel ocením komplexní pohled na osobní i firemní finance. Vřele doporučuji.', type: 'Podnikatel' },
+  { initials: 'LV', text: 'Spolupráce na hypotéce byla bez stresu. Vše proběhlo přesně podle plánu.', type: 'První bydlení' },
+  { initials: 'TO', text: 'Investiční strategie, která dává smysl. Žádné zbytečné poplatky, jen to podstatné.', type: 'Investor' },
+];
+---
+<section id="reference" class="py-20 lg:py-28 bg-brand-background" aria-labelledby="testimonials-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 animate-fade-in-up">
+      <h2 id="testimonials-title" class="text-3xl lg:text-4xl font-bold text-brand-text mb-4">Reference</h2>
+      <p class="text-brand-muted max-w-2xl mx-auto text-lg">
+        Co říkají klienti o spolupráci s námi.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {testimonials.map((t, i) => (
+        <div class="animate-fade-in-up bg-white rounded-2xl border border-brand-border p-6 shadow-sm hover:shadow-md transition-shadow" data-delay={String(i)}>
+          <div class="w-12 h-12 rounded-full bg-brand-navy/10 flex items-center justify-center text-brand-navy font-bold text-sm mb-4">
+            {t.initials}
+          </div>
+          <p class="text-brand-text leading-relaxed text-sm mb-4">&bdquo;{t.text}&ldquo;</p>
+          <span class="text-xs text-brand-muted font-medium">{t.type}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

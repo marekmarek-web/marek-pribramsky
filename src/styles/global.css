@@ -1,0 +1,80 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-brand-background text-brand-text antialiased;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .animate-fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 500ms ease-out, transform 500ms ease-out;
+  }
+  .animate-fade-in-up.visible[data-delay="1"] { transition-delay: 100ms; }
+  .animate-fade-in-up.visible[data-delay="2"] { transition-delay: 200ms; }
+  .animate-fade-in-up.visible[data-delay="3"] { transition-delay: 300ms; }
+  .animate-fade-in-up.visible[data-delay="4"] { transition-delay: 400ms; }
+  .animate-fade-in-up.visible[data-delay="5"] { transition-delay: 500ms; }
+  .animate-fade-in-up.visible[data-delay="6"] { transition-delay: 600ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .animate-fade-in-up.visible {
+      transition: none;
+    }
+  }
+}
+
+/* Badge shimmer - very subtle, only on hero badge */
+.badge-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(79, 198, 242, 0.95) 35%,
+    rgba(255, 255, 255, 0.95) 65%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmer-badge 5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge-shimmer {
+    animation: none;
+  }
+}
+@keyframes shimmer-badge {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Blog card hover - only on devices with hover (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .blog-hover-layer {
+    opacity: 1;
+  }
+  .group:hover .blog-card-img {
+    transform: scale(1.05);
+  }
+}
+@media (hover: none) {
+  .blog-hover-layer {
+    opacity: 0;
+  }
+}

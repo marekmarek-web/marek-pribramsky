@@ -1,0 +1,78 @@
+---
+---
+<section class="relative bg-brand-navy overflow-hidden" aria-labelledby="hero-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6 py-16 lg:py-24">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="space-y-6">
+        <span
+          class="inline-flex items-center gap-2 py-1.5 px-3 rounded-full bg-white/5 border border-white/10 text-white/90 text-xs font-semibold tracking-wide badge-shimmer"
+        >
+          Premium Brokers • Privátní plánování
+        </span>
+
+        <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight">
+          Privátní finanční plánování pro lidi, kteří chtějí mít klid.
+        </h1>
+
+        <p class="text-lg text-slate-300 max-w-xl">
+          Pomáháme rodinám a podnikatelům sestavit finanční strategie, které dávají smysl. Bez zbytečného stresu, s jasnou vizí do budoucna.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 pt-2">
+          <a
+            href="#lead-form"
+            class="inline-flex justify-center items-center px-8 py-4 rounded-2xl bg-brand-cyan text-brand-navy font-bold hover:bg-brand-cyan/90 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
+          >
+            Domluvit konzultaci
+          </a>
+          <a
+            href="#spoluprace"
+            class="inline-flex justify-center items-center px-8 py-4 rounded-2xl border-2 border-white/30 text-white font-semibold hover:border-white/50 hover:bg-white/5 transition-colors"
+          >
+            Spolupráce
+          </a>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
+          <div>
+            <span class="block text-2xl lg:text-3xl font-bold text-white tabular-nums">250+</span>
+            <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">klientů</span>
+          </div>
+          <div>
+            <span class="block text-2xl lg:text-3xl font-bold text-white tabular-nums">12 let</span>
+            <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">praxe</span>
+          </div>
+          <div>
+            <span class="block text-2xl lg:text-3xl font-bold text-white tabular-nums">180 mil.</span>
+            <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">pod správou</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block">
+        <div class="relative aspect-[4/5] rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
+          <img
+            src="/img/hero-portrait.jpg"
+            alt=""
+            class="w-full h-full object-cover portrait-img"
+            width="480"
+            height="600"
+            loading="eager"
+          />
+          <div class="portrait-placeholder hidden absolute inset-0 bg-brand-navy/30 flex items-center justify-center text-white/40 text-sm" aria-hidden="true">
+            Portrait
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.portrait-img').forEach((img) => {
+    img.addEventListener('error', function () {
+      this.style.display = 'none';
+      this.nextElementSibling?.classList.remove('hidden');
+    });
+  });
+</script>

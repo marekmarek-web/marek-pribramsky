@@ -1,0 +1,47 @@
+---
+const posts = [
+  { title: 'Jak začít investovat v roce 2025', date: '12. 1. 2025', category: 'Investice', slug: '/blog/jak-zacit-investovat', image: '/img/blog-1.jpg' },
+  { title: 'Hypotéka: na co si dát pozor', date: '5. 1. 2025', category: 'Hypotéky', slug: '/blog/hypoteka-tipy', image: '/img/blog-2.jpg' },
+  { title: 'Firemní benefity, které dávají smysl', date: '28. 12. 2024', category: 'Firmy', slug: '/blog/firemni-benefity', image: '/img/blog-3.jpg' },
+];
+---
+<section id="blog" class="py-20 lg:py-28 bg-white" aria-labelledby="blog-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 animate-fade-in-up">
+      <h2 id="blog-title" class="text-3xl lg:text-4xl font-bold text-brand-text mb-4">Blog</h2>
+      <p class="text-brand-muted max-w-2xl mx-auto text-lg">
+        Články o financích, investicích a plánování.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {posts.map((post, i) => (
+        <article class="animate-fade-in-up group" data-delay={String(i)}>
+          <a href={post.slug} class="block rounded-2xl overflow-hidden border border-brand-border bg-brand-background focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
+            <div class="relative aspect-[16/10] overflow-hidden bg-brand-border/50">
+              <img
+                src={post.image}
+                alt=""
+                class="w-full h-full object-cover transition-transform duration-500 ease-out blog-card-img"
+                width="400"
+                height="250"
+                loading="lazy"
+              />
+              <div
+                class="blog-hover-layer absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-transparent opacity-0 transition-opacity duration-500 flex items-end p-6 pointer-events-none"
+                aria-hidden="true"
+              >
+                <span class="text-white font-semibold">Číst článek</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-xs text-brand-cyan font-semibold uppercase tracking-wide">{post.category}</span>
+              <h3 class="text-lg font-bold text-brand-text mt-1 mb-2 group-hover:text-brand-navy">{post.title}</h3>
+              <time class="text-sm text-brand-muted" datetime={post.date}>{post.date}</time>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

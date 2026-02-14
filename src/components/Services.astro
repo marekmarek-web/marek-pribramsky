@@ -1,0 +1,53 @@
+---
+const services = [
+  { title: 'Investice', desc: 'Zhodnocení kapitálu s přehlednou strategií a nízkými náklady.', href: '#', icon: 'chart' },
+  { title: 'Pojištění', desc: 'Krytí rizik na míru – životní, majetkové, odpovědnosti.', href: '#', icon: 'shield' },
+  { title: 'Hypotéky', desc: 'Optimalizace hypotečního úvěru a refinancování.', href: '#', icon: 'home' },
+  { title: 'Finanční plán', desc: 'Komplexní plánování příjmů, výdajů a cílů.', href: '#', icon: 'plan' },
+  { title: 'Firemní benefity', desc: 'Penzijní připojištění, pojištění zaměstnanců.', href: '#', icon: 'briefcase' },
+  { title: 'Realitní spolupráce', desc: 'Propojení financí s nákupem nebo prodejem nemovitosti.', href: '#', icon: 'key' },
+];
+
+const icons: Record<string, string> = {
+  chart: 'M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z',
+  shield: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+  home: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+  plan: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01',
+  briefcase: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+  key: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z',
+};
+---
+<section id="sluzby" class="py-20 lg:py-28 bg-brand-background" aria-labelledby="services-title">
+  <div class="max-w-content mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 animate-fade-in-up">
+      <h2 id="services-title" class="text-3xl lg:text-4xl font-bold text-brand-text mb-4">Služby</h2>
+      <p class="text-brand-muted max-w-2xl mx-auto text-lg">
+        Komplexní nabídka finančního plánování pro soukromé i firemní klienty.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {services.map((s, i) => {
+        const isFeatured = i === 0 || i === 3;
+        return (
+        <div
+          class={`animate-fade-in-up bg-white rounded-2xl border border-brand-border p-6 lg:p-8 shadow-sm hover:shadow-md transition-all flex flex-col ${isFeatured ? 'sm:col-span-2' : ''}`}
+          data-delay={String(i)}
+        >
+          <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={icons[s.icon] || icons.chart} />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-text mb-2">{s.title}</h3>
+          <p class="text-brand-muted text-sm leading-relaxed flex-grow mb-4">{s.desc}</p>
+          <a href={s.href} class="text-brand-navy font-semibold text-sm hover:text-brand-cyan transition-colors inline-flex items-center gap-1">
+            Zjistit více
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          </a>
+        </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
