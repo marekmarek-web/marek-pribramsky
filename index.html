@@ -60,9 +60,12 @@
         <a href="/#proc-ja" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Proč já</a>
         <a href="/#sluzby" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Služby</a>
         <a href="/#spoluprace" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Spolupráce</a>
+        <a href="/financni-analyza/" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Finanční analýza</a>
+        <a href="/kalkulacky/" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Kalkulačky</a>
         <a href="/#pobocky" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Pobočky</a>
         <a href="/blog/" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Blog</a>
-        <a href="/#lead-form" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Kontakt</a>
+        <a href="/#partneri" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Pro partnery</a>
+        <a href="/#kontakt" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Kontakt</a>
       </nav>
       <a href="/kontakt/" class="flex items-center gap-2 rounded-full bg-[#1D2354] text-white px-4 py-2 text-sm font-semibold hover:opacity-95 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0">
         <span>Ozvat se</span>
@@ -634,8 +637,41 @@
       </div>
     </section>
 
+    <!-- FORMULÁŘ PRO PARTNERY – sběr kontaktů na nové partnery -->
+    <section id="partneri" class="py-12 sm:py-16 md:py-20 lg:py-24 bg-brand-background">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl lg:text-3xl font-bold text-brand-navy mb-3">Spolupráce pro partnery</h2>
+          <p class="text-brand-muted">Máte zájem o spolupráci s Premium Brokers? Zanechte kontakt a ozveme se vám.</p>
+        </div>
+        <form id="partner-form" class="space-y-4 bg-white rounded-2xl border border-brand-border p-6 lg:p-8 shadow-sm">
+          <div>
+            <label for="partner-name" class="block text-sm font-semibold text-brand-navy mb-1">Jméno a příjmení</label>
+            <input type="text" id="partner-name" name="name" required placeholder="Jan Novák" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-brand-text placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan/40 focus:border-brand-cyan">
+          </div>
+          <div>
+            <label for="partner-email" class="block text-sm font-semibold text-brand-navy mb-1">E-mail</label>
+            <input type="email" id="partner-email" name="email" required placeholder="jan@email.cz" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-brand-text placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan/40 focus:border-brand-cyan">
+          </div>
+          <div>
+            <label for="partner-phone" class="block text-sm font-semibold text-brand-navy mb-1">Telefon</label>
+            <input type="tel" id="partner-phone" name="phone" placeholder="+420 123 456 789" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-brand-text placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan/40 focus:border-brand-cyan">
+          </div>
+          <div>
+            <label for="partner-message" class="block text-sm font-semibold text-brand-navy mb-1">Zpráva</label>
+            <textarea id="partner-message" name="message" rows="3" placeholder="Stručně popište váš zájem o spolupráci…" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-brand-text placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan/40 focus:border-brand-cyan"></textarea>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="partner-consent" name="consent" required class="mt-1 w-4 h-4 rounded border-slate-300 text-brand-navy focus:ring-brand-cyan">
+            <label for="partner-consent" class="text-sm text-brand-muted">Souhlasím se <a href="/gdpr/" class="text-brand-cyan hover:underline">zpracováním osobních údajů</a>.</label>
+          </div>
+          <button type="submit" class="w-full py-4 px-6 rounded-full bg-[#1D2354] text-white font-bold hover:opacity-95 transition">Odeslat zájem o spolupráci</button>
+        </form>
+      </div>
+    </section>
+
     <!-- CTA + FORMULÁŘ – Chcete to probrat? (glass na světlém pozadí) -->
-    <section id="lead-form" class="lead-form-section py-24 lg:py-32 relative overflow-hidden min-h-[560px] lg:min-h-[640px] flex items-center">
+    <section id="kontakt" class="lead-form-section py-24 lg:py-32 relative overflow-hidden min-h-[560px] lg:min-h-[640px] flex items-center">
       <div class="lead-form-bg" aria-hidden="true"></div>
       <div class="max-w-2xl mx-auto px-4 sm:px-6 relative z-10 w-full">
         <div class="lead-glass-card gradient-border-card">
@@ -693,7 +729,7 @@
 
   <footer class="bg-brand-navy text-white py-16" role="contentinfo">
   <div class="max-w-content mx-auto px-4 sm:px-6">
-    <div class="grid md:grid-cols-4 gap-12 mb-12">
+    <div class="grid md:grid-cols-5 gap-12 mb-12">
       <div class="md:col-span-2">
         <div class="flex items-center gap-2 mb-4">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-cyan to-brand-navy flex items-center justify-center"><span class="font-bold text-lg text-white">MP</span></div>
@@ -728,7 +764,19 @@
           <li><a href="/#pobocky" class="text-slate-300 hover:text-white">Pobočky</a></li>
           <li><a href="/blog/" class="text-slate-300 hover:text-white">Blog</a></li>
           <li><a href="/spoluprace/" class="text-slate-300 hover:text-white">Spolupráce</a></li>
+          <li><a href="/#partneri" class="text-slate-300 hover:text-white">Formulář pro partnery</a></li>
           <li><a href="/kontakt/" class="text-slate-300 hover:text-white">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm uppercase tracking-wider mb-4">Nástroje</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/financni-analyza/" class="text-slate-300 hover:text-white">Finanční analýza</a></li>
+          <li><a href="/kalkulacky/" class="text-slate-300 hover:text-white">Kalkulačky</a></li>
+          <li><a href="/hypotecnikalkulacka/" class="text-slate-300 hover:text-white">Hypoteční kalkulačka</a></li>
+          <li><a href="/investicnikalkulacka/" class="text-slate-300 hover:text-white">Investiční kalkulačka</a></li>
+          <li><a href="/zivotnikalkulacka/" class="text-slate-300 hover:text-white">Životní pojištění</a></li>
+          <li><a href="/penzijnikalkulacka/" class="text-slate-300 hover:text-white">Penzijní kalkulačka</a></li>
         </ul>
       </div>
       <div>
