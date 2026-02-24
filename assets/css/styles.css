@@ -49,6 +49,57 @@ body {
   }
 }
 
+/* Loader (Aurora style) */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: #F8FAFC;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loader-progress { transition: width 0.1s linear; }
+
+/* Hero – celá fotka, zaoblené rohy, světlé pozadí (žádná černá za rohy) */
+.hero-aurora {
+  background: #F8FAFC;
+}
+.hero-aurora .hero-image-wrapper {
+  background: #e2e8f0;
+}
+.hero-aurora .hero-image-wrapper img { display: block; }
+.hero-aurora .hero-photo-only {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.hero-aurora .hero-img-full {
+  object-fit: contain;
+  object-position: center;
+  vertical-align: middle;
+}
+.hero-aurora .hero-photo-only {
+  max-height: 80vh;
+}
+@media (max-width: 640px) {
+  .hero-aurora {
+    min-height: 80vh;
+  }
+  .hero-aurora .hero-title {
+    font-size: clamp(2.2rem, 7vw, 3rem);
+    line-height: 1.2;
+  }
+  .hero-aurora .hero-content {
+    padding-top: 4rem;
+  }
+}
+.text-reveal-mask { overflow: hidden; display: block; }
+.text-reveal-line { transform: translateY(100%); display: block; }
+.hero-aurora .hero-subtitle { transition: opacity 0.5s ease; }
+
 /* Header vs Hero – main má padding-top podle výšky headeru */
 .main-with-header { padding-top: 72px; }
 @media (min-width: 640px) { .main-with-header { padding-top: 80px; } }
@@ -143,19 +194,19 @@ body {
   border-color: rgba(29, 35, 84, 0.35);
 }
 
-/* CTA tlačítka – výrazný světle modrý gradient + silný okraj, bez capslocku */
+/* CTA tlačítka – navy gradient + neuro UI stín (bez zeleného/cyan glow) */
 .lead-cta-btn {
   text-transform: none;
   letter-spacing: 0;
   font-weight: 700;
-  background: linear-gradient(135deg, #4FC6F2 0%, #3b82c4 40%, #1D2354 100%);
-  border: 3px solid #4FC6F2;
-  box-shadow: 0 0 0 1px rgba(79, 198, 242, 0.5), 0 6px 24px rgba(79, 198, 242, 0.4), 0 4px 14px rgba(29, 35, 84, 0.3);
+  background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
+  border: 1px solid rgba(29, 35, 84, 0.5);
+  box-shadow: 6px 6px 14px rgba(29, 35, 84, 0.25), -2px -2px 8px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.12);
   color: #fff;
 }
 .lead-cta-btn:hover {
-  border-color: #7dd3fc;
-  box-shadow: 0 0 0 2px rgba(79, 198, 242, 0.6), 0 8px 32px rgba(79, 198, 242, 0.5), 0 6px 20px rgba(29, 35, 84, 0.35);
+  border-color: rgba(29, 35, 84, 0.7);
+  box-shadow: 8px 8px 18px rgba(29, 35, 84, 0.3), -3px -3px 10px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15);
   filter: brightness(1.05);
 }
 
@@ -222,7 +273,31 @@ body {
   transition: transform 0.15s ease;
 }
 /* Canvas container – explicitní rozměry pro Chart.js */
-#wealthChart { position: absolute; inset: 0; }
+.wealth-chart-svg-wrap { position: relative; }
+.wealth-chart-svg { display: block; }
+.wealth-chart-svg #wealthChartPathLine { stroke: #4FC6F2; }
+.wealth-chart-svg #wealthChartPathAverage { stroke: #f97316; }
+.wealth-chart-axis { fill: rgba(255,255,255,0.9); font-size: 9px; font-family: inherit; }
+.wealth-legend-strategy { color: #7dd3fc; }
+.wealth-legend-strategy span { background: #4FC6F2; }
+.wealth-legend-average { color: #fdba74; }
+.wealth-legend-average span { background: #f97316; }
+.wealth-chart-tooltip {
+  position: absolute;
+  padding: 6px 10px;
+  background: rgba(15, 23, 42, 0.95);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -100%);
+  transition: opacity 0.15s ease;
+  z-index: 5;
+  white-space: nowrap;
+}
+.wealth-chart-tooltip.visible { opacity: 1; }
 .chart-card-tilt::after {
   content: '';
   position: absolute;
@@ -872,7 +947,7 @@ body {
   }
 }
 
-/* CTA – tmavě modré v sekci Moje služby (gradient navy → navyLight) */
+/* CTA – jednotný vzhled s .lead-cta-btn (neuro UI, navy gradient) */
 .sluzby-cta-glass {
   display: inline-flex;
   align-items: center;
@@ -880,39 +955,22 @@ body {
   gap: 0.5rem;
   padding: 0.875rem 1.5rem;
   background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
-  border: 1px solid rgba(29, 35, 84, 0.9);
+  border: 1px solid rgba(29, 35, 84, 0.5);
   color: #ffffff;
   font-weight: 700;
   font-size: 1rem;
   border-radius: 0.75rem;
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 2px 8px rgba(29, 35, 84, 0.25);
+  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 6px 6px 14px rgba(29, 35, 84, 0.25), -2px -2px 8px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.12);
   margin-top: auto;
   position: relative;
   overflow: hidden;
 }
-.sluzby-cta-glass::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0s;
-}
 .sluzby-cta-glass:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #252d5c 0%, #2a3366 100%);
-  border-color: #1D2354;
-  box-shadow: 0 4px 12px rgba(29, 35, 84, 0.35);
-}
-.sluzby-cta-glass:hover::before {
-  animation: glass-cta-shimmer 0.6s ease-out;
-}
-@keyframes glass-cta-shimmer {
-  0% { left: -50%; }
-  100% { left: 150%; }
+  filter: brightness(1.05);
+  box-shadow: 8px 8px 18px rgba(29, 35, 84, 0.3), -3px -3px 10px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 /* Hero text section – signature line pod textem */
@@ -1303,189 +1361,21 @@ body {
 }
 .lead-cta-btn {
   background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
-  box-shadow: 0 4px 14px rgba(29, 35, 84, 0.35);
+  box-shadow: 6px 6px 14px rgba(29, 35, 84, 0.25), -2px -2px 8px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .lead-cta-btn:hover {
   background: linear-gradient(135deg, #252d5c 0%, #2a3366 100%);
-  box-shadow: 0 6px 20px rgba(29, 35, 84, 0.4);
+  box-shadow: 8px 8px 18px rgba(29, 35, 84, 0.3), -3px -3px 10px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-/* Moje cesta – sticky stacking cards, zúžené a vyšší, vycentrované */
-#moje-cesta {
-  --card-height: clamp(14rem, 32vw, 24rem);
-  --card-margin: 2vw;
-  --card-top-offset: 0.6em;
+/* Moje cesta – horizontal scroll (Portfolio & Focus Areas styl z Aurora) */
+.moje-cesta-portfolio .moje-cesta-horizontal {
+  width: 800%;
+  flex-wrap: nowrap;
 }
-
-#moje-cesta .moje-cesta-wrapper {
-  max-width: 72rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+.moje-cesta-portfolio .moje-cesta-title-block {
+  flex-shrink: 0;
 }
-
-#moje-cesta #cards {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(7, var(--card-height));
-  gap: var(--card-margin);
-  padding-bottom: calc(7 * var(--card-margin));
-  margin-bottom: var(--card-margin);
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#moje-cesta .card {
-  position: sticky;
-  top: 10vh;
-  height: var(--card-height);
-  padding-top: calc(var(--index) * var(--card-top-offset));
-  perspective: 1000px;
-}
-
-#moje-cesta .card:nth-child(1) { --index: 1; }
-#moje-cesta .card:nth-child(2) { --index: 2; }
-#moje-cesta .card:nth-child(3) { --index: 3; }
-#moje-cesta .card:nth-child(4) { --index: 4; }
-#moje-cesta .card:nth-child(5) { --index: 5; }
-#moje-cesta .card:nth-child(6) { --index: 6; }
-#moje-cesta .card:nth-child(7) { --index: 7; }
-
-#moje-cesta .card__content {
-  box-sizing: border-box;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  width: 100%;
-  height: 100%;
-  border-radius: 50px;
-  background: #1c1c1c;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  transform-origin: 50% 0%;
-  will-change: transform, filter;
-  transform-style: preserve-3d;
-  animation: scale-card linear forwards;
-  animation-timeline: view();
-  animation-range: exit-crossing 0% exit-crossing 100%;
-}
-
-#moje-cesta .card:nth-child(1) .card__content {
-  background: #03254c;
-  color: #fff;
-  --shadow-color: rgba(3, 37, 76, 0.8);
-}
-#moje-cesta .card:nth-child(2) .card__content {
-  background: #1167b1;
-  color: #fff;
-  --shadow-color: rgba(17, 103, 177, 0.8);
-}
-#moje-cesta .card:nth-child(3) .card__content {
-  background: #187bcd;
-  color: #fff;
-  --shadow-color: rgba(24, 123, 205, 0.8);
-}
-#moje-cesta .card:nth-child(4) .card__content {
-  background: #2a9df4;
-  color: #fff;
-  --shadow-color: rgba(42, 157, 244, 0.8);
-}
-#moje-cesta .card:nth-child(5) .card__content {
-  background: #d0efff;
-  color: #03254c;
-  --shadow-color: rgba(208, 239, 255, 0.8);
-}
-#moje-cesta .card:nth-child(6) .card__content {
-  background: #1167b1;
-  color: #fff;
-  --shadow-color: rgba(17, 103, 177, 0.8);
-}
-#moje-cesta .card:nth-child(7) .card__content {
-  background: #03254c;
-  color: #fff;
-  --shadow-color: rgba(3, 37, 76, 0.8);
-}
-
-@keyframes scale-card {
-  to {
-    transform: scale(0.8) translateY(-10vh) rotateX(-20deg);
-    filter: brightness(0.6);
-    border-radius: 20px;
-    box-shadow: 0 50px 80px -10px var(--shadow-color);
-  }
-}
-
-#moje-cesta .card__content h2 {
-  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-  margin: 0;
-}
-#moje-cesta .card__content p {
-  font-size: clamp(0.875rem, 1.1vw, 1rem);
-  max-width: 420px;
-  line-height: 1.4;
-  opacity: 0.8;
-}
-
-#moje-cesta .number {
-  font-size: clamp(2.5rem, 4vw, 4rem);
-  position: absolute;
-  right: 1rem;
-  top: 0.5rem;
-  opacity: 0.3;
-  font-weight: bold;
-}
-/* Timeline křivka – CSS Motion Path: bod + glow po path */
-.timeline-curve-wrap { min-height: 480px; position: relative; }
-#timeline-path-svg { min-height: 480px; width: 100%; }
-#timeline-dot-track {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-}
-/* Bod – pohybuje se po path přes offset-distance (url = SVG path, správné souřadnice) */
-#timeline-dot-moving {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #4FC6F2;
-  box-shadow: 0 0 16px rgba(79, 198, 242, 0.6);
-  offset-path: url(#timeline-path);
-  offset-distance: 0%;
-  offset-rotate: 0deg;
-  transform: translate(-50%, -50%);
-  will-change: offset-distance;
-}
-/* Glow – sleduje bod po stejné path */
-#timeline-active-glow {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 80px;
-  height: 80px;
-  margin-left: -40px;
-  margin-top: -40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(79, 198, 242, 0.3) 0%, transparent 70%);
-  pointer-events: none;
-  offset-path: url(#timeline-path);
-  offset-distance: 0%;
-  offset-rotate: 0deg;
-  transform: translate(-50%, -50%);
-  will-change: offset-distance;
-}
-.timeline-detail-glass { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06); }
 
 /* Pobočky – bento grid s fotkami, trailing overlay + rozsvícení fotky na hover */
 .bento-grid {
@@ -1674,7 +1564,6 @@ body {
 .social-fa--yt:hover { color: #ff0000; }
 
 @media (prefers-reduced-motion: reduce) {
-  .moje-cesta-card { transition: none; }
   .lead-glass-card.gradient-border-card::before { animation: none; }
   .social-fa { transition: none; }
 }
@@ -1723,33 +1612,6 @@ body {
 }
 @media (max-width: 374px) {
   .review-scroll-card { width: 85vw; }
-}
-
-/* Moje cesta – karty na mobilu: zúžené, vyšší, vycentrované */
-@media (max-width: 639px) {
-  #moje-cesta .moje-cesta-wrapper {
-    max-width: 22rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-  #moje-cesta {
-    --card-height: 12rem;
-    --card-margin: 1.25rem;
-  }
-  #moje-cesta #cards {
-    max-width: 100%;
-  }
-  #moje-cesta .card__content h2 { font-size: 1.25rem; }
-  #moje-cesta .card__content p { font-size: 0.8125rem; }
-  #moje-cesta .number { font-size: 2rem; }
-}
-@media (min-width: 640px) and (max-width: 1023px) {
-  #moje-cesta .moje-cesta-wrapper {
-    max-width: 26rem;
-  }
-  #moje-cesta {
-    --card-height: clamp(14rem, 26vw, 18rem);
-  }
 }
 
 /* FAQ – padding na mobilu */

@@ -144,6 +144,22 @@ function initReviewsSlider() {
  * Spouští se po DOMContentLoaded i po načtení partials (partialsLoaded)
  */
 function init() {
+  // Hero – text reveal (Aurora style)
+  var revealLines = document.querySelectorAll('.text-reveal-line');
+  if (revealLines.length && typeof gsap !== 'undefined') {
+    gsap.to(revealLines, {
+      y: '0%',
+      duration: 1.2,
+      stagger: 0.1,
+      ease: 'power4.out',
+      delay: 0.2
+    });
+    var heroSub = document.querySelector('.hero-subtitle');
+    if (heroSub) {
+      gsap.to(heroSub, { opacity: 1, duration: 1, delay: 1, ease: 'power2.out' });
+    }
+  }
+
   // Mobilní menu
   var menuBtn = document.getElementById('mobile-menu-btn');
   var mobileMenu = document.getElementById('mobile-menu');
@@ -349,6 +365,20 @@ function init() {
       }
     };
   }
+  // Proč já – stejný spotlight efekt
+  var procJaBento = document.getElementById('proc-ja-bento');
+  if (procJaBento) {
+    procJaBento.onmousemove = function (e) {
+      var cards = procJaBento.getElementsByClassName('postup-item');
+      for (var i = 0; i < cards.length; i++) {
+        var rect = cards[i].getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        cards[i].style.setProperty('--mouse-x', x + 'px');
+        cards[i].style.setProperty('--mouse-y', y + 'px');
+      }
+    };
+  }
 
   // Scroll handlers – optimalizované s requestAnimationFrame throttling
   var scrollTicking = false;
@@ -421,74 +451,80 @@ function init() {
     });
   }
 
-  // Chart.js – projekce majetku (stejný graf jako osobni-web-finance-temp)
-  var chartCanvas = document.getElementById('wealthChart');
-  if (chartCanvas && typeof Chart !== 'undefined') {
-    var ctx = chartCanvas.getContext('2d');
+  // Projekce majetku – SVG graf (Aurora Performance styl), data + grid + tilt zachovány
+  var wealthSvg = document.getElementById('wealthChartSvg');
+  if (wealthSvg) {
     var labels = ['Start', '2 roky', '4 roky', '6 let', '8 let', '10 let'];
     var averageData = [500000, 505000, 510000, 515000, 520000, 526000];
     var strategyData = [500000, 550000, 650000, 750000, 900000, 1100000];
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Strategie fondů',
-            data: strategyData,
-            borderColor: '#1D2354',
-            backgroundColor: function(context) {
-              var ctx = context.chart.ctx;
-              var gradient = ctx.createLinearGradient(0, 0, 0, 300);
-              gradient.addColorStop(0, 'rgba(29, 35, 84, 0.5)');
-              gradient.addColorStop(1, 'rgba(29, 35, 84, 0)');
-              return gradient;
-            },
-            borderWidth: 3,
-            pointBackgroundColor: '#fff',
-            pointBorderColor: '#1D2354',
-            pointRadius: 5,
-            fill: true,
-            tension: 0.4
-          },
-          {
-            label: 'Běžný účet',
-            data: averageData,
-            borderColor: '#f87171',
-            backgroundColor: 'transparent',
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointBackgroundColor: '#f87171',
-            pointRadius: 3,
-            fill: false,
-            tension: 0.2
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { intersect: false, mode: 'index' },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('cs-CZ') + ' Kč'; }
-            }
-          }
-        },
-        scales: {
-          y: {
-            grid: { color: 'rgba(255,255,255,0.15)' },
-            ticks: { font: { size: 10 }, color: 'rgba(255,255,255,0.8)', callback: function(v) { var s = v >= 1000000 ? (v / 1000000).toFixed(1).replace('.', ',') + ' mil' : (v / 1000) + ' tis.'; return s + ' Kč'; } }
-          },
-          x: {
-            grid: { display: false },
-            ticks: { font: { size: 10 }, color: 'rgba(255,255,255,0.8)' }
-          }
+    var yMin = 500000;
+    var yMax = 1100000;
+    var w = 400;
+    var h = 200;
+    function yToCoord(val) { return h - ((val - yMin) / (yMax - yMin)) * h; }
+    function xToCoord(i) { return (i / (strategyData.length - 1)) * w; }
+    function dataToPath(data) {
+      var pts = data.map(function(v, i) { return xToCoord(i) + ',' + yToCoord(v); });
+      return 'M' + pts.join(' L');
+    }
+    function dataToPathSmooth(data) {
+      var d = '';
+      for (var i = 0; i < data.length; i++) {
+        var x = xToCoord(i);
+        var y = yToCoord(data[i]);
+        if (i === 0) d += 'M' + x + ',' + y;
+        else {
+          var x0 = xToCoord(i - 1);
+          var y0 = yToCoord(data[i - 1]);
+          var cp1x = x0 + (x - x0) * 0.5;
+          var cp2x = x0 + (x - x0) * 0.5;
+          d += ' C' + cp1x + ',' + y0 + ' ' + cp2x + ',' + y + ' ' + x + ',' + y;
         }
       }
-    });
+      return d;
+    }
+    var pathLine = document.getElementById('wealthChartPathLine');
+    var pathFill = document.getElementById('wealthChartPathFill');
+    var pathAvg = document.getElementById('wealthChartPathAverage');
+    var lineD = dataToPathSmooth(strategyData);
+    var fillD = lineD + ' V' + h + ' H0 Z';
+    pathLine.setAttribute('d', lineD);
+    pathFill.setAttribute('d', fillD);
+    pathAvg.setAttribute('d', dataToPathSmooth(averageData));
+
+    // Animace čáry při scrollu (Aurora style)
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+      var pathLen = pathLine.getTotalLength ? pathLine.getTotalLength() : 0;
+      if (pathLen) {
+        pathLine.style.strokeDasharray = pathLen;
+        pathLine.style.strokeDashoffset = pathLen;
+        gsap.to(pathLine, {
+          strokeDashoffset: 0,
+          duration: 1.5,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: wealthSvg, start: 'top 85%', toggleActions: 'play none none reverse' }
+        });
+      }
+    }
+
+    // Tooltip při hoveru (interaktivita)
+    var tooltip = document.getElementById('wealthChartTooltip');
+    var wrap = wealthSvg.closest('.wealth-chart-svg-wrap');
+    if (wrap && tooltip) {
+      wrap.addEventListener('mousemove', function(e) {
+        var rect = wealthSvg.getBoundingClientRect();
+        var wrapRect = wrap.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * w;
+        var i = Math.round((x / w) * (strategyData.length - 1));
+        i = Math.max(0, Math.min(i, strategyData.length - 1));
+        tooltip.textContent = labels[i] + ': ' + strategyData[i].toLocaleString('cs-CZ') + ' Kč';
+        tooltip.classList.add('visible');
+        tooltip.style.left = (e.clientX - wrapRect.left) + 'px';
+        tooltip.style.top = (e.clientY - wrapRect.top) + 'px';
+      });
+      wrap.addEventListener('mouseleave', function() { tooltip.classList.remove('visible'); });
+    }
   }
 
   // Chart card – 3D tilt + mouse-follow glow
@@ -517,7 +553,37 @@ function init() {
 
 }
 document.addEventListener('DOMContentLoaded', function() {
-  init();
+  var loader = document.getElementById('loader');
+  var runAfterLoader = function() {
+    document.body.classList.add('page-loaded');
+    init();
+  };
+
+  if (loader && typeof gsap !== 'undefined') {
+    var progress = loader.querySelector('.loader-progress');
+    var loaderText = loader.querySelector('.loader-text');
+    gsap.to(progress, {
+      width: '100%',
+      duration: 0.7,
+      ease: 'power2.inOut',
+      onComplete: function() {
+        var tl = gsap.timeline();
+        tl.to(loaderText, { y: '0%', duration: 0.3, ease: 'power3.out' })
+          .to(loaderText, { y: '-100%', duration: 0.3, delay: 0.2, ease: 'power3.in' })
+          .to(loader, {
+            yPercent: -100,
+            duration: 0.5,
+            ease: 'power4.inOut',
+            onComplete: function() {
+              runAfterLoader();
+            }
+          });
+      }
+    });
+  } else {
+    runAfterLoader();
+  }
+
   // Page wipe – po animaci skrýt overlay
   var wipe = document.getElementById('page-wipe');
   if (wipe) {
