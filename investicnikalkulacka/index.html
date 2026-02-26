@@ -850,6 +850,62 @@
         </div>
     </div>
 
+    <!-- QUICK-CALC WIDGET – Plovoucí menu kalkulaček -->
+    <div class="qc-widget" aria-label="Rychlé kalkulačky">
+      <button type="button" class="qc-button" aria-expanded="false" aria-controls="qc-panel">
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="18" rx="2" ry="2"></rect>
+          <line x1="8" y1="9" x2="16" y2="9"></line>
+          <line x1="9" y1="13" x2="9" y2="13"></line>
+          <line x1="12" y1="13" x2="12" y2="13"></line>
+          <line x1="15" y1="13" x2="15" y2="13"></line>
+          <line x1="9" y1="16" x2="9" y2="16"></line>
+          <line x1="12" y1="16" x2="12" y2="16"></line>
+        </svg>
+      </button>
+      <div id="qc-panel" class="qc-panel" role="dialog" aria-modal="false">
+        <h3 class="text-sm font-bold text-brand-navy mb-1">Rychlé kalkulačky</h3>
+        <p class="text-xs text-slate-500 mb-4">Vyberte, co chcete spočítat.</p>
+        <div class="space-y-2 text-sm">
+          <a href="https://www.marekpribramsky.cz/hypotecnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Hypoteční kalkulačka</span>
+              <span class="block text-xs text-slate-500">Výše splátky a celkové náklady</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/investicnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V10"/><path d="M12 21V3"/><path d="M17 21v-6"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Investiční kalkulačka</span>
+              <span class="block text-xs text-slate-500">Projekce zhodnocení v čase</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/zivotnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Kalkulačka životního pojištění</span>
+              <span class="block text-xs text-slate-500">Potřebné krytí podle situace</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/penzijnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Penzijní kalkulačka</span>
+              <span class="block text-xs text-slate-500">Státní příspěvky a daňové úlevy</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
 </main>
     <!-- Footer PB (Marek Příbramský) -->
   <footer class="bg-brand-navy text-white py-10 sm:py-12 lg:py-16" role="contentinfo">

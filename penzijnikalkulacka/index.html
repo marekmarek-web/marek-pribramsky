@@ -227,6 +227,65 @@
         input[type=range].neu-range::-moz-range-track{
             height:12px;border-radius:9999px;background:rgba(148,163,184,.35);
         }
+
+        /* Life Timeline (osa života) – body vycentrované na hodnotu */
+        .life-timeline-track { --thumb-size: 32px; }
+        .life-timeline-thumb { border-width: 3px; touch-action: none; user-select: none; transform: translate(-50%, -50%); margin-left: 0 !important; }
+        .life-timeline-thumb-retire { background: #4FC6F2 !important; }
+        .penzije-donut svg { transform: rotate(-90deg); }
+
+        /* Cost of Delay – červený výsledek */
+        #investmentNeededResult.cost-of-delay-active { color: #f87171 !important; }
+
+        /* Inflation orb – abstraktní vizualizace inflace */
+        .inflation-orb {
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 50% 35%, rgba(248,250,252,0.95) 0%, rgba(56,189,248,0.9) 35%, rgba(15,23,42,1) 80%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 18px 45px rgba(15,23,42,0.45);
+            transform: scale(var(--inflation-scale, 1));
+            opacity: var(--inflation-opacity, 1);
+            transition: transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+            filter: blur(calc(var(--inflation-frag, 0) * 1.2px));
+        }
+        .inflation-core {
+            position: absolute;
+            inset: 18%;
+            border-radius: inherit;
+            background: radial-gradient(circle at 50% 30%, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 70%);
+            mix-blend-mode: screen;
+            opacity: 0.9;
+        }
+        .inflation-orb::before,
+        .inflation-orb::after {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+              radial-gradient(circle at 10% 20%, rgba(248,250,252,0.15) 0, transparent 40%),
+              radial-gradient(circle at 80% 0%, rgba(6,182,212,0.25) 0, transparent 45%),
+              radial-gradient(circle at 50% 90%, rgba(251,191,36,0.2) 0, transparent 45%);
+            opacity: calc(0.5 + 0.5 * (1 - var(--inflation-frag, 0)));
+            animation: inflation-particles 12s linear infinite;
+            mix-blend-mode: screen;
+        }
+        .inflation-orb::after {
+            animation-duration: 18s;
+            animation-direction: reverse;
+        }
+        @keyframes inflation-particles {
+            0%   { transform: translate3d(0,0,0) scale(1); }
+            50%  { transform: translate3d(6px,-4px,0) scale(1.1); }
+            100% { transform: translate3d(-4px,4px,0) scale(1); }
+        }
+
+        /* Odometer styl čísel */
+        .number-odometer {
+            font-variant-numeric: tabular-nums;
+        }
     </style>
 </head>
 <body class="bg-brand-light text-slate-800 page-loaded">
@@ -382,40 +441,61 @@
                 <div class="lg:col-span-7">
                     <div class="neu-raised rounded-2xl p-6 md:p-10">
                         
-                        <!-- INPUT 1: VĚK -->
-                        <div class="mb-10">
-                            <div class="flex justify-between items-end mb-4">
-                                <label class="text-sm font-bold text-slate-600 tracking-wide uppercase">Váš současný věk <span class="text-slate-400 font-normal normal-case">(let)</span></label>
-                                <div class="flex items-baseline border-b-2 border-slate-200 focus-within:border-brand-cyan transition-colors">
-                                    <input type="text" id="ageInputDisplay" class="bare-input text-right font-extrabold text-3xl text-brand-dark w-20 bg-transparent" value="35">
-                                    <span class="text-slate-400 font-medium ml-2 text-lg">let</span>
+                        <!-- VIZUÁLNÍ OSA ŽIVOTA (18–85): dva body = já teď + věk důchodu -->
+                        <div class="mb-10 calc-step calc-step-1">
+                            <label class="text-sm font-bold text-slate-600 tracking-wide uppercase block mb-3">Osa života <span class="text-slate-400 font-normal normal-case">(táhněte body)</span></label>
+                            <div class="life-timeline-wrap relative pt-2 pb-8">
+                                <div class="life-timeline-track relative h-3 rounded-full bg-slate-200 overflow-visible" id="lifeTimelineTrack">
+                                    <div class="life-timeline-fill life-timeline-build absolute top-0 h-full rounded-full bg-brand-cyan/60 pointer-events-none transition-all duration-150" id="lifeTimelineBuild"></div>
+                                    <div class="life-timeline-fill life-timeline-draw absolute top-0 h-full rounded-full bg-amber-400/50 pointer-events-none transition-all duration-150" id="lifeTimelineDraw"></div>
+                                    <button type="button" class="life-timeline-thumb absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-brand-navy border-3 border-white shadow-lg cursor-grab active:cursor-grabbing z-10 text-white text-xs font-bold flex items-center justify-center hover:scale-110 transition-transform" id="lifeThumbNow" aria-label="Váš věk teď"><span id="lifeThumbNowLabel">35</span></button>
+                                    <button type="button" class="life-timeline-thumb life-timeline-thumb-retire absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-brand-cyan border-3 border-white shadow-lg cursor-grab active:cursor-grabbing z-10 text-white text-xs font-bold flex items-center justify-center hover:scale-110 transition-transform" id="lifeThumbRetire" aria-label="Věk odchodu do důchodu"><span id="lifeThumbRetireLabel">65</span></button>
+                                </div>
+                                <div class="flex justify-between text-xs font-medium text-slate-400 mt-2 px-0.5">
+                                    <span>18</span>
+                                    <span>85 let</span>
+                                </div>
+                                <div class="flex justify-between mt-2 text-xs text-slate-500">
+                                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-brand-cyan/60"></span> Budování</span>
+                                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-400/60"></span> Čerpání</span>
                                 </div>
                             </div>
-                            <input type="range" id="ageRange" min="18" max="64" step="1" value="35" class="w-full neu-range">
-                            <div class="flex justify-between text-xs font-medium text-slate-400 mt-3">
-                                <span>18 let</span>
-                                <span>64 let</span>
+                            <div class="flex justify-between items-center mt-2 gap-4">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-slate-500 text-sm">Já teď:</span>
+                                    <input type="text" id="ageInputDisplay" class="bare-input text-right font-bold text-brand-dark w-14 bg-slate-50 rounded-lg px-2 py-1 text-lg" value="35">
+                                    <span class="text-slate-400 text-sm">let</span>
+                                </div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-slate-500 text-sm">Důchod od:</span>
+                                    <input type="text" id="retireAgeInputDisplay" class="bare-input text-right font-bold text-brand-dark w-14 bg-slate-50 rounded-lg px-2 py-1 text-lg" value="65">
+                                    <span class="text-slate-400 text-sm">let</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- INPUT NOVÝ: VĚK ODCHODU DO DŮCHODU -->
-                        <div class="mb-10">
+                        <!-- SKRYTÉ RANGE PRO SYNC (life timeline je zdroj pravdy) -->
+                        <input type="hidden" id="ageRange" min="18" max="85" value="35">
+                        <input type="hidden" id="retireAgeRange" min="18" max="85" value="65">
+
+                        <!-- KOLIK UŽ MÁTE NASPOŘENO -->
+                        <div class="mb-10 calc-step calc-step-2 hidden">
                             <div class="flex justify-between items-end mb-4">
-                                <label class="text-sm font-bold text-slate-600 tracking-wide uppercase">Věk odchodu do důchodu <span class="text-slate-400 font-normal normal-case">(let)</span></label>
+                                <label class="text-sm font-bold text-slate-600 tracking-wide uppercase">Kolik už máte dnes naspořeno / zainvestováno? <span class="text-slate-400 font-normal normal-case">(Kč)</span></label>
                                 <div class="flex items-baseline border-b-2 border-slate-200 focus-within:border-brand-cyan transition-colors">
-                                    <input type="text" id="retireAgeInputDisplay" class="bare-input text-right font-extrabold text-3xl text-brand-dark w-20 bg-transparent" value="65">
-                                    <span class="text-slate-400 font-medium ml-2 text-lg">let</span>
+                                    <input type="text" id="savingsInputDisplay" class="bare-input text-right font-extrabold text-2xl text-brand-dark w-32 bg-transparent" value="0">
+                                    <span class="text-slate-400 font-medium ml-2 text-lg">Kč</span>
                                 </div>
                             </div>
-                            <input type="range" id="retireAgeRange" min="60" max="70" step="1" value="65" class="w-full neu-range">
+                            <input type="range" id="savingsRange" min="0" max="5000000" step="50000" value="0" class="w-full neu-range">
                             <div class="flex justify-between text-xs font-medium text-slate-400 mt-3">
-                                <span>60 let</span>
-                                <span>70 let</span>
+                                <span>0</span>
+                                <span>5 mil. Kč</span>
                             </div>
                         </div>
 
                         <!-- INPUT 2: MZDA -->
-                        <div class="mb-10">
+                        <div class="mb-10 calc-step calc-step-2 hidden">
                             <div class="flex justify-between items-end mb-4">
                                 <label class="text-sm font-bold text-slate-600 tracking-wide uppercase">Hrubá mzda <span class="text-slate-400 font-normal normal-case">(měsíčně)</span></label>
                                 <div class="flex items-baseline border-b-2 border-slate-200 focus-within:border-brand-cyan transition-colors">
@@ -430,17 +510,34 @@
                             </div>
                         </div>
 
-                        <!-- INPUT 3: POŽADOVANÁ RENTA -->
-                        <div class="mb-10 bg-blue-50/50 p-6 rounded-xl border border-blue-100/50">
+                        <!-- INPUT 3: POŽADOVANÁ RENTA – Lifestyle Builder -->
+                        <div class="mb-10 bg-blue-50/50 p-6 rounded-xl border border-blue-100/50 calc-step calc-step-3 hidden">
                             <div class="flex justify-between items-end mb-4">
                                 <div class="flex flex-col">
                                     <label class="text-sm font-bold text-brand-main tracking-wide uppercase mb-1">Cílová renta v důchodu</label>
-                                    <span class="text-xs text-slate-500">V dnešních cenách (hodnota peněz dnes)</span>
+                                    <span class="text-xs text-slate-500">Vyberte styl života, který si chcete udržet.</span>
                                 </div>
                                 <div class="flex items-baseline border-b-2 border-slate-200 focus-within:border-brand-cyan transition-colors">
                                     <input type="text" id="rentInputDisplay" class="bare-input text-right font-extrabold text-3xl text-brand-dark w-40 bg-transparent" value="35 000">
                                     <span class="text-slate-400 font-medium ml-2 text-lg">Kč</span>
                                 </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <button type="button" class="lifestyle-choice inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold border border-blue-200/70 bg-white/70 text-brand-main hover:border-brand-cyan hover:bg-white transition-colors data-[active=true]:bg-brand-main data-[active=true]:text-white data-[active=true]:border-brand-main" data-rent="25000">
+                                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fas fa-mug-hot text-xs"></i></span>
+                                    <span>Základní jistota</span>
+                                    <span class="text-[10px] text-slate-400 data-[active=true]:text-blue-100">25&nbsp;000 Kč</span>
+                                </button>
+                                <button type="button" class="lifestyle-choice inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold border border-blue-200/70 bg-white/70 text-brand-main hover:border-brand-cyan hover:bg-white transition-colors data-[active=true]:bg-brand-main data-[active=true]:text-white data-[active=true]:border-brand-main" data-rent="35000">
+                                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fas fa-plane-departure text-xs"></i></span>
+                                    <span>Aktivní cestovatel</span>
+                                    <span class="text-[10px] text-slate-400 data-[active=true]:text-blue-100">35&nbsp;000 Kč</span>
+                                </button>
+                                <button type="button" class="lifestyle-choice inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold border border-blue-200/70 bg-white/70 text-brand-main hover:border-brand-cyan hover:bg-white transition-colors data-[active=true]:bg-brand-main data-[active=true]:text-white data-[active=true]:border-brand-main" data-rent="50000">
+                                    <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fas fa-champagne-glasses text-xs"></i></span>
+                                    <span>Prémiový luxus</span>
+                                    <span class="text-[10px] text-slate-400 data-[active=true]:text-blue-100">50&nbsp;000 Kč</span>
+                                </button>
                             </div>
                             <input type="range" id="rentRange" min="10000" max="150000" step="1000" value="35000" class="w-full neu-range">
                             <div class="flex justify-between text-xs font-medium text-slate-400 mt-3">
@@ -450,7 +547,7 @@
                         </div>
 
                         <!-- INPUT NOVÝ: SCÉNÁŘ VÝVOJE (TOGGLE/SELECT) -->
-                        <div class="mb-6">
+                        <div class="mb-6 calc-step calc-step-4 hidden">
                              <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
                                  <label class="text-sm font-bold text-slate-600 uppercase">Scénář vývoje státu</label>
                                  <div class="relative">
@@ -466,7 +563,7 @@
                         </div>
 
                          <!-- INPUT 4: ODHAD STÁTNÍHO DŮCHODU -->
-                         <div class="mb-0">
+                         <div class="mb-0 calc-step calc-step-4 hidden">
                              <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
                                  <div class="flex flex-col">
                                      <label class="text-sm font-bold text-slate-600 uppercase">Odhad státního důchodu</label>
@@ -482,14 +579,19 @@
                     
                     <!-- NOVÁ SEKCE "REALITY CHECK" -->
                     <div class="mt-6 bg-slate-100 rounded-2xl p-6 border border-slate-200 shadow-inner">
-                        <div class="flex gap-4">
-                            <div class="shrink-0 pt-1">
-                                <i data-lucide="alert-circle" class="w-6 h-6 text-brand-cyan"></i>
+                            <div class="flex gap-5 items-center">
+                            <div class="shrink-0">
+                                <div class="inflation-orb" id="inflationOrb">
+                                    <div class="inflation-core"></div>
+                                </div>
                             </div>
                             <div>
-                                <h4 class="text-brand-dark font-bold text-lg mb-2">Proč mi vychází tak málo?</h4>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i data-lucide="alert-circle" class="w-5 h-5 text-brand-cyan"></i>
+                                    <h4 class="text-brand-dark font-bold text-lg">Proč mi vychází tak málo?</h4>
+                                </div>
                                 <p class="text-slate-600 text-sm leading-relaxed">
-                                    Kalkulačka zohledňuje reálná demografická data. Dříve na jednoho důchodce vydělávali 4 pracující, dnes jsou to pouze 2 a tento trend klesá (slabé ročníky vs. silné ročníky Husákových dětí). Udržení současné výše důchodů je bez reformy matematicky nemožné.
+                                    Kalkulačka zohledňuje reálná demografická data. Čím dál jste od důchodu, tím víc inflace „ukrajuje“ z kupní síly peněz – zářící kruh vlevo ukazuje, jak se vaše dnešní stokoruna v čase zmenšuje.
                                 </p>
                             </div>
                         </div>
@@ -509,19 +611,41 @@
                                 <i class="fas fa-exclamation-triangle text-brand-cyan"></i> Chybí vám měsíčně
                             </h3>
                             
-                            <div class="flex items-baseline gap-2 mb-8 relative z-10">
-                                <span id="monthlyGapResult" class="text-5xl md:text-6xl font-black text-white tracking-tight">--</span>
-                                <span class="text-2xl font-medium text-slate-400">Kč</span>
+                            <div class="flex items-center gap-4 mb-4 relative z-10">
+                                <div class="flex items-baseline gap-2 flex-1">
+                                    <span id="monthlyGapResult" class="text-4xl md:text-5xl font-black text-white tracking-tight number-odometer">--</span>
+                                    <span class="text-xl font-medium text-slate-400">Kč</span>
+                                </div>
+                                <div class="penzije-donut shrink-0" id="penzijeDonut" aria-hidden="true">
+                                    <svg viewBox="0 0 64 64" class="w-16 h-16 md:w-20 md:h-20">
+                                        <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(148,163,184,0.5)" stroke-width="8"/>
+                                        <circle cx="32" cy="32" r="28" fill="none" stroke="#4FC6F2" stroke-width="8" stroke-dasharray="0 176" stroke-linecap="round" id="donutState"/>
+                                        <circle cx="32" cy="32" r="28" fill="none" stroke="#f59e0b" stroke-width="8" stroke-dasharray="0 176" stroke-linecap="round" id="donutGap"/>
+                                    </svg>
+                                </div>
                             </div>
 
                             <div class="space-y-0 relative z-10 bg-slate-800/50 rounded-xl p-1 backdrop-blur-sm border border-white/5">
                                 <div class="flex justify-between items-center p-4 border-b border-white/10">
                                     <span class="text-slate-300 text-sm">Nutno investovat dnes</span>
-                                    <span class="font-bold text-white text-xl" id="investmentNeededResult">-- Kč</span>
+                                    <span class="font-bold text-white text-xl transition-colors duration-300 number-odometer" id="investmentNeededResult">-- Kč</span>
                                 </div>
-                                <div class="flex justify-between items-center p-4">
-                                    <span class="text-slate-300 text-sm">Cílový majetek v 65 letech</span>
-                                    <span class="font-bold text-white text-lg" id="targetCapitalResult">-- mil. Kč</span>
+                                <p class="px-4 pb-2 text-slate-400 text-sm" id="dailyComparisonText">To je přibližně -- Kč denně. (Zhruba cena lepšího oběda nebo dvou káv.)</p>
+                                <div class="px-4 pb-4 pt-0">
+                                    <label class="cost-of-delay-toggle flex items-center gap-3 cursor-pointer group">
+                                        <input type="checkbox" id="costOfDelayToggle" class="sr-only peer">
+                                        <span class="cost-of-delay-switch w-11 h-6 rounded-full bg-slate-600 peer-checked:bg-red-500 transition-colors block relative after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5"></span>
+                                        <span class="text-slate-300 text-sm group-hover:text-slate-200">Co když začnu až za 5 let?</span>
+                                    </label>
+                                    <p class="text-right mt-2 hidden" id="costOfDelayResultWrap">
+                                        <span class="text-slate-400 text-sm">Pak by to bylo </span>
+                                        <span id="costOfDelayResult" class="font-bold text-red-400 text-lg">-- Kč</span>
+                                        <span class="text-slate-400 text-sm"> měsíčně.</span>
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center p-4 border-t border-white/10">
+                                    <span class="text-slate-300 text-sm">Cílový majetek v <span id="targetCapitalAgeLabel">65</span> letech</span>
+                                    <span class="font-bold text-white text-lg number-odometer" id="targetCapitalResult">-- mil. Kč</span>
                                 </div>
                             </div>
 
@@ -685,6 +809,83 @@
         </div>
     </div>
 
+    <!-- Sticky widget „Váš cíl“ – zobrazuje se po odscrollování kalkulačky -->
+    <div id="stickyGoalBar" class="fixed inset-x-0 bottom-4 z-40 px-4 pointer-events-none hidden">
+        <div class="max-w-3xl mx-auto">
+            <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-900/95 text-white shadow-xl border border-white/10 px-4 py-3 backdrop-blur-md pointer-events-auto">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-300">
+                        <i class="fas fa-flag-checkered text-sm"></i>
+                    </div>
+                    <div class="text-sm leading-tight">
+                        <div class="font-semibold">Váš cíl</div>
+                        <div class="text-xs text-slate-300">Zajistit <span id="stickyGoalAmount" class="font-bold text-emerald-300">35&nbsp;000 Kč</span> měsíčně v důchodu.</div>
+                    </div>
+                </div>
+                <button type="button" onclick="openPensionModal('plan')" class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 text-xs font-semibold px-4 py-2 hover:bg-emerald-400 transition-colors whitespace-nowrap">
+                    Sjednat plán
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK-CALC WIDGET – Plovoucí menu kalkulaček -->
+    <div class="qc-widget" aria-label="Rychlé kalkulačky">
+      <button type="button" class="qc-button" aria-expanded="false" aria-controls="qc-panel">
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="18" rx="2" ry="2"></rect>
+          <line x1="8" y1="9" x2="16" y2="9"></line>
+          <line x1="9" y1="13" x2="9" y2="13"></line>
+          <line x1="12" y1="13" x2="12" y2="13"></line>
+          <line x1="15" y1="13" x2="15" y2="13"></line>
+          <line x1="9" y1="16" x2="9" y2="16"></line>
+          <line x1="12" y1="16" x2="12" y2="16"></line>
+        </svg>
+      </button>
+      <div id="qc-panel" class="qc-panel" role="dialog" aria-modal="false">
+        <h3 class="text-sm font-bold text-brand-navy mb-1">Rychlé kalkulačky</h3>
+        <p class="text-xs text-slate-500 mb-4">Vyberte, co chcete spočítat.</p>
+        <div class="space-y-2 text-sm">
+          <a href="https://www.marekpribramsky.cz/hypotecnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Hypoteční kalkulačka</span>
+              <span class="block text-xs text-slate-500">Výše splátky a celkové náklady</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/investicnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V10"/><path d="M12 21V3"/><path d="M17 21v-6"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Investiční kalkulačka</span>
+              <span class="block text-xs text-slate-500">Projekce zhodnocení v čase</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/zivotnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Kalkulačka životního pojištění</span>
+              <span class="block text-xs text-slate-500">Potřebné krytí podle situace</span>
+            </span>
+          </a>
+          <a href="https://www.marekpribramsky.cz/penzijnikalkulacka" class="qc-link">
+            <span class="qc-icon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+            </span>
+            <span>
+              <span class="font-semibold block">Penzijní kalkulačka</span>
+              <span class="block text-xs text-slate-500">Státní příspěvky a daňové úlevy</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
     <!-- Footer PB (Marek Příbramský) -->
 </main>
   <footer class="bg-brand-navy text-white py-10 sm:py-12 lg:py-16" role="contentinfo" id="kontakt">
@@ -791,34 +992,56 @@
         const els = {
             ageRange: document.getElementById('ageRange'),
             ageInput: document.getElementById('ageInputDisplay'),
-            
-            // Nový element: Věk odchodu do důchodu
             retireAgeRange: document.getElementById('retireAgeRange'),
             retireAgeInput: document.getElementById('retireAgeInputDisplay'),
-            
             salaryRange: document.getElementById('salaryRange'),
             salaryInput: document.getElementById('salaryInputDisplay'),
             rentRange: document.getElementById('rentRange'),
             rentInput: document.getElementById('rentInputDisplay'),
-            
-            // Nový element: Scénář
+            savingsRange: document.getElementById('savingsRange'),
+            savingsInput: document.getElementById('savingsInputDisplay'),
             scenarioSelect: document.getElementById('scenarioSelect'),
-
-            // Outputs
-            statePensionInput: document.getElementById('statePensionInput'), // Nyní automaticky počítané pole
+            statePensionInput: document.getElementById('statePensionInput'),
             monthlyGapResult: document.getElementById('monthlyGapResult'),
             investmentNeededResult: document.getElementById('investmentNeededResult'),
             targetCapitalResult: document.getElementById('targetCapitalResult'),
+            targetCapitalAgeLabel: document.getElementById('targetCapitalAgeLabel'),
+            dailyComparisonText: document.getElementById('dailyComparisonText'),
+            costOfDelayToggle: document.getElementById('costOfDelayToggle'),
+            costOfDelayResult: document.getElementById('costOfDelayResult'),
+            costOfDelayResultWrap: document.getElementById('costOfDelayResultWrap'),
+            donutState: document.getElementById('donutState'),
+            donutGap: document.getElementById('donutGap'),
+            lifeTimelineTrack: document.getElementById('lifeTimelineTrack'),
+            lifeTimelineBuild: document.getElementById('lifeTimelineBuild'),
+            lifeTimelineDraw: document.getElementById('lifeTimelineDraw'),
+            lifeThumbNow: document.getElementById('lifeThumbNow'),
+            lifeThumbRetire: document.getElementById('lifeThumbRetire'),
+            lifeThumbNowLabel: document.getElementById('lifeThumbNowLabel'),
+            lifeThumbRetireLabel: document.getElementById('lifeThumbRetireLabel'),
         };
 
         // State Kalkulačky
         let state = {
             age: 35,
-            retireAge: 65, // Default
+            retireAge: 65,
             salary: 45000,
             rent: 35000,
-            scenario: 'realistic' // Defaultní scénář
+            savedToday: 0,
+            scenario: 'realistic'
         };
+
+        // Výstupy z calculate() pro donut a delay
+        let calcResult = { estimatedPension: 0, monthlyGap: 0, monthlyInvestment: 0, monthlyInvestmentIfDelayed5: null, targetCapital: 0 };
+
+        // Pro odometer animaci
+        var lastAnimated = { monthlyGap: 0, invest: 0, targetCap: 0 };
+
+        // Stav pro postupné odkrývání kroků
+        var revealedSteps = { 2: false, 3: false, 4: false };
+
+        // Sticky goal widget
+        var stickyGoalState = { bar: null, amountEl: null };
 
         // --- SCROLL LOGIKA (Mění vzhled headeru) ---
         const handleScroll = () => {
@@ -968,71 +1191,160 @@
             els.statePensionInput.value = formatCurrency(estimatedPension);
 
 
-            // --- Krok D: Výpočet Mezery a Investice ---
-            
+            // --- Krok D: Výpočet Mezery a Investice (včetně současných úspor) ---
             let monthlyGap = state.rent - estimatedPension;
             if (monthlyGap < 0) monthlyGap = 0;
 
+            const expectedReturn = 0.07;
+            const inflation = 0.02;
+            const realRate = (1 + expectedReturn) / (1 + inflation) - 1;
+            const yearsInRetirement = 20;
+            const monthsInRetirement = yearsInRetirement * 12;
+            const retirementRealRateMonthly = 0.015 / 12;
             let monthlyInvestment = 0;
             let targetCapital = 0;
+            let monthlyInvestmentIfDelayed5 = null;
 
             if (yearsToRetirement > 0) {
-                 // Konstanty pro investici
-                const expectedReturn = 0.07; // 7% p.a.
-                const inflation = 0.02; // 2% inflace
-                const realRate = (1 + expectedReturn) / (1 + inflation) - 1; 
-                
-                // Kolik kapitálu potřebuji v době odchodu do důchodu?
-                const yearsInRetirement = 20;
-                const monthsInRetirement = yearsInRetirement * 12;
-                // Bezpečný výběr (Safe Withdrawal Rate) upravený o inflaci během důchodu
-                const retirementRealRateMonthly = 0.015 / 12; 
-                
-                // PV = PMT * [1 - (1+r)^-n] / r
                 targetCapital = monthlyGap * (1 - Math.pow(1 + retirementRealRateMonthly, -monthsInRetirement)) / retirementRealRateMonthly;
-
-                // Kolik musím spořit měsíčně TEĎ?
-                // PMT = FV * r / [(1+r)^n - 1]
                 const accumulationRateMonthly = realRate / 12;
                 const monthsAccumulation = yearsToRetirement * 12;
-                
-                monthlyInvestment = targetCapital * accumulationRateMonthly / (Math.pow(1 + accumulationRateMonthly, monthsAccumulation) - 1);
-            } else {
-                monthlyInvestment = 0;
-                targetCapital = 0;
+                const futureValueOfSavings = state.savedToday * Math.pow(1 + realRate, yearsToRetirement);
+                const capitalToSave = Math.max(0, targetCapital - futureValueOfSavings);
+                monthlyInvestment = capitalToSave > 0
+                    ? capitalToSave * accumulationRateMonthly / (Math.pow(1 + accumulationRateMonthly, monthsAccumulation) - 1)
+                    : 0;
+
+                if (yearsToRetirement > 5) {
+                    const monthsDelayed = (yearsToRetirement - 5) * 12;
+                    const capitalDelayed = monthlyGap * (1 - Math.pow(1 + retirementRealRateMonthly, -monthsInRetirement)) / retirementRealRateMonthly;
+                    monthlyInvestmentIfDelayed5 = capitalDelayed * accumulationRateMonthly / (Math.pow(1 + accumulationRateMonthly, monthsDelayed) - 1);
+                }
             }
+
+            calcResult = { estimatedPension, monthlyGap, monthlyInvestment, monthlyInvestmentIfDelayed5, targetCapital };
 
             // Výstupy
             els.monthlyGapResult.innerText = formatCurrency(monthlyGap);
-            els.investmentNeededResult.innerText = formatCurrency(monthlyInvestment) + " Kč";
-            els.targetCapitalResult.innerText = (targetCapital / 1000000).toFixed(1) + " mil. Kč";
+            const showDelay = els.costOfDelayToggle && els.costOfDelayToggle.checked && monthlyInvestmentIfDelayed5 != null;
+            const displayAmount = showDelay ? monthlyInvestmentIfDelayed5 : monthlyInvestment;
+            if (els.investmentNeededResult) {
+                els.investmentNeededResult.innerText = formatCurrency(displayAmount) + " Kč";
+                els.investmentNeededResult.classList.toggle('cost-of-delay-active', showDelay);
+            }
+            if (els.targetCapitalResult) els.targetCapitalResult.innerText = (targetCapital / 1000000).toFixed(1) + " mil. Kč";
+            if (els.targetCapitalAgeLabel) els.targetCapitalAgeLabel.textContent = state.retireAge;
+
+            // Denní přirovnání (káva / oběd) – podle zobrazené měsíční částky
+            const displayMonthly = showDelay && monthlyInvestmentIfDelayed5 != null ? monthlyInvestmentIfDelayed5 : monthlyInvestment;
+            const daily = Math.round(displayMonthly / 30);
+            if (els.dailyComparisonText) els.dailyComparisonText.textContent = "To je přibližně " + formatCurrency(daily) + " Kč denně. (Zhruba cena lepšího oběda nebo dvou káv.)";
+
+            // Cost of Delay – zobrazit částku „za 5 let“
+            if (els.costOfDelayResult) els.costOfDelayResult.textContent = monthlyInvestmentIfDelayed5 != null ? formatCurrency(monthlyInvestmentIfDelayed5) + " Kč" : "--";
+            if (els.costOfDelayResultWrap) els.costOfDelayResultWrap.classList.toggle('hidden', !showDelay);
+
+            // Donut: státní důchod (šedý/cyan) vs. mezera (oranžová)
+            const total = state.rent || 1;
+            const circ = 2 * Math.PI * 28;
+            const statePct = Math.min(1, estimatedPension / total);
+            const gapPct = Math.min(1, monthlyGap / total);
+            if (els.donutState) {
+                els.donutState.setAttribute('stroke-dasharray', (statePct * circ) + " " + circ);
+            }
+            if (els.donutGap) {
+                els.donutGap.setAttribute('stroke-dasharray', (gapPct * circ) + " " + circ);
+                els.donutGap.setAttribute('stroke-dashoffset', -statePct * circ);
+            }
         }
 
         function updateValue(key, val) {
             state[key] = val;
-            
-            // UI Sync
-            if (key === 'age') { els.ageInput.value = val; els.ageRange.value = val; }
-            if (key === 'retireAge') { els.retireAgeInput.value = val; els.retireAgeRange.value = val; }
+            if (key === 'age') {
+                els.ageInput.value = val;
+                if (els.ageRange) els.ageRange.value = val;
+                if (state.retireAge <= state.age) { state.retireAge = state.age + 1; els.retireAgeInput.value = state.retireAge; if (els.retireAgeRange) els.retireAgeRange.value = state.retireAge; }
+                updateLifeTimelinePositions();
+            }
+            if (key === 'retireAge') {
+                els.retireAgeInput.value = val;
+                if (els.retireAgeRange) els.retireAgeRange.value = val;
+                if (state.age >= state.retireAge) { state.age = state.retireAge - 1; els.ageInput.value = state.age; if (els.ageRange) els.ageRange.value = state.age; }
+                updateLifeTimelinePositions();
+            }
             if (key === 'salary') { els.salaryInput.value = formatCurrency(val); els.salaryRange.value = val; }
             if (key === 'rent') { els.rentInput.value = formatCurrency(val); els.rentRange.value = val; }
-            if (key === 'scenario') { 
-                // Select value is handled automatically by change event
+            if (key === 'savedToday') {
+                els.savingsInput.value = formatCurrency(val);
+                if (els.savingsRange) els.savingsRange.value = val;
             }
-
-            // Ošetření: Věk odchodu nemůže být menší než současný věk
-            if (key === 'age' && state.age >= state.retireAge) {
-                 state.retireAge = state.age + 1;
-                 els.retireAgeRange.value = state.retireAge;
-                 els.retireAgeInput.value = state.retireAge;
-            }
-
-            applyNeuRangeFill(els.ageRange);
-            applyNeuRangeFill(els.retireAgeRange);
             applyNeuRangeFill(els.salaryRange);
             applyNeuRangeFill(els.rentRange);
-
+            if (els.savingsRange) applyNeuRangeFill(els.savingsRange);
             calculate();
+        }
+
+        function revealStep(step) {
+            if (revealedSteps[step]) return;
+            revealedSteps[step] = true;
+            var stepEls = document.querySelectorAll('.calc-step-' + step);
+            stepEls.forEach(function (el) {
+                if (!el.classList.contains('hidden')) return;
+                el.classList.remove('hidden');
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(8px)';
+                requestAnimationFrame(function () {
+                    el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        function updateLifeTimelinePositions() {
+            const track = els.lifeTimelineTrack;
+            if (!track) return;
+            const minA = 18, maxA = 85;
+            const pctNow = ((state.age - minA) / (maxA - minA)) * 100;
+            const pctRetire = ((state.retireAge - minA) / (maxA - minA)) * 100;
+            if (els.lifeTimelineBuild) {
+                els.lifeTimelineBuild.style.left = pctNow + '%';
+                els.lifeTimelineBuild.style.width = (pctRetire - pctNow) + '%';
+            }
+            if (els.lifeTimelineDraw) {
+                els.lifeTimelineDraw.style.left = pctRetire + '%';
+                els.lifeTimelineDraw.style.width = (100 - pctRetire) + '%';
+            }
+            if (els.lifeThumbNow) { els.lifeThumbNow.style.left = pctNow + '%'; if (els.lifeThumbNowLabel) els.lifeThumbNowLabel.textContent = state.age; }
+            if (els.lifeThumbRetire) { els.lifeThumbRetire.style.left = pctRetire + '%'; if (els.lifeThumbRetireLabel) els.lifeThumbRetireLabel.textContent = state.retireAge; }
+        }
+
+        function setupLifeTimeline() {
+            const track = els.lifeTimelineTrack;
+            const minA = 18, maxA = 85;
+            if (!track) return;
+            function xToAge(x) {
+                const rect = track.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+                return Math.round(minA + pct * (maxA - minA));
+            }
+            function dragThumb(thumb, setKey) {
+                let moving = false;
+                const onMove = (e) => {
+                    if (!moving) return;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    let age = xToAge(clientX);
+                    if (setKey === 'age') age = Math.max(minA, Math.min(age, state.retireAge - 1));
+                    else age = Math.max(state.age + 1, Math.min(age, maxA));
+                    updateValue(setKey, age);
+                };
+                const onUp = () => { moving = false; document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); document.removeEventListener('touchmove', onMove); document.removeEventListener('touchend', onUp); };
+                thumb.addEventListener('mousedown', (e) => { e.preventDefault(); moving = true; if (setKey === 'retireAge') revealStep(2); document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp); });
+                thumb.addEventListener('touchstart', (e) => { e.preventDefault(); moving = true; if (setKey === 'retireAge') revealStep(2); document.addEventListener('touchmove', onMove, { passive: false }); document.addEventListener('touchend', onUp); }, { passive: false });
+            }
+            if (els.lifeThumbNow) dragThumb(els.lifeThumbNow, 'age');
+            if (els.lifeThumbRetire) dragThumb(els.lifeThumbRetire, 'retireAge');
+            updateLifeTimelinePositions();
         }
 
         function openPensionModal(type = 'plan') {
@@ -1074,23 +1386,22 @@
                 });
             });
 
+            // Life timeline (osa života) – zdroj pravdy pro věk a věk důchodu
+            setupLifeTimeline();
             // Calculator Listeners (Ranges)
-            els.ageRange.addEventListener('input', (e) => updateValue('age', parseInt(e.target.value)));
-            els.retireAgeRange.addEventListener('input', (e) => updateValue('retireAge', parseInt(e.target.value)));
-            els.salaryRange.addEventListener('input', (e) => updateValue('salary', parseInt(e.target.value)));
-            els.rentRange.addEventListener('input', (e) => updateValue('rent', parseInt(e.target.value)));
-            
-            // Calculator Listeners (Inputs)
-            els.ageInput.addEventListener('change', (e) => updateValue('age', parseInt(e.target.value) || 18));
-            els.retireAgeInput.addEventListener('change', (e) => updateValue('retireAge', parseInt(e.target.value) || 65));
-            els.salaryInput.addEventListener('change', (e) => updateValue('salary', parseCurrency(e.target.value)));
-            els.rentInput.addEventListener('change', (e) => updateValue('rent', parseCurrency(e.target.value)));
-            
-            // Scenario Listener
-            els.scenarioSelect.addEventListener('change', (e) => updateValue('scenario', e.target.value));
-            [els.ageRange, els.retireAgeRange, els.salaryRange, els.rentRange].forEach((r) => {
-                applyNeuRangeFill(r);
-                r.addEventListener('input', () => applyNeuRangeFill(r));
+            if (els.salaryRange) els.salaryRange.addEventListener('input', (e) => updateValue('salary', parseInt(e.target.value)));
+            if (els.rentRange) els.rentRange.addEventListener('input', (e) => updateValue('rent', parseInt(e.target.value)));
+            if (els.savingsRange) els.savingsRange.addEventListener('input', (e) => updateValue('savedToday', parseInt(e.target.value)));
+            // Calculator Listeners (Inputs – včetně věk z osy)
+            if (els.ageInput) els.ageInput.addEventListener('change', (e) => updateValue('age', Math.max(18, Math.min(85, parseInt(e.target.value) || 18))));
+            if (els.retireAgeInput) els.retireAgeInput.addEventListener('change', (e) => updateValue('retireAge', Math.max(19, Math.min(85, parseInt(e.target.value) || 65))));
+            if (els.salaryInput) els.salaryInput.addEventListener('change', (e) => updateValue('salary', parseCurrency(e.target.value)));
+            if (els.rentInput) els.rentInput.addEventListener('change', (e) => updateValue('rent', parseCurrency(e.target.value)));
+            if (els.savingsInput) els.savingsInput.addEventListener('change', (e) => updateValue('savedToday', parseCurrency(e.target.value)));
+            if (els.scenarioSelect) els.scenarioSelect.addEventListener('change', (e) => updateValue('scenario', e.target.value));
+            if (els.costOfDelayToggle) els.costOfDelayToggle.addEventListener('change', () => calculate());
+            [els.salaryRange, els.rentRange, els.savingsRange].forEach((r) => {
+                if (r) { applyNeuRangeFill(r); r.addEventListener('input', () => applyNeuRangeFill(r)); }
             });
 
             const pensionLeadForm = document.getElementById('pensionLeadForm');

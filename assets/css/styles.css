@@ -14,7 +14,7 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Kontejnery – jednotný padding */
+/* Kontejnery – jednotný padding (mobil → tablet → notebook) */
 .container-padding {
   padding-left: max(1rem, env(safe-area-inset-left));
   padding-right: max(1rem, env(safe-area-inset-right));
@@ -27,6 +27,9 @@ body {
 }
 @media (min-width: 1024px) {
   .container-padding { padding-left: 2rem; padding-right: 2rem; }
+}
+@media (min-width: 1280px) {
+  .container-padding { padding-left: 2.5rem; padding-right: 2.5rem; }
 }
 
 /* Touch targets – min 44px pro CTA a ikony na mobilu */
@@ -67,38 +70,417 @@ body {
   background: #F8FAFC;
 }
 .hero-aurora .hero-image-wrapper {
-  background: #e2e8f0;
+  background: #1D2354;
 }
 .hero-aurora .hero-image-wrapper img { display: block; }
-.hero-aurora .hero-photo-only {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  max-height: 100%;
+/* Stín textu pro čitelnost – výrazně světlý dojem (ne příliš tmavý) */
+.hero-text-shadow {
+  text-shadow: 0 0 1px rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.25), 0 2px 12px rgba(0,0,0,0.2);
+}
+.hero-aurora .hero-title {
+  color: #ffffff;
 }
 .hero-aurora .hero-img-full {
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center top;
   vertical-align: middle;
-}
-.hero-aurora .hero-photo-only {
-  max-height: 80vh;
 }
 @media (max-width: 640px) {
   .hero-aurora {
     min-height: 80vh;
   }
+  .hero-aurora .hero-image-wrapper {
+    inset: 0.5rem;
+  }
   .hero-aurora .hero-title {
-    font-size: clamp(2.2rem, 7vw, 3rem);
-    line-height: 1.2;
+    font-size: clamp(2rem, 8vw, 3rem);
+    line-height: 1.15;
   }
   .hero-aurora .hero-content {
+    padding-top: 3.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .hero-aurora .hero-subtitle {
+    font-size: 1rem;
+    margin-top: 0.75rem;
+  }
+  .hero-badges-center {
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .hero-scroll-link {
+    bottom: 1rem;
+  }
+}
+@media (min-width: 641px) and (max-width: 1023px) {
+  .hero-aurora .hero-content {
     padding-top: 4rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .hero-aurora .hero-image-wrapper {
+    inset: 1rem;
   }
 }
 .text-reveal-mask { overflow: hidden; display: block; }
 .text-reveal-line { transform: translateY(100%); display: block; }
 .hero-aurora .hero-subtitle { transition: opacity 0.5s ease; }
+
+/* Hero – Trust Badges */
+.trust-badge {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(29, 35, 84, 0.1);
+}
+/* Floating animace pro trust badges (umístění ponecháno – uprostřed pod nápisem) */
+.trust-badge-float {
+  animation: hero-float 6s ease-in-out infinite;
+}
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.hero-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  animation: hero-float 8s ease-in-out infinite;
+}
+.hero-badge-experience {
+  top: 20%;
+  left: 8%;
+  animation-delay: 0s;
+}
+.hero-badge-active {
+  bottom: 18%;
+  left: 12%;
+  animation-delay: 2.2s;
+}
+.hero-badge-mandate {
+  top: 24%;
+  right: 10%;
+  animation-delay: 4.4s;
+}
+
+/* Audit smluv – Hover-Morph Bento (Koncept 4) */
+.audit-morph-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+}
+.audit-morph-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 100% 100%, rgba(79,198,242,0.18) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+}
+.audit-morph-card > * {
+  position: relative;
+  z-index: 1;
+}
+@media (hover: hover) {
+  .audit-morph-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
+    border-color: rgba(79, 198, 242, 0.5);
+  }
+  .audit-morph-card:hover .audit-morph-bg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Pro koho – Persona Switcher (Koncept 1) */
+.persona-tabs {
+  position: relative;
+}
+.persona-btn {
+  position: relative;
+  outline: none;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+.persona-btn:hover {
+  border-color: rgba(79, 198, 242, 0.45);
+  transform: translateY(-1px);
+}
+.persona-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(79, 198, 242, 0.32);
+}
+.persona-btn.active {
+  color: #1D2354;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(79, 198, 242, 0.48);
+  box-shadow: 0 8px 18px rgba(29, 35, 84, 0.1);
+}
+.persona-content { display: none; }
+.persona-content.active { display: block; animation: personaFadeIn 0.4s ease forwards; }
+.persona-content.hidden { display: none !important; }
+@keyframes personaFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pro koho – pozadí sekce (jemně rozostřená fotka) */
+.persona-section {
+  background: linear-gradient(180deg, #f0f9ff 0%, #f8fafc 50%, #ffffff 100%);
+}
+.persona-section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../img/hero3.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(50px);
+  opacity: 0.14;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .persona-section-bg { filter: blur(60px); opacity: 0.12; }
+}
+
+/* Pro koho – karta s efektem mléčného skla (Glassmorphism) */
+.persona-glass-card {
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4) inset, 0 25px 50px -12px rgba(29, 35, 84, 0.12);
+}
+.persona-glass-card-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* Proč já – Osa spolupráce (vlevo) – ponecháno pro případné jiné použití */
+.proc-ja-axis { position: relative; }
+.process-axis { position: relative; }
+.process-line {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.process-line-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(180deg, #0f172a 0%, rgba(79,198,242,0.8) 100%);
+  border-radius: 2px;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.process-node { cursor: default; }
+.process-node .node-circle {
+  border-color: #e2e8f0;
+  background: #fff;
+}
+.process-node.active .node-circle {
+  border-color: #0f172a;
+  background: #0f172a;
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12);
+}
+.process-node.active .node-text { color: #0f172a; }
+.process-node.active .node-text + p { color: #475569; }
+
+/* Proč já – Doc stack „z chaosu řád“ (vpravo, Koncept 4) */
+.doc-stack-container {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.doc-card {
+  position: absolute;
+  width: 220px;
+  min-height: 180px;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, box-shadow 0.4s ease;
+}
+.doc-stack-container .doc-card:nth-child(1) {
+  transform: translate(-40px, 20px) rotate(-12deg);
+  opacity: 0.92;
+  z-index: 1;
+}
+.doc-stack-container .doc-card:nth-child(2) {
+  transform: translate(20px, -15px) rotate(6deg);
+  opacity: 0.94;
+  z-index: 2;
+}
+.doc-stack-container .doc-card:nth-child(3) {
+  transform: translate(-10px, -35px) rotate(18deg);
+  opacity: 1;
+  z-index: 3;
+}
+@media (hover: hover) {
+  .doc-stack-container:hover .doc-card:nth-child(1) {
+    transform: translate(-60px, 0) rotate(0) scale(0.92);
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  }
+  .doc-stack-container:hover .doc-card:nth-child(2) {
+    transform: translate(-60px, 22px) rotate(0) scale(0.96);
+    opacity: 0.95;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  }
+  .doc-stack-container:hover .doc-card:nth-child(3) {
+    transform: translate(-60px, 44px) rotate(0) scale(1);
+    opacity: 1;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+  }
+}
+
+/* Proč já – na mobilu (bez myši): skrýt „Najetím myší“, zobrazit jiný text */
+.proc-ja-hint-hover { display: none; }
+.proc-ja-hint-touch { display: inline; }
+@media (hover: hover) {
+  .proc-ja-hint-hover { display: inline; }
+  .proc-ja-hint-touch { display: none; }
+}
+
+/* Proč já – na mobilu: automatická smyčka chaos → řád → chaos */
+@media (hover: none) {
+  .doc-stack-container.doc-stack-mobile-animate .doc-card:nth-child(1) {
+    animation: doc-stack-card-1 5s ease-in-out infinite;
+  }
+  .doc-stack-container.doc-stack-mobile-animate .doc-card:nth-child(2) {
+    animation: doc-stack-card-2 5s ease-in-out infinite;
+  }
+  .doc-stack-container.doc-stack-mobile-animate .doc-card:nth-child(3) {
+    animation: doc-stack-card-3 5s ease-in-out infinite;
+  }
+}
+@keyframes doc-stack-card-1 {
+  0%, 100% { transform: translate(-40px, 20px) rotate(-12deg); opacity: 0.92; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+  25%, 75% { transform: translate(-60px, 0) rotate(0) scale(0.92); opacity: 0.9; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); }
+  50% { transform: translate(-60px, 0) rotate(0) scale(0.92); opacity: 0.9; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); }
+}
+@keyframes doc-stack-card-2 {
+  0%, 100% { transform: translate(20px, -15px) rotate(6deg); opacity: 0.94; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+  25%, 75% { transform: translate(-60px, 22px) rotate(0) scale(0.96); opacity: 0.95; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08); }
+  50% { transform: translate(-60px, 22px) rotate(0) scale(0.96); opacity: 0.95; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08); }
+}
+@keyframes doc-stack-card-3 {
+  0%, 100% { transform: translate(-10px, -35px) rotate(18deg); opacity: 1; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+  25%, 75% { transform: translate(-60px, 44px) rotate(0) scale(1); opacity: 1; box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12); }
+  50% { transform: translate(-60px, 44px) rotate(0) scale(1); opacity: 1; box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12); }
+}
+
+/* QUICK-CALC WIDGET – plovoucí kalkulačky vpravo dole */
+.qc-widget {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+}
+.qc-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 10px 24px rgba(22, 163, 74, 0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.qc-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(22, 163, 74, 0.4), inset 0 1px 0 rgba(255,255,255,0.65);
+}
+.qc-panel {
+  position: absolute;
+  right: 0;
+  bottom: 72px;
+  width: 320px;
+  max-width: calc(100vw - 40px);
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  padding: 1.25rem 1.25rem 1.4rem;
+  border: 1px solid #e2e8f0;
+  transform-origin: bottom right;
+  transform: scale(0.9) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.qc-widget.open .qc-panel {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+.qc-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.9rem;
+  text-decoration: none;
+  color: #0f172a;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.qc-link:hover {
+  background: #f0fdf4;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(22, 163, 74, 0.18);
+}
+.qc-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #ecfdf3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #15803d;
+}
+@media (max-width: 480px) {
+  .qc-widget {
+    right: 14px;
+    bottom: 14px;
+  }
+  .qc-button {
+    width: 52px;
+    height: 52px;
+  }
+}
 
 /* Header vs Hero – main má padding-top podle výšky headeru */
 .main-with-header { padding-top: 72px; }
@@ -479,6 +861,16 @@ body {
   padding: 72px 20px;
   max-width: 1100px;
   margin: 0 auto;
+}
+@media (max-width: 639px) {
+  .faq-section {
+    padding: 3rem max(1rem, env(safe-area-inset-left)) 3rem max(1rem, env(safe-area-inset-right));
+  }
+  .faq-head h2 { font-size: 1.35rem; }
+  .faq-sub { font-size: 0.9375rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .faq-section { padding: 4rem 1.5rem; }
 }
 
 .faq-head {
@@ -902,19 +1294,109 @@ body {
   z-index: 2;
 }
 
+/* Služby – accordion karty: každá karta má vlastní dropdown s popisem + CTA */
+.sluzby-accordion-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.sluzby-accordion-card:hover {
+  box-shadow: 0 8px 24px rgba(29, 35, 84, 0.12);
+}
+.sluzby-accordion-card.is-open {
+  box-shadow: 0 8px 24px rgba(29, 35, 84, 0.15);
+}
+.sluzby-acc-trigger {
+  background: none;
+  border: none;
+  outline: none;
+}
+.sluzby-acc-trigger[aria-expanded="true"] .sluzby-acc-chevron {
+  transform: rotate(180deg);
+}
+.sluzby-acc-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+.sluzby-acc-panel > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.sluzby-accordion-card.is-open .sluzby-acc-panel {
+  max-height: 260px;
+  opacity: 1;
+}
+.sluzby-acc-cta {
+  background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
+  box-shadow: 4px 4px 12px rgba(29, 35, 84, 0.2);
+  border: 1px solid rgba(29, 35, 84, 0.4);
+  /* Kompaktnější CTA (bez přepáleného paddingu) */
+  padding: 0.68rem 1rem !important;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  margin-bottom: 0 !important;
+  margin-top: 0.15rem;
+}
+.sluzby-acc-cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 6px 6px 16px rgba(29, 35, 84, 0.25);
+}
+
+/* Dropdown panel – jen CTA odkazy, bílé pozadí, čitelný text */
+.sluzby-cta-dropdown-panel {
+  color: #0f172a;
+}
+.sluzby-cta-link {
+  display: block;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 4px 4px 12px rgba(29, 35, 84, 0.2);
+  border: 1px solid rgba(29, 35, 84, 0.4);
+}
+.sluzby-cta-link:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 6px 6px 16px rgba(29, 35, 84, 0.25);
+}
+
 /* Ikony v kartách – světlejší glass */
 .sluzby-icon-glass {
   box-shadow: none;
   background: rgba(255, 255, 255, 0.5) !important;
-  border-color: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-/* Služby – iOS Glass Morphism Style (bez ořezávání při hoveru) */
+/* Služby – dropdown (vyjede popis + CTA) – ponecháno pro jiné stránky */
+.sluzby-dropdown-trigger {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.sluzby-dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.sluzby-dropdown-item.is-open .sluzby-dropdown-panel {
+  grid-template-rows: 1fr;
+}
+.sluzby-dropdown-item.is-open .sluzby-dropdown-chevron {
+  transform: rotate(180deg);
+}
+.sluzby-dropdown-list .sluzby-cta-glass {
+  margin-top: 0;
+}
+
+/* Služby – karty (grid i starý accordion) */
 .sluzby-card-glass {
   position: relative;
   overflow: visible;
 }
-/* Text v kartách Moje služby – tmavě modré */
 .sluzby-glass-inner h3,
 .sluzby-glass-inner .text-brand-text {
   color: #1D2354;
@@ -947,13 +1429,14 @@ body {
   }
 }
 
-/* CTA – jednotný vzhled s .lead-cta-btn (neuro UI, navy gradient) */
+/* CTA v kartách služeb – větší vertikální padding pro lepší vzhled */
 .sluzby-cta-glass {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
+  padding: 1rem 1.5rem;
+  min-height: 3.25rem;
   background: linear-gradient(135deg, #1D2354 0%, #2a3366 100%);
   border: 1px solid rgba(29, 35, 84, 0.5);
   color: #ffffff;
@@ -1115,9 +1598,9 @@ body {
   filter: drop-shadow(0 0 24px rgba(79, 198, 242, .6)) drop-shadow(0 0 48px rgba(79, 198, 242, .35));
 }
 
-/* Shimmer na bílém textu – PB cyan */
+/* Shimmer na bílém textu – světlý dojem (bílá + jemný cyan) */
 .text-gradient-shimmer-light {
-  background: linear-gradient(90deg, #fff 0%, #4FC6F2 40%, #fff 60%, #4FC6F2 100%);
+  background: linear-gradient(90deg, #ffffff 0%, #c5edfa 35%, #ffffff 50%, #b8e9f8 65%, #ffffff 100%);
   background-size: 200% auto;
   color: transparent;
   -webkit-background-clip: text;
@@ -1155,50 +1638,47 @@ body {
 @media (min-width: 1024px) {
   .reference-container { padding-left: 2rem; padding-right: 2rem; }
 }
-/* Reference – grab & scroll s blur na krajích */
-.reviews-scroll-wrap {
+/* Reference – Focus Marquee (plynulé reference) */
+.reference-marquee {
   position: relative;
-  max-width: 100%;
   overflow: hidden;
 }
-.reviews-scroll {
+.reference-marquee-white .reference-marquee-fade-left {
+  background: linear-gradient(to right, #ffffff 0%, transparent 100%);
+}
+.reference-marquee-white .reference-marquee-fade-right {
+  background: linear-gradient(to left, #ffffff 0%, transparent 100%);
+}
+.marquee-viewport {
+  overflow: hidden;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.marquee-wrapper {
+  display: flex;
+  width: max-content;
+}
+.marquee-track {
   display: flex;
   gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 1.5rem 10%;
-  cursor: grab;
-  -webkit-overflow-scrolling: touch;
+  padding: 0 1.25rem;
 }
-.reviews-scroll:active {
-  cursor: grabbing;
+.animate-marquee {
+  animation: reference-marquee 36s linear infinite;
 }
-.reviews-scroll::-webkit-scrollbar {
-  display: none;
+/* Pause jen při najetí na kartu recenze (ne na celou sekci) – řízeno JS třídou .marquee-paused */
+.reference-marquee.marquee-paused .animate-marquee {
+  animation-play-state: paused;
 }
-.reviews-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.reviews-arrows {
-  gap: 1rem;
-}
-.reviews-arrow-btn {
-  flex-shrink: 0;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-}
-.reviews-arrow-btn:hover {
-  background: rgba(79, 198, 242, 0.2);
-  border-color: #4FC6F2;
-}
-.reviews-arrow-btn:active {
-  transform: scale(0.96);
+@keyframes reference-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 .review-scroll-card {
   flex: 0 0 auto;
   width: 380px;
   max-width: 85vw;
+  min-width: 280px;
   scroll-snap-align: center;
   border-radius: 1.25rem;
   background: rgba(255, 255, 255, 0.95);
@@ -1211,8 +1691,16 @@ body {
   opacity: var(--review-opacity, 1);
   filter: blur(var(--review-blur, 0));
   z-index: var(--review-z, 1);
-  transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   position: relative;
+}
+@media (hover: hover) {
+  .review-scroll-card:hover {
+    transform: scale(1.05) translateY(-6px);
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(29, 35, 84, 0.15);
+    border-color: #4FC6F2;
+  }
 }
 .review-scroll-quote {
   font-size: 0.9375rem;
@@ -1277,8 +1765,8 @@ body {
 }
 .review-scroll-google svg { width: 100%; height: 100%; display: block; }
 
-/* Fade overlays – blur na krajích */
-.reviews-scroll-fade {
+/* Reference – fade overlays na krajích */
+.reference-marquee-fade {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -1286,19 +1774,15 @@ body {
   pointer-events: none;
   z-index: 10;
 }
-.reviews-scroll-fade--left {
+.reference-marquee-fade-left {
   left: 0;
   background: linear-gradient(to right, rgba(29, 35, 84, 1) 0%, transparent 100%);
 }
-.reviews-scroll-fade--right {
+.reference-marquee-fade-right {
   right: 0;
   background: linear-gradient(to left, rgba(29, 35, 84, 1) 0%, transparent 100%);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reviews-scroll { scroll-behavior: auto; }
-  .review-scroll-card { transition: none; }
-}
 
 /* Lead form – fotka na pozadí (opacity 40), rotating gradient border na kartě */
 .lead-form-section {
@@ -1368,13 +1852,72 @@ body {
   box-shadow: 8px 8px 18px rgba(29, 35, 84, 0.3), -3px -3px 10px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-/* Moje cesta – horizontal scroll (Portfolio & Focus Areas styl z Aurora) */
-.moje-cesta-portfolio .moje-cesta-horizontal {
-  width: 800%;
-  flex-wrap: nowrap;
+/* Moje cesta – Koncept 5 z UI UX inspi */
+#moje-cesta .timeline-section {
+  position: relative;
 }
-.moje-cesta-portfolio .moje-cesta-title-block {
-  flex-shrink: 0;
+#moje-cesta .timeline-year {
+  position: sticky;
+  top: 2rem;
+  font-size: 5.25rem; /* o 30 % menší než předchozí 7.5rem */
+  line-height: 1;
+}
+@media (max-width: 639px) {
+  #moje-cesta .timeline-year { font-size: 3.5rem; top: 1rem; }
+  #moje-cesta .timeline-section { gap: 1rem; margin-bottom: 1.75rem; }
+  #moje-cesta .timeline-content h3 { font-size: 1.25rem; }
+  #moje-cesta .timeline-content p { font-size: 0.9375rem; }
+}
+@media (min-width: 640px) and (max-width: 767px) {
+  #moje-cesta .timeline-year { font-size: 4.25rem; }
+  #moje-cesta .timeline-section { margin-bottom: 2rem; }
+}
+@media (min-width: 768px) {
+  #moje-cesta .timeline-year { font-size: 5.6rem; }
+}
+/* Pravý sloupec vyplní mezeru (celá šířka 2/3), text pod fotkou zarovnaný */
+#moje-cesta .timeline-content {
+  width: 100%;
+}
+/* Všechny fotky stejné rozměry – vyplní šířku sloupce, pevná výška o trochu větší */
+#moje-cesta .timeline-photo {
+  display: block;
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+@media (max-width: 639px) {
+  #moje-cesta .timeline-photo { height: 200px; }
+}
+/* 2015: ořez šetrný k hlavám */
+#moje-cesta .timeline-photo-2015 {
+  object-position: center 30%;
+}
+@media (min-width: 768px) {
+  #moje-cesta .timeline-photo { height: 280px; }
+}
+/* Hard stop proti "vylití" timeline mimo vlastní sekci/box */
+#moje-cesta {
+  contain: layout;
+  overflow: hidden;
+}
+#moje-cesta > .max-w-5xl {
+  overflow: hidden;
+}
+#moje-cesta .bg-white.rounded-3xl {
+  overflow-y: auto;
+  overflow-x: hidden;
+  isolation: isolate;
+  position: relative;
+}
+
+/* Služby – méně průhledné, čitelnější glass */
+.sluzby-accordion-card {
+  /* Zachovaný glass efekt, ale méně průhledný a lépe čitelný */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.78)) !important;
+  border-color: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(14px) saturate(1.1) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.1) !important;
 }
 
 /* Pobočky – bento grid s fotkami, trailing overlay + rozsvícení fotky na hover */
@@ -1668,5 +2211,145 @@ img {
   max-width: 100%;
   height: auto;
   object-fit: contain;
+}
+
+/* ========== MOBIL / TABLET / NOTEBOOK – komplexní optimalizace ========== */
+
+/* Sekce – vertikální spacing (mobil menší, tablet/notebook větší) */
+@media (max-width: 639px) {
+  section.py-12 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+  section.py-16 { padding-top: 3rem; padding-bottom: 3rem; }
+  #muj-postup .mb-10, #sluzby .mb-10 { margin-bottom: 2rem; }
+  #investicni-projekce .mb-10 { margin-bottom: 1.5rem; }
+  .reference-section .py-16 { padding-top: 3rem; padding-bottom: 3rem; }
+  #blog.py-20 { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+}
+
+/* Header – kontejner a CTA na úzkých displejích */
+@media (max-width: 639px) {
+  .header-inner { padding-left: 0.75rem; padding-right: 0.75rem; padding-top: 0.5rem; }
+  .header-inner .px-3 { padding-left: 0.5rem; padding-right: 0.5rem; }
+  a.header-cta span { font-size: 0.8125rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .header-inner { padding-left: 1rem; padding-right: 1rem; }
+}
+
+/* Pro koho – persona karta a záložky */
+@media (max-width: 639px) {
+  .persona-glass-card { padding: 1.25rem 1rem !important; }
+  .persona-tabs { gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .persona-btn { padding: 0.5rem 0.75rem; font-size: 0.8125rem; }
+  .persona-content h3 { font-size: 1.25rem !important; }
+  .persona-content .py-6 { padding-top: 1rem; padding-bottom: 1rem; }
+  .persona-content .w-16.h-16 { width: 3rem; height: 3rem; }
+  .persona-content .w-16.h-16 svg { width: 1.5rem; height: 1.5rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .persona-glass-card { padding: 1.5rem !important; }
+  .persona-tabs { margin-bottom: 2rem; }
+}
+
+/* Služby – karty a accordion na tabletu */
+@media (max-width: 639px) {
+  .sluzby-accordion-card .sluzby-acc-trigger { padding: 1rem 1.25rem !important; }
+  .sluzby-accordion-card h3 { font-size: 1.0625rem !important; }
+  .sluzby-accordion-card .sluzby-acc-panel .px-5 { padding-left: 1rem; padding-right: 1rem; padding-bottom: 1rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #sluzby .grid { gap: 1rem; }
+}
+
+/* Moje cesta – bílý box padding a výška */
+@media (max-width: 639px) {
+  #moje-cesta .moje-cesta-box { min-height: 400px; max-height: 70vh; }
+  #moje-cesta .text-center.mb-8 h2 { font-size: 1.5rem; }
+  #moje-cesta .text-center.mb-8 h2 span { font-size: 1.25rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #moje-cesta .moje-cesta-box { min-height: 500px; }
+}
+
+/* Pobočky – bento na tabletu (2 sloupce) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bento-grid { gap: 1rem; }
+  .bento-card-content { padding: 1rem; }
+  .bento-city { font-size: 1.125rem; }
+}
+
+/* Reference – marquee viewport a kontejner */
+@media (max-width: 639px) {
+  .reference-container { padding-left: 1rem; padding-right: 1rem; }
+  .reference-marquee-white { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .marquee-track { padding-left: 0.75rem; padding-right: 0.75rem; gap: 1rem; }
+  .review-scroll-card { padding: 1.25rem 1rem; }
+  .review-scroll-quote { font-size: 0.875rem; -webkit-line-clamp: 4; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .reference-container { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+/* Kontakt / lead form */
+@media (max-width: 639px) {
+  #kontakt { padding-top: 2.5rem; padding-bottom: 2.5rem; min-height: 480px; }
+  #kontakt .smart-choice { padding: 0.875rem 1rem; font-size: 0.9375rem; }
+  #kontakt .section-title { font-size: 1.35rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #kontakt { padding-top: 3rem; padding-bottom: 3rem; }
+}
+
+/* Footer – mřížka a mezery (mobil 2 sloupce, tablet 3, notebook 6) */
+@media (max-width: 639px) {
+  .footer-inner { padding-left: 1rem; padding-right: 1rem; padding-top: 2rem; padding-bottom: 2rem; }
+  .footer-inner .grid { gap: 1.75rem; margin-bottom: 2rem; }
+  .footer-inner .grid > div { min-width: 0; }
+  .footer-inner h4 { font-size: 0.75rem; margin-bottom: 0.75rem; }
+  .footer-inner ul { font-size: 0.8125rem; }
+  .footer-inner .border-t.pt-8 { padding-top: 1.5rem; }
+  .footer-inner .border-t .flex-col { gap: 0.75rem; }
+  .footer-inner .max-w-3xl.text-slate-500 { font-size: 0.65rem; line-height: 1.4; }
+}
+@media (min-width: 640px) and (max-width: 767px) {
+  .footer-inner .grid { gap: 2rem; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .footer-inner { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .footer-inner .grid { gap: 2.5rem; }
+}
+
+/* Investiční filozofie – chart a text na tabletu */
+@media (max-width: 639px) {
+  #investicni-projekce .chart-card-tilt { padding: 1rem !important; }
+  #investicni-projekce .wealth-chart-svg-wrap { height: 200px; }
+  #investicni-projekce h2 { font-size: 1.35rem; }
+  #investicni-projekce .space-y-4 li { font-size: 0.9375rem; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #investicni-projekce .lg\\:mb-0 { margin-bottom: 2rem; }
+  #investicni-projekce .chart-card-tilt { padding: 1.5rem; }
+}
+
+/* Můj postup – bento karty na tabletu (čitelnější) */
+@media (max-width: 639px) {
+  #postup-bento .postup-item { padding: 1.25rem !important; }
+  #postup-bento h3 { font-size: 1.125rem !important; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #postup-bento { max-width: 36rem; margin-left: auto; margin-right: auto; }
+}
+
+/* Blog – karty na mobilu */
+@media (max-width: 639px) {
+  #blog .gap-6 { gap: 1.25rem; }
+  #blog article .p-6 { padding: 1rem; }
+  #blog .text-lg { font-size: 1rem; }
+}
+
+/* FAQ – tlačítka a odpovědi na mobilu */
+@media (max-width: 639px) {
+  .faq-q { padding: 0.875rem 1rem; font-size: 0.875rem; }
+  .faq-answer { padding: 1rem; }
+  .faq-a { font-size: 0.9375rem; }
 }
 
