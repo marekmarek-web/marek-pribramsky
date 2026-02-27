@@ -26,6 +26,13 @@ Osobní web finančního poradce. Statický HTML/CSS/JS s Tailwind, GSAP a Chart
 
 Stačí otevřít `index.html` v prohlížeči nebo použít např. Live Server.
 
+## Git a nasazení
+
+- **Hlavní větev:** `main`. Všechny změny commitovat a pushovat na `main`.
+- **GitHub Pages:** V repozitáři na GitHubu: **Settings → Pages** → Source: **Deploy from a branch** → Branch: **main** (složka `/`). Uložit.
+- Starou větev `master` lze po přepnutí výchozí větve na `main` smazat na remote:  
+  `git push origin --delete master`
+
 ## Build pro produkci (Tailwind CSS)
 
 Pro ostrý web se používá zkompilované CSS místo CDN (rychlejší načítání, žádné FOUC).
