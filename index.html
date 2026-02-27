@@ -45,7 +45,7 @@
   }
   </script>
 </head>
-<body class="bg-white text-brand-text antialiased">
+<body class="text-brand-text antialiased">
 
   <!-- Preloader (Aurora style) -->
   <div class="loader" id="loader">
@@ -57,9 +57,9 @@
     </div>
   </div>
 
-  <header id="main-header" class="header-entry fixed top-0 left-0 right-0 z-50 transform -translate-y-full transition-transform duration-500 ease-out" role="banner">
+  <header id="main-header" class="header-entry fixed top-0 left-0 right-0 z-50 transition-transform duration-500 ease-out" role="banner">
   <div class="header-inner max-w-6xl mx-auto px-4 pt-4 pb-2">
-    <div class="bg-white rounded-full border border-slate-200 shadow-sm px-3 py-2 flex justify-between items-center gap-3">
+    <div class="header-pill-glass px-3 py-2 flex justify-between items-center gap-3">
       <a href="https://www.marekpribramsky.cz/" class="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white/90 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0" aria-label="Úvodní stránka">
         <img src="assets/img/logos/pb-logo-no-bg.png" alt="Premium Brokers" class="h-8 w-auto" />
       </a>
@@ -99,7 +99,7 @@
       </nav>
       <a href="https://www.marekpribramsky.cz/#kontakt" class="header-cta lead-cta-btn flex items-center justify-center gap-2 rounded-full text-white px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0 no-underline">
         <span>Kontaktujte mě</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
     </div>
   </div>
@@ -116,7 +116,7 @@
       <div class="hero-content relative z-10 text-center max-w-5xl mx-auto px-4 pt-20">
         <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] text-white hero-text-shadow">
           <div class="text-reveal-mask"><span class="text-reveal-line">Jsem</span></div>
-          <div class="text-reveal-mask"><span class="text-reveal-line text-gradient-shimmer-light">Marek Příbramský.</span></div>
+          <div class="text-reveal-mask"><span class="text-reveal-line text-gradient-shimmer-blue">Marek Příbramský.</span></div>
         </h1>
         <p class="hero-subtitle mt-8 text-lg sm:text-xl text-white/90 opacity-0 hero-text-shadow">Pomůžu Vám splnit Vaše cíle.</p>
 
@@ -291,7 +291,7 @@
 
           <div id="persona-rodina" class="persona-content active text-center max-w-2xl mx-auto py-6" role="tabpanel" aria-labelledby="tab-rodina">
             <div class="w-16 h-16 bg-brand-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-brand-navy">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.72m11.856-3.041a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0118 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0112 18.72"/></svg>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             </div>
             <h3 class="text-2xl font-bold text-brand-text mb-4">Zajistím klid pro vaši rodinu</h3>
             <p class="text-brand-muted leading-relaxed mb-6">Plán rezerv, spoření dětem, hypotéka na nové bydlení a ochrana příjmu, když se něco pokazí. Vše v jednom srozumitelném plánu.</p>
@@ -320,7 +320,7 @@
 
     <!-- SLUŽBY – 3x2 mřížka, každá karta má vlastní accordion (ikona+nadpis+podnadpis → klik → popis + CTA) -->
     <section id="sluzby" class="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 relative overflow-visible sluzby-section-bg">
-      <div class="absolute inset-0 bg-black/45 z-[1]"></div>
+      <div class="absolute inset-0 bg-black/80 z-[1]" aria-hidden="true"></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-10 lg:mb-12 animate-fade-in-up">
           <span class="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-md border border-white/70 text-white font-bold text-xs tracking-widest uppercase mb-4 shadow-sm">PORTFOLIO</span>
@@ -343,7 +343,7 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Vytvořím pro vás portfolio na míru, které odolá inflaci a zajistí vám rentu. Využívám nízkonákladové ETF fondy.</p>
                 <a href="https://www.marekpribramsky.cz/investicnikalkulacka" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Spočítejte si investice
                 </a>
               </div>
@@ -364,7 +364,7 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Pomohu vám nastavit hypotéku tak, aby vás nezatížila, a poradím, jak na refinancování nebo čerpání úvěru pro vaše bydlení.</p>
                 <a href="https://www.marekpribramsky.cz/hypotecnikalkulacka" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Hypoteční kalkulačka
                 </a>
               </div>
@@ -385,18 +385,18 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Provedu audit vašich smluv, odstraním duplicity a nastavím krytí tak, aby vás skutečně chránilo v kritických situacích.</p>
                 <a href="https://www.marekpribramsky.cz/#kontakt" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Nastavení pojištění
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- 4 – Úvěry a konsolidace -->
+          <!-- 4 – Úvěry a konsolidace (ikona: bankovky / konsolidace) -->
           <div class="sluzby-accordion-card rounded-2xl bg-white/[0.97] backdrop-blur-xl border border-white/80 shadow-lg overflow-hidden">
             <button type="button" class="sluzby-acc-trigger w-full p-5 sm:p-6 flex flex-col items-center text-center cursor-pointer" aria-expanded="false">
               <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-cyan/10 flex items-center justify-center shrink-0 mb-3">
-                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18.75v-1.5m0 1.5v-1.5m0 0h3.75m-3.75 0h3.75m-3.75 0h-3.75m0 0h-3.75m0 0V15m0 0v1.5m0-1.5V15m0 3h3.75m-3.75 0h3.75m-3.75 0H18M9 10.5h.008v.008H9V10.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
               <h3 class="text-lg sm:text-xl font-bold text-brand-navy">Úvěry a konsolidace</h3>
               <p class="text-slate-600 text-sm mt-1">Optimalizace dluhů</p>
@@ -406,18 +406,18 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Máte více půjček? Pomohu vám je sloučit do jedné, snížit měsíční splátku a celkově ušetřit na nákladech.</p>
                 <a href="https://www.marekpribramsky.cz/#kontakt" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Spočítat úsporu
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- 5 – Doplňkové penzijní spoření -->
+          <!-- 5 – Doplňkové penzijní spoření (ikona: kalendář / důchod v čase) -->
           <div class="sluzby-accordion-card rounded-2xl bg-white/[0.97] backdrop-blur-xl border border-white/80 shadow-lg overflow-hidden">
             <button type="button" class="sluzby-acc-trigger w-full p-5 sm:p-6 flex flex-col items-center text-center cursor-pointer" aria-expanded="false">
               <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-cyan/10 flex items-center justify-center shrink-0 mb-3">
-                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
               </div>
               <h3 class="text-lg sm:text-xl font-bold text-brand-navy">Doplňkové penzijní spoření</h3>
               <p class="text-slate-600 text-sm mt-1">Státní příspěvky</p>
@@ -427,18 +427,18 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Získejte ze státu maximum. Pomohu vám nastavit penzijní spoření tak, abyste využili všechny státní příspěvky a daňové úlevy naplno.</p>
                 <a href="https://www.marekpribramsky.cz/penzijnikalkulacka" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Optimální nastavení penze
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- 6 – Realitní služby -->
+          <!-- 6 – Realitní služby (ikona: klíč / nemovitost) -->
           <div class="sluzby-accordion-card rounded-2xl bg-white/[0.97] backdrop-blur-xl border border-white/80 shadow-lg overflow-hidden">
             <button type="button" class="sluzby-acc-trigger w-full p-5 sm:p-6 flex flex-col items-center text-center cursor-pointer" aria-expanded="false">
               <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-cyan/10 flex items-center justify-center shrink-0 mb-3">
-                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
               </div>
               <h3 class="text-lg sm:text-xl font-bold text-brand-navy">Realitní služby</h3>
               <p class="text-slate-600 text-sm mt-1">Prodej, nákup a pronájem</p>
@@ -448,7 +448,7 @@
               <div class="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
                 <p class="text-slate-700 text-sm mb-4">Komplexní servis při prodeji či nákupu nemovitostí. Zajistím tržní odhad, profesionální prezentaci, právní servis a bezpečný převod.</p>
                 <a href="https://www.marekpribramsky.cz/#kontakt" class="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   Konzultace realit
                 </a>
               </div>
@@ -460,8 +460,9 @@
     </section>
 
     <!-- MOJE CESTA – Koncept 5 z UI UX inspi.txt (1:1 struktura, vyměněny roky/fotky/texty) -->
-    <section id="moje-cesta" class="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#EAF3FF] text-brand-navy" style="contain:layout" aria-label="Moje cesta">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="moje-cesta" class="moje-cesta-section py-12 sm:py-16 md:py-20 lg:py-24 bg-[#EAF3FF] text-brand-navy relative overflow-hidden" style="contain:layout" aria-label="Moje cesta">
+      <div class="moje-cesta-bg-deco" aria-hidden="true"></div>
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center mb-8 sm:mb-10 lg:mb-12">
           <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">Moje cesta &<br><span class="italic text-brand-cyan font-bold">Klíčové milníky</span></h2>
         </div>

@@ -407,8 +407,8 @@ body {
   z-index: 60;
 }
 .qc-button {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   border: none;
   outline: none;
@@ -427,7 +427,7 @@ body {
 .qc-panel {
   position: absolute;
   right: 0;
-  bottom: 72px;
+  bottom: 80px;
   width: 320px;
   max-width: calc(100vw - 40px);
   background: #ffffff;
@@ -477,8 +477,8 @@ body {
     bottom: 14px;
   }
   .qc-button {
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
   }
 }
 
@@ -774,8 +774,10 @@ body {
   .animate-fade-in-up.visible { transition: none; }
   .animate-fade-in-up.visible[data-delay] { transition-delay: 0ms; }
   .text-gradient-shimmer,
-  .text-gradient-shimmer-light { animation: none; }
-  .text-gradient-shimmer-light { color: #fff; -webkit-text-fill-color: #fff; background: none; }
+  .text-gradient-shimmer-light,
+  .text-gradient-shimmer-blue { animation: none; }
+  .text-gradient-shimmer-light,
+  .text-gradient-shimmer-blue { color: #fff; -webkit-text-fill-color: #fff; background: none; }
   .btn-shimmer::before { animation: none; }
   .gradient-border-card::before { animation: none; }
 }
@@ -1506,8 +1508,38 @@ body {
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   background-color: rgba(234, 243, 255, 0.92);
 }
+/* Body – světlé pozadí, aby horní pruh (když je header skrytý) nebyl modrý */
+body { background-color: #F9FAFC; }
+#main-header {
+  transform: translateY(-100%);
+  background-color: transparent !important;
+  min-height: 72px;
+}
 #main-header.visible {
   transform: translateY(0);
+}
+/* Header pill – lehký glass neuro (průhledný, blur, jemné stíny) */
+.header-pill-glass {
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 4px 20px rgba(29, 35, 84, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+/* Header – stejná barva jako hero overlay (tmavý průhled) */
+.header-bg-hero-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.header-bar-glass {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.header-logo-on-dark {
+  filter: brightness(0) invert(1);
 }
 
 /* Gradient background sections – zleva doprava (použito jinde) */
@@ -1608,6 +1640,20 @@ body {
   animation: shimmer-text-light 6s ease-in-out infinite;
 }
 @keyframes shimmer-text-light {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Hero jméno – modrý (brand) shimmer přes bílý text */
+.text-gradient-shimmer-blue {
+  background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 25%, #4FC6F2 50%, #38bdf8 75%, #ffffff 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer-text-blue 4s ease-in-out infinite;
+}
+@keyframes shimmer-text-blue {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
@@ -1896,6 +1942,37 @@ body {
 @media (min-width: 768px) {
   #moje-cesta .timeline-photo { height: 280px; }
 }
+/* Moje cesta – lehký gradient + kolečko v pozadí (UX dekor) */
+.moje-cesta-bg-deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, rgba(79, 198, 242, 0.08) 0%, rgba(234, 243, 255, 0.6) 35%, transparent 65%);
+}
+.moje-cesta-bg-deco::before {
+  content: '';
+  position: absolute;
+  width: min(85vw, 520px);
+  height: min(85vw, 520px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 198, 242, 0.18) 0%, rgba(79, 198, 242, 0.06) 45%, transparent 70%);
+  top: -15%;
+  right: -12%;
+  filter: blur(48px);
+}
+.moje-cesta-bg-deco::after {
+  content: '';
+  position: absolute;
+  width: min(60vw, 360px);
+  height: min(60vw, 360px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29, 35, 84, 0.06) 0%, transparent 65%);
+  bottom: -10%;
+  left: -8%;
+  filter: blur(40px);
+}
+
 /* Hard stop proti "vylití" timeline mimo vlastní sekci/box */
 #moje-cesta {
   contain: layout;

@@ -345,7 +345,7 @@ function init() {
   if (mainHeader) {
     function updateHeaderVisibility() {
       var sy = window.scrollY;
-      mainHeader.classList.toggle('visible', sy > 60);
+      mainHeader.classList.toggle('visible', sy > 140);
     }
     window.addEventListener('scroll', updateHeaderVisibility, { passive: true });
     updateHeaderVisibility();
