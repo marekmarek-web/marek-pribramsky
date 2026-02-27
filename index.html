@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Marek Příbramský – Privátní finanční plánování</title>
   <meta name="description" content="Marek Příbramský – finanční poradce. Pomáhám rodinám a podnikatelům sestavit strategie, které dávají smysl. Investice, hypotéky, pojištění.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Tailwind – lokální build (funguje na GitHub Pages bez závislosti na CDN) -->
   <link rel="stylesheet" href="assets/css/tailwind.css">
   <style>
@@ -24,7 +27,6 @@
     .lead-cta-btn:disabled { opacity: 0.75; cursor: not-allowed; }
   </style>
   <link rel="stylesheet" href="assets/css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -61,22 +63,11 @@
   <div class="header-inner max-w-6xl mx-auto px-4 pt-4 pb-2">
     <div class="header-pill-glass px-3 py-2 flex justify-between items-center gap-3">
       <a href="https://www.marekpribramsky.cz/" class="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white/90 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0" aria-label="Úvodní stránka">
-        <img src="assets/img/logos/pb-logo-no-bg.png" alt="Premium Brokers" class="h-8 w-auto" />
+        <img src="assets/img/logos/pb-logo-no-bg.png" alt="Premium Brokers" class="h-8 w-auto" width="120" height="40" />
       </a>
       <button id="mobile-menu-btn" type="button" class="hamburger-btn md:hidden flex items-center justify-center w-11 h-11 rounded-full text-slate-700 hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
-      <nav id="mobile-menu" class="mobile-nav-drawer fixed inset-0 z-40 md:hidden" aria-label="Mobilní navigace" aria-hidden="true">
-        <div class="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden="true"></div>
-        <div class="mobile-nav-panel absolute top-0 right-0 w-full max-w-sm h-full bg-white shadow-2xl flex flex-col pt-20 px-6 pb-8">
-          <a href="https://www.marekpribramsky.cz/#proc-ja" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">O mně</a>
-          <a href="https://www.marekpribramsky.cz/#sluzby" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Služby</a>
-          <a href="https://www.marekpribramsky.cz/#kontakt" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Spolupráce</a>
-          <a href="https://www.marekpribramsky.cz/kalkulacky" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Kalkulačky</a>
-          <a href="https://www.marekpribramsky.cz/blog" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Blog</a>
-          <a href="https://www.marekpribramsky.cz/#kontakt" class="mobile-nav-link lead-cta-btn mt-4 py-4 rounded-xl text-white font-semibold text-center no-underline">Kontaktujte mě</a>
-        </div>
-      </nav>
       <nav class="hidden md:flex items-center gap-1" aria-label="Hlavní navigace">
         <a href="https://www.marekpribramsky.cz/#proc-ja" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">O mně</a>
         <a href="https://www.marekpribramsky.cz/#sluzby" class="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1">Služby</a>
@@ -105,12 +96,25 @@
   </div>
 </header>
 
+  <!-- Mobilní menu – mimo header (kvůli transform), fixed viewport -->
+  <nav id="mobile-menu" class="mobile-nav-drawer fixed inset-0 z-[9999] md:hidden" aria-label="Mobilní navigace" aria-hidden="true">
+    <div class="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden="true"></div>
+    <div class="mobile-nav-panel absolute top-0 right-0 w-full max-w-sm h-full flex flex-col pt-20 px-6 pb-8">
+      <a href="https://www.marekpribramsky.cz/#proc-ja" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">O mně</a>
+      <a href="https://www.marekpribramsky.cz/#sluzby" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Služby</a>
+      <a href="https://www.marekpribramsky.cz/#kontakt" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Spolupráce</a>
+      <a href="https://www.marekpribramsky.cz/kalkulacky" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Kalkulačky</a>
+      <a href="https://www.marekpribramsky.cz/blog" class="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100">Blog</a>
+      <a href="https://www.marekpribramsky.cz/#kontakt" class="mobile-nav-link lead-cta-btn mt-4 py-4 rounded-xl text-white font-semibold text-center no-underline">Kontaktujte mě</a>
+    </div>
+  </nav>
+
   <main class="main-with-header">
     <!-- HERO – responzivní inset a zaoblené rohy (mobil/tablet/notebook) -->
     <section id="hero" class="hero-aurora hero-entry relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-brand-navy">
       <div class="hero-image-wrapper absolute inset-3 sm:inset-4 md:inset-6 z-0 overflow-hidden rounded-[1rem] sm:rounded-[1.25rem] md:rounded-[1.5rem] shadow-2xl">
         <div class="absolute inset-0 bg-brand-navy" aria-hidden="true"></div>
-        <img src="assets/img/hero3.jpg" alt="Marek Příbramský" class="hero-img-full block w-full h-full relative z-[1]" />
+        <img src="assets/img/hero3.jpg" alt="Marek Příbramský" class="hero-img-full block w-full h-full relative z-[1]" fetchpriority="high" width="1200" height="800" />
         <div class="hero-overlay absolute inset-0 bg-black/50 pointer-events-none z-[2]" aria-hidden="true"></div>
       </div>
       <div class="hero-content relative z-10 text-center max-w-5xl mx-auto px-4 pt-20">
@@ -474,7 +478,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2013</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2013.jpg" class="timeline-photo rounded-2xl mb-4" alt="2013">
+                        <img src="assets/img/2013.jpg" class="timeline-photo rounded-2xl mb-4" alt="2013" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">První kroky v OVB</h3>
                         <p class="text-slate-500 mt-2">Během studia 5. ročníku na ekonomické VŠ jsem začal pracovat v OVB Allfinanz a.s.</p>
                     </div>
@@ -485,7 +489,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2015</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2015.png" class="timeline-photo timeline-photo-2015 rounded-2xl mb-4" alt="2015">
+                        <img src="assets/img/2015.png" class="timeline-photo timeline-photo-2015 rounded-2xl mb-4" alt="2015" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Přestup do FINGO</h3>
                         <p class="text-slate-500 mt-2">Pochopení, že existují lepší možnosti – přestup do F&P Consulting s.r.o. (dnešní FINGO).</p>
                     </div>
@@ -496,7 +500,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2016</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2016.jpg" class="timeline-photo rounded-2xl mb-4" alt="2016">
+                        <img src="assets/img/2016.jpg" class="timeline-photo rounded-2xl mb-4" alt="2016" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Fulltime v Broker Trust</h3>
                         <p class="text-slate-500 mt-2">Ukončení zaměstnání a plný přechod do světa financí. Získávání nezávislosti.</p>
                     </div>
@@ -507,7 +511,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2019</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2019.jpg" class="timeline-photo rounded-2xl mb-4" alt="2019">
+                        <img src="assets/img/2019.jpg" class="timeline-photo rounded-2xl mb-4" alt="2019" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Založení Premium Brokers</h3>
                         <p class="text-slate-500 mt-2">Vlastní firma s vizí prémiového a férového přístupu ke klientům.</p>
                     </div>
@@ -518,7 +522,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2021</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2021.jpg" class="timeline-photo rounded-2xl mb-4" alt="2021">
+                        <img src="assets/img/2021.jpg" class="timeline-photo rounded-2xl mb-4" alt="2021" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Nové pobočky</h3>
                         <p class="text-slate-500 mt-2">Otevření nových poboček v Litoměřicích, Štětí a Praze k současné Roudnické.</p>
                     </div>
@@ -529,7 +533,7 @@
                         <div class="timeline-year text-6xl font-black text-slate-200">2024</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2024.jpg" class="timeline-photo rounded-2xl mb-4" alt="2024">
+                        <img src="assets/img/2024.jpg" class="timeline-photo rounded-2xl mb-4" alt="2024" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Premium Brokers Reality</h3>
                         <p class="text-slate-500 mt-2">Založení realitní kanceláře Premium Brokers Reality s.r.o.</p>
                     </div>
@@ -540,7 +544,7 @@
                         <div class="timeline-year text-6xl font-black text-brand-cyan">2026</div>
                     </div>
                     <div class="md:w-2/3 timeline-content">
-                        <img src="assets/img/2026.jpg" class="timeline-photo rounded-2xl mb-4" alt="2026">
+                        <img src="assets/img/2026.jpg" class="timeline-photo rounded-2xl mb-4" alt="2026" loading="lazy">
                         <h3 class="text-2xl font-bold text-brand-navy">Lovosice a tým</h3>
                         <p class="text-slate-500 mt-2">Lovosice, silný tým a komplexní péče pod jednou střechou.</p>
                     </div>
@@ -560,7 +564,7 @@
         <div class="bento-grid">
           <a href="https://www.google.com/maps?q=N%C3%A1m.+Jana+z+Dra%C5%BEic+99,+413+01+Roudnice+nad+Labem" target="_blank" rel="noopener noreferrer" class="bento-card bento-card--large">
             <div class="bento-card-img">
-              <img src="assets/img/rce.jpg" alt="Roudnice nad Labem – náměstí">
+              <img src="assets/img/rce.jpg" alt="Roudnice nad Labem – náměstí" loading="lazy">
               <div class="bento-card-overlay"></div>
             </div>
             <div class="bento-card-content">
@@ -581,7 +585,7 @@
           </a>
           <a href="https://www.google.com/maps?q=5.+kv%C4%9Btna+10,+412+01+Litom%C4%9B%C5%99ice" target="_blank" rel="noopener noreferrer" class="bento-card">
             <div class="bento-card-img">
-              <img src="assets/img/lito.png" alt="Litoměřice – Mírové náměstí">
+              <img src="assets/img/lito.png" alt="Litoměřice – Mírové náměstí" loading="lazy">
               <div class="bento-card-overlay"></div>
             </div>
             <div class="bento-card-content">
@@ -601,7 +605,7 @@
           </a>
           <div class="bento-card bento-card-coming">
             <div class="bento-card-img">
-              <img src="assets/img/lovo.jpg" alt="Lovosice – Lovoš a okolí">
+              <img src="assets/img/lovo.jpg" alt="Lovosice – Lovoš a okolí" loading="lazy">
               <div class="bento-card-overlay"></div>
             </div>
             <div class="bento-card-content">
@@ -669,7 +673,7 @@
           <article class="animate-fade-in-up group">
             <a href="https://www.marekpribramsky.cz/blog/hypoteka-tipy" class="block rounded-2xl overflow-hidden border border-brand-border bg-brand-background">
               <div class="relative aspect-[16/10] overflow-hidden bg-brand-border/50">
-                <img src="assets/img/blog/blog-2.jpg" alt="" class="w-full h-full object-cover transition-transform duration-500 blog-img">
+                <img src="assets/img/blog/blog-2.jpg" alt="" class="w-full h-full object-cover transition-transform duration-500 blog-img" loading="lazy">
                 <div class="blog-hover absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-transparent opacity-0 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
                   <span class="text-white font-semibold">Číst článek</span>
                 </div>
@@ -913,7 +917,7 @@
         <div class="flex flex-col">
           <div class="flex items-center gap-2 mb-2">
             <a href="./" class="shrink-0">
-              <img src="assets/img/logos/pb-logo-no-bg-grey.png" alt="Premium Brokers" class="h-10 w-auto" />
+              <img src="assets/img/logos/pb-logo-no-bg-grey.png" alt="Premium Brokers" class="h-10 w-auto" loading="lazy" width="120" height="40" />
             </a>
             <span class="font-bold text-xl">Marek Příbramský</span>
           </div>
@@ -1006,11 +1010,11 @@
     {"author":"Monika Dvohomiljová","initials":"MD","rating":5,"date_relative":"před 2 lety","text":"Velká spokojenost..."},
     {"author":"Jirka Machala","initials":"JM","rating":5,"date_relative":"před rokem","text":"Naprostá spokojenost..."}
   ]</script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/anim.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/anim.js" defer></script>
   <script>
     // Služby – accordion: klik na kartu otevře/zavře popis + CTA
     document.addEventListener('DOMContentLoaded', function() {
