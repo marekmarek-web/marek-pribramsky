@@ -92,6 +92,10 @@ body {
   .hero-aurora .hero-image-wrapper {
     inset: 0.5rem;
   }
+  /* Na mobilu posunout fotku vpravo, aby byl Marek v záběru */
+  .hero-aurora .hero-img-full {
+    object-position: right center;
+  }
   .hero-aurora .hero-title {
     font-size: clamp(2rem, 8vw, 3rem);
     line-height: 1.15;
@@ -798,21 +802,31 @@ body {
   .group:hover .blog-img { transform: scale(1.05); }
 }
 
-/* Mobilní menu – drawer z pravé strany */
+/* Mobilní menu – drawer z pravé strany, plně kryje stránku */
 .mobile-nav-drawer {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s;
   pointer-events: none;
+  z-index: 9999;
 }
 .mobile-nav-drawer.open {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
+.mobile-nav-backdrop {
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 0;
+}
 .mobile-nav-panel {
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+  background-color: #fff !important;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
 }
 .mobile-nav-drawer.open .mobile-nav-panel {
   transform: translateX(0);
