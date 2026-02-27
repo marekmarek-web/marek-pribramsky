@@ -6,8 +6,12 @@
   <title>Marek Příbramský – Privátní finanční plánování</title>
   <meta name="description" content="Marek Příbramský – finanční poradce. Pomáhám rodinám a podnikatelům sestavit strategie, které dávají smysl. Investice, hypotéky, pojištění.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Tailwind – načítání z GitHub CDN kvůli GitHub Pages (lokálně i na produkci) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/marekmarek-web/marek-pribramsky@main/assets/css/tailwind.css">
+  <!-- Tailwind – primárně jsDelivr, fallback na unpkg (když CDN zlobí) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/marekmarek-web/marek-pribramsky@main/assets/css/tailwind.css"
+    onerror="this.onerror=null;this.href='https://unpkg.com/premium-brokers@1.0.0/assets/css/tailwind.css';"
+  >
   <style>
     /* CTA – navy gradient + neuro UI stín (bez zeleného dropshadow) */
     .lead-cta-btn {
