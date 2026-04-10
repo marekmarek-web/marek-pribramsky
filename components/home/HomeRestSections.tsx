@@ -6,7 +6,7 @@ import { WealthProjectionChart } from "@/components/home/WealthProjectionChart";
 export function HomeRestSections() {
   return (
     <>
-      <section id="muj-postup" className="py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32 bg-white relative overflow-hidden">
+      <section id="spoluprace" className="py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32 bg-white relative overflow-hidden scroll-mt-28 md:scroll-mt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-14 lg:mb-20 animate-fade-in-up">
             <h2 className="section-title font-bold text-brand-text mb-4">Můj postup</h2>

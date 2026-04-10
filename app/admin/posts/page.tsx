@@ -7,7 +7,7 @@ export default async function AdminPostsPage() {
   const { supabase } = await requireEditor();
   const { data: posts, error } = await supabase
     .from("posts")
-    .select("id, slug, title, published, published_at, category")
+    .select("id, slug, title, published, published_at, updated_at, category, author_name")
     .order("updated_at", { ascending: false });
 
   if (error) {
@@ -48,7 +48,9 @@ export default async function AdminPostsPage() {
                   ) : (
                     <span>koncept</span>
                   )}
-                  {p.published_at ? ` · ${formatPostDate(p.published_at)}` : null}
+                  {p.published_at ? ` · publ. ${formatPostDate(p.published_at)}` : null}
+                  {p.updated_at ? ` · upr. ${formatPostDate(p.updated_at)}` : null}
+                  {p.author_name ? ` · ${p.author_name}` : ""}
                 </p>
               </div>
               <div className="flex gap-2">

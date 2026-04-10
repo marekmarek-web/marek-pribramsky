@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-/** Port `assets/js/anim.js` + část `main.js` (persona, FAQ, služby, postup spotlight) po dokončení loaderu. */
+/** Port `assets/js/anim.js` + část `main.js` (FAQ, postup spotlight) po dokončení loaderu. Persona a služby jsou v Reactu. */
 export function HomeVanillaInit({ enabled }: { enabled: boolean }) {
   useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
@@ -40,53 +40,6 @@ export function HomeVanillaInit({ enabled }: { enabled: boolean }) {
       }
     };
     if (postupBento) postupBento.addEventListener("mousemove", onPostupMove);
-
-    const personaBtns = document.querySelectorAll<HTMLButtonElement>(".persona-btn[data-persona]");
-    const personaPanels = document.querySelectorAll(".persona-content");
-    function switchPersona(id: string) {
-      personaBtns.forEach((btn) => {
-        const isActive = btn.getAttribute("data-persona") === id;
-        btn.classList.toggle("active", isActive);
-        btn.setAttribute("aria-selected", isActive ? "true" : "false");
-        btn.setAttribute("tabindex", isActive ? "0" : "-1");
-      });
-      personaPanels.forEach((panel) => {
-        const isTarget = panel.id === `persona-${id}`;
-        panel.classList.toggle("active", isTarget);
-        panel.classList.toggle("hidden", !isTarget);
-      });
-    }
-    const personaCleanups: (() => void)[] = [];
-    personaBtns.forEach((btn) => {
-      const onClick = () => switchPersona(btn.getAttribute("data-persona") || "");
-      const onKey = (e: KeyboardEvent) => {
-        const idx = Array.prototype.indexOf.call(personaBtns, btn);
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-          e.preventDefault();
-          const dir = e.key === "ArrowRight" ? 1 : -1;
-          const nextIdx = (idx + dir + personaBtns.length) % personaBtns.length;
-          personaBtns[nextIdx].focus();
-          switchPersona(personaBtns[nextIdx].getAttribute("data-persona") || "");
-        }
-        if (e.key === "Home") {
-          e.preventDefault();
-          personaBtns[0].focus();
-          switchPersona(personaBtns[0].getAttribute("data-persona") || "");
-        }
-        if (e.key === "End") {
-          e.preventDefault();
-          const last = personaBtns[personaBtns.length - 1];
-          last.focus();
-          switchPersona(last.getAttribute("data-persona") || "");
-        }
-      };
-      btn.addEventListener("click", onClick);
-      btn.addEventListener("keydown", onKey as EventListener);
-      personaCleanups.push(() => {
-        btn.removeEventListener("click", onClick);
-        btn.removeEventListener("keydown", onKey as EventListener);
-      });
-    });
 
     const faqSwitcher = document.querySelector<HTMLElement>(".faq-switcher[data-tabs]");
     const faqTabs = faqSwitcher ? Array.from(faqSwitcher.querySelectorAll<HTMLButtonElement>(".faq-tab")) : [];
@@ -134,32 +87,12 @@ export function HomeVanillaInit({ enabled }: { enabled: boolean }) {
       if (initQ) setQ(initQ);
     });
 
-    const onSluzhyClick = (e: Event) => {
-      const trigger = (e.target as HTMLElement).closest(".sluzhy-acc-trigger");
-      if (!trigger) return;
-      const card = trigger.closest(".sluzby-accordion-card");
-      if (!card) return;
-      const isOpen = card.classList.contains("is-open");
-      document.querySelectorAll(".sluzby-accordion-card.is-open").forEach((c) => {
-        c.classList.remove("is-open");
-        const t = c.querySelector(".sluzby-acc-trigger");
-        if (t) t.setAttribute("aria-expanded", "false");
-      });
-      if (!isOpen) {
-        card.classList.add("is-open");
-        trigger.setAttribute("aria-expanded", "true");
-      }
-    };
-    document.addEventListener("click", onSluzhyClick);
-
     return () => {
       window.removeEventListener("scroll", onScrollFade);
       window.removeEventListener("load", checkFade);
       if (postupBento) postupBento.removeEventListener("mousemove", onPostupMove);
-      personaCleanups.forEach((c) => c());
       faqTabCleanups.forEach((c) => c());
       faqPanelCleanups.forEach((c) => c());
-      document.removeEventListener("click", onSluzhyClick);
     };
   }, [enabled]);
 

@@ -1,118 +1,26 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Suspense } from "react";
 import { LeadConsultationForm } from "@/components/forms/LeadConsultationForm";
 import { HomeBlogSection, HomeBlogSectionFallback } from "@/components/home/HomeBlogSection";
+import { timelineEntries } from "@/components/home/home-data";
+import { PersonaSwitcher } from "@/components/home/PersonaSwitcher";
 import { ReviewsMarquee } from "@/components/home/ReviewsMarquee";
+import { ServicesAccordion } from "@/components/home/ServicesAccordion";
 
 /** Sekce #proc-ja až #kontakt z kořenového `index.html`. */
 export function HomeTailSections() {
   return (
     <>
-      <section id="proc-ja" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 relative overflow-hidden persona-section">
+      <section id="proc-ja" className="persona-section relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28">
         <div className="persona-section-bg" aria-hidden />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-10 lg:mb-14">
-            <h2 className="section-title font-bold text-brand-text mb-4">Pro koho</h2>
-            <p className="text-brand-muted section-desc mx-auto text-lg leading-relaxed">
-              Vyberte, kdo jste – obsah pod záložkami je napsaný přímo pro vás.
+        <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center lg:mb-14">
+            <h2 className="section-title mb-4 font-bold text-brand-text">Pro koho</h2>
+            <p className="section-desc mx-auto text-lg leading-relaxed text-brand-muted">
+              Vyberte profil — zobrazí se konkrétní přínosy, situace a další krok.
             </p>
           </div>
-          <div className="persona-glass-card rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
-            <div className="persona-glass-card-inner">
-              <div className="persona-tabs flex flex-wrap gap-3 sm:gap-4 mb-8 justify-center" role="tablist" aria-label="Typ klienta">
-                <button
-                  type="button"
-                  className="persona-btn active px-4 sm:px-5 py-2.5 rounded-full text-slate-600 font-semibold text-sm sm:text-base transition-all"
-                  role="tab"
-                  aria-selected
-                  aria-controls="persona-rodina"
-                  id="tab-rodina"
-                  data-persona="rodina"
-                  tabIndex={0}
-                >
-                  Pro rodiny a jednotlivce
-                </button>
-                <button
-                  type="button"
-                  className="persona-btn px-4 sm:px-5 py-2.5 rounded-full text-slate-600 font-semibold text-sm sm:text-base transition-all"
-                  role="tab"
-                  aria-selected={false}
-                  aria-controls="persona-podnikatel"
-                  id="tab-podnikatel"
-                  data-persona="podnikatel"
-                  tabIndex={-1}
-                >
-                  Pro podnikatele
-                </button>
-                <button
-                  type="button"
-                  className="persona-btn px-4 sm:px-5 py-2.5 rounded-full text-slate-600 font-semibold text-sm sm:text-base transition-all"
-                  role="tab"
-                  aria-selected={false}
-                  aria-controls="persona-firma"
-                  id="tab-firma"
-                  data-persona="firma"
-                  tabIndex={-1}
-                >
-                  Pro firmy
-                </button>
-              </div>
-              <div id="persona-rodina" className="persona-content active text-center max-w-2xl mx-auto py-6" role="tabpanel" aria-labelledby="tab-rodina">
-                <div className="w-16 h-16 bg-brand-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-brand-navy">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-brand-text mb-4">Zajistím klid pro vaši rodinu</h3>
-                <p className="text-brand-muted leading-relaxed mb-6">
-                  Plán rezerv, spoření dětem, hypotéka na nové bydlení a ochrana příjmu, když se něco pokazí. Vše v jednom
-                  srozumitelném plánu.
-                </p>
-                <Link href="/#kontakt" className="lead-cta-btn inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold no-underline">
-                  Chci rodinný plán
-                </Link>
-              </div>
-              <div id="persona-podnikatel" className="persona-content text-center max-w-2xl mx-auto py-6 hidden" role="tabpanel" aria-labelledby="tab-podnikatel">
-                <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6 text-amber-700">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-brand-text mb-4">Oddělte firemní a osobní peníze</h3>
-                <p className="text-brand-muted leading-relaxed mb-6">
-                  Znáte to – peníze se točí, ale osobní rezerva neroste. Nastavíme systém, jak bezpečně vyvádět peníze z
-                  s.r.o. a budovat soukromé rentiérské portfolio.
-                </p>
-                <Link href="/#kontakt" className="lead-cta-btn inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold no-underline">
-                  Chci řešení pro OSVČ / s.r.o.
-                </Link>
-              </div>
-              <div id="persona-firma" className="persona-content text-center max-w-2xl mx-auto py-6 hidden" role="tabpanel" aria-labelledby="tab-firma">
-                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-700">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-brand-text mb-4">Optimalizace a benefity</h3>
-                <p className="text-brand-muted leading-relaxed mb-6">
-                  Od daňově uznatelných benefitů pro klíčové zaměstnance (DIP, penzijko) po pojištění odpovědnosti
-                  managementu a firemního majetku.
-                </p>
-                <Link href="/#kontakt" className="lead-cta-btn inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold no-underline">
-                  Poptat firemní audit
-                </Link>
-              </div>
-            </div>
-          </div>
+          <PersonaSwitcher />
         </div>
       </section>
 
@@ -137,159 +45,66 @@ export function HomeTailSections() {
 
 function SluzbySection() {
   return (
-    <section id="sluzby" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 relative overflow-visible sluzby-section-bg">
-      <div className="absolute inset-0 bg-black/80 z-[1]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-10 lg:mb-12 animate-fade-in-up">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-md border border-white/70 text-white font-bold text-xs tracking-widest uppercase mb-4 shadow-sm">
+    <section id="sluzby" className="sluzby-section-bg relative overflow-visible py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32">
+      <div className="absolute inset-0 z-[1] bg-black/78" aria-hidden />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="animate-fade-in-up mb-10 text-center lg:mb-12">
+          <span className="mb-4 inline-block rounded-full border border-white/70 bg-white/50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-sm backdrop-blur-md">
             PORTFOLIO
           </span>
-          <h2 className="section-title font-bold text-white mb-4 drop-shadow-md">Moje služby</h2>
+          <h2 className="section-title mb-2 font-bold text-white drop-shadow-md">Moje služby</h2>
+          <p className="mx-auto max-w-2xl text-sm text-white/85 sm:text-base">
+            Rozklikněte službu — krátký popis a jasný další krok.
+          </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <SluzbyCard
-            title="Investiční plánování"
-            subtitle="Ochrana a zhodnocení kapitálu"
-            iconD="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-            body="Vytvořím pro vás portfolio na míru, které odolá inflaci a zajistí vám rentu. Využívám nízkonákladové ETF fondy."
-            ctaHref="/investicnikalkulacka"
-            ctaLabel="Spočítejte si investice"
-          />
-          <SluzbyCard
-            title="Hypoteční úvěr"
-            subtitle="Financování bydlení chytře"
-            iconD="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-            body="Pomohu vám nastavit hypotéku tak, aby vás nezatížila, a poradím, jak na refinancování nebo čerpání úvěru pro vaše bydlení."
-            ctaHref="/hypotecnikalkulacka"
-            ctaLabel="Hypoteční kalkulačka"
-          />
-          <SluzbyCard
-            title="Zabezpečení rizik"
-            subtitle="Životní i majetkové pojištění"
-            iconD="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-            body="Provedu audit vašich smluv, odstraním duplicity a nastavím krytí tak, aby vás skutečně chránilo v kritických situacích."
-            ctaHref="/#kontakt"
-            ctaLabel="Nastavení pojištění"
-          />
-          <SluzbyCard
-            title="Úvěry a konsolidace"
-            subtitle="Optimalizace dluhů"
-            iconD="M2.25 18.75v-1.5m0 1.5v-1.5m0 0h3.75m-3.75 0h3.75m-3.75 0h-3.75m0 0h-3.75m0 0V15m0 0v1.5m0-1.5V15m0 3h3.75m-3.75 0h3.75m-3.75 0H18M9 10.5h.008v.008H9V10.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            body="Máte více půjček? Pomohu vám je sloučit do jedné, snížit měsíční splátku a celkově ušetřit na nákladech."
-            ctaHref="/#kontakt"
-            ctaLabel="Spočítat úsporu"
-          />
-          <SluzbyCard
-            title="Doplňkové penzijní spoření"
-            subtitle="Státní příspěvky"
-            iconD="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-            body="Získejte ze státu maximum. Pomohu vám nastavit penzijní spoření tak, abyste využili všechny státní příspěvky a daňové úlevy naplno."
-            ctaHref="/penzijnikalkulacka"
-            ctaLabel="Optimální nastavení penze"
-          />
-          <SluzbyCard
-            title="Realitní služby"
-            subtitle="Prodej, nákup a pronájem"
-            iconD="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-            body="Komplexní servis při prodeji či nákupu nemovitostí. Zajistím tržní odhad, profesionální prezentaci, právní servis a bezpečný převod."
-            ctaHref="/#kontakt"
-            ctaLabel="Konzultace realit"
-          />
-        </div>
+        <ServicesAccordion />
       </div>
     </section>
   );
 }
 
-function SluzbyCard({
-  title,
-  subtitle,
-  iconD,
-  body,
-  ctaHref,
-  ctaLabel,
-}: {
-  title: string;
-  subtitle: string;
-  iconD: string;
-  body: string;
-  ctaHref: string;
-  ctaLabel: string;
-}) {
-  return (
-    <div className="sluzby-accordion-card rounded-2xl bg-white/[0.97] backdrop-blur-xl border border-white/80 shadow-lg overflow-hidden">
-      <button type="button" className="sluzby-acc-trigger w-full p-5 sm:p-6 flex flex-col items-center text-center cursor-pointer" aria-expanded={false}>
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-brand-cyan/10 flex items-center justify-center shrink-0 mb-3">
-          <svg className="w-6 h-6 sm:w-7 sm:h-7 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={iconD} />
-          </svg>
-        </div>
-        <h3 className="text-lg sm:text-xl font-bold text-brand-navy">{title}</h3>
-        <p className="text-slate-600 text-sm mt-1">{subtitle}</p>
-        <svg className="w-5 h-5 text-brand-navy/40 mt-3 sluzby-acc-chevron transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div className="sluzby-acc-panel">
-        <div className="px-5 sm:px-6 pb-4 sm:pb-5 text-center">
-          <p className="text-slate-700 text-sm mb-4">{body}</p>
-          <Link href={ctaHref} className="sluzby-acc-cta inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl text-white font-semibold no-underline transition-all">
-            <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-            {ctaLabel}
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function MojeCestaSection() {
-  const items: {
-    year: string;
-    img: string;
-    title: string;
-    text: string;
-    photoClass?: string;
-    yearClass?: string;
-  }[] = [
-    { year: "2013", img: "/img/2013.jpg", title: "První kroky v OVB", text: "Během studia 5. ročníku na ekonomické VŠ jsem začal pracovat v OVB Allfinanz a.s." },
-    { year: "2015", img: "/img/2015.png", title: "Přestup do FINGO", text: "Pochopení, že existují lepší možnosti – přestup do F&P Consulting s.r.o. (dnešní FINGO).", photoClass: "timeline-photo-2015" },
-    { year: "2016", img: "/img/2016.jpg", title: "Fulltime v Broker Trust", text: "Ukončení zaměstnání a plný přechod do světa financí. Získávání nezávislosti." },
-    { year: "2019", img: "/img/2019.jpg", title: "Založení Premium Brokers", text: "Vlastní firma s vizí prémiového a férového přístupu ke klientům." },
-    { year: "2021", img: "/img/2021.jpg", title: "Nové pobočky", text: "Otevření nových poboček v Litoměřicích, Štětí a Praze k současné Roudnické." },
-    { year: "2024", img: "/img/2024.jpg", title: "Premium Brokers Reality", text: "Založení realitní kanceláře Premium Brokers Reality s.r.o." },
-    { year: "2026", img: "/img/2026.jpg", title: "Lovosice a tým", text: "Lovosice, silný tým a komplexní péče pod jednou střechou.", yearClass: "text-brand-cyan" },
-  ];
   return (
     <section
       id="moje-cesta"
-      className="moje-cesta-section py-12 sm:py-16 md:py-20 lg:py-24 bg-[#EAF3FF] text-brand-navy relative overflow-hidden"
+      className="moje-cesta-section relative overflow-hidden bg-[#EAF3FF] py-12 text-brand-navy sm:py-16 md:py-20 lg:py-24"
       style={{ contain: "layout" }}
       aria-label="Moje cesta"
     >
       <div className="moje-cesta-bg-deco" aria-hidden />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
-            Moje cesta &<br />
-            <span className="italic text-brand-cyan font-bold">Klíčové milníky</span>
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 text-center sm:mb-10 lg:mb-12">
+          <h2 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+            Moje cesta &
+            <br />
+            <span className="font-bold italic text-brand-cyan">Klíčové milníky</span>
           </h2>
         </div>
         <div
-          className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 lg:p-8 h-[600px] overflow-y-auto moje-cesta-box"
+          className="moje-cesta-box max-h-[min(72vh,680px)] min-h-[360px] overflow-y-auto rounded-3xl border border-slate-200/90 bg-white p-4 shadow-sm sm:p-6 lg:p-8"
           style={{ scrollbarWidth: "thin", isolation: "isolate" }}
         >
-          {items.map((it, idx) => (
-            <div key={it.year} className={`timeline-section flex flex-col md:flex-row gap-8 ${idx < items.length - 1 ? "mb-20" : ""}`}>
-              <div className="md:w-1/3">
-                <div className={`timeline-year text-6xl font-black ${it.yearClass ?? "text-slate-200"}`}>{it.year}</div>
+          {timelineEntries.map((it, idx) => (
+            <div
+              key={it.year}
+              className={`timeline-section flex flex-col gap-6 md:flex-row md:gap-10 ${idx < timelineEntries.length - 1 ? "mb-14 border-b border-slate-100 pb-14 md:mb-16 md:pb-16" : ""}`}
+            >
+              <div className="shrink-0 md:sticky md:top-24 md:w-[30%] md:self-start">
+                <div className={`timeline-year text-5xl font-black sm:text-6xl ${it.yearClass ?? "text-slate-200"}`}>{it.year}</div>
               </div>
-              <div className="md:w-2/3 timeline-content">
-                <Image src={it.img} alt={it.year} width={800} height={500} className={`timeline-photo rounded-2xl mb-4 ${it.photoClass ?? ""}`} loading="lazy" />
-                <h3 className="text-2xl font-bold text-brand-navy">{it.title}</h3>
-                <p className="text-slate-500 mt-2">{it.text}</p>
+              <div className="timeline-content min-w-0 md:w-[70%]">
+                <div className="relative mb-4 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+                  <Image
+                    src={it.img}
+                    alt={it.title}
+                    fill
+                    className={`object-cover ${it.imagePositionClass}`}
+                    sizes="(max-width: 768px) 100vw, 640px"
+                    loading="lazy"
+                  />
+                </div>
+                <h3 className="text-xl font-bold text-brand-navy sm:text-2xl">{it.title}</h3>
+                <p className="mt-2 text-slate-600 sm:text-[1.02rem]">{it.text}</p>
               </div>
             </div>
           ))}

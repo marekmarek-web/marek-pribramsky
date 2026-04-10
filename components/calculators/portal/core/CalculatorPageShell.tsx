@@ -13,7 +13,7 @@ export function CalculatorPageShell({
 }: CalculatorPageShellProps) {
   return (
     <div
-      className={`${maxWidth} mx-auto space-y-4 rounded-[20px] bg-[#f4f6fb] p-4 sm:p-6 ${className}`.trim()}
+      className={`${maxWidth} mx-auto space-y-4 rounded-[22px] border border-slate-200/60 bg-white/90 p-4 shadow-sm shadow-slate-900/5 backdrop-blur-sm sm:p-6 ${className}`.trim()}
     >
       {children}
       <p className="text-center text-sm text-slate-500 pt-2">

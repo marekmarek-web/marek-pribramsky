@@ -5,11 +5,13 @@ import type { MortgageResult } from "@/lib/calculators/mortgage/mortgage.types";
 
 export interface MortgageResultsPanelProps {
   result: MortgageResult;
+  /** Obecná konzultace / nabídka bez výběru banky z karty */
+  onCtaConsult?: () => void;
 }
 
 const CIRC = 2 * Math.PI * 36; // ≈ 226.19
 
-export function MortgageResultsPanel({ result }: MortgageResultsPanelProps) {
+export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPanelProps) {
   const totalInterest = result.totalPaid - result.monthlyPayment * 0 > 0
     ? result.totalPaid - (result.monthlyPayment > 0 ? result.borrowingAmount : 0)
     : 0;
@@ -96,6 +98,19 @@ export function MortgageResultsPanel({ result }: MortgageResultsPanelProps) {
           <span className="text-xs text-white/50">Celkem zaplatíte bance</span>
           <span className="text-base font-bold text-white">{formatCurrency(result.totalPaid)} Kč</span>
         </div>
+
+        {onCtaConsult != null ? (
+          <button
+            type="button"
+            onClick={onCtaConsult}
+            className="mt-5 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-bold text-white ring-1 ring-white/20 transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/80"
+          >
+            Chci konzultaci k této variantě
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+        ) : null}
       </div>
     </div>
   );

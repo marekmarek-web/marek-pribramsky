@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { requireEditor } from "@/lib/admin/require-editor";
+import { requireAdmin } from "@/lib/admin/require-editor";
 import { saveSiteSettingsAction } from "@/app/admin/settings/actions";
 
 type Props = { searchParams: Promise<{ saved?: string; error?: string }> };
 
 export default async function AdminSettingsPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const { supabase } = await requireEditor();
+  const { supabase } = await requireAdmin();
 
   const { data: rows } = await supabase.from("site_settings").select("key, value").in("key", [
     "footer_tagline",

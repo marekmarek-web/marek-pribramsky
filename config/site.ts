@@ -10,10 +10,20 @@ export const siteConfig = {
 
 export type NavItem = { label: string; href: string; external?: boolean };
 
+/** Sekce úvodní stránky + Blog — mezi „Spolupráce“ a „Blog“ vkládá SiteHeader dropdown Nástroje (canonical root index.html). */
 export const mainNav: NavItem[] = [
   { label: "O mně", href: "/#proc-ja" },
   { label: "Služby", href: "/#sluzby" },
-  { label: "Spolupráce", href: "/spoluprace" },
+  { label: "Spolupráce", href: "/#kontakt" },
+  { label: "Blog", href: "/blog" },
+];
+
+/** Mobilní drawer — pořadí a položky jako v index.html (bez rozbalení jednotlivých kalkulaček). */
+export const mobileMenuLinks: NavItem[] = [
+  { label: "O mně", href: "/#proc-ja" },
+  { label: "Služby", href: "/#sluzby" },
+  { label: "Spolupráce", href: "/#kontakt" },
+  { label: "Kalkulačky", href: "/kalkulacky" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -42,12 +52,12 @@ export const toolsDropdown: ToolLink[] = [
   },
 ];
 
+/** Rychlé odkazy v patičce — shodně s root index.html (canonical). */
 export const footerQuickLinks: NavItem[] = [
   { label: "Služby", href: "/#sluzby" },
   { label: "Pobočky", href: "/#pobocky" },
   { label: "Blog", href: "/blog" },
   { label: "Spolupráce", href: "/spoluprace" },
-  { label: "Kariéra", href: "/kariera" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
 

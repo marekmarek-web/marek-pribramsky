@@ -25,18 +25,15 @@ export function CalculatorMarketingHero({
 
   return (
     <div
-      className={`relative mb-10 rounded-3xl border border-brand-line/60 bg-brand-light p-8 shadow-xl md:p-12 ${overflowCls} ${className}`.trim()}
+      className={`relative mb-10 rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-brand-light to-slate-50/90 p-8 shadow-lg shadow-slate-900/5 md:p-12 ${overflowCls} ${className}`.trim()}
     >
-      <div
-        className={`pointer-events-none absolute inset-0 select-none rounded-3xl ${overflow === "visible" ? "overflow-visible" : "overflow-hidden"}`}
-        aria-hidden
-      >
+      <div className="pointer-events-none absolute inset-0 select-none overflow-hidden rounded-3xl" aria-hidden>
         <Image
           src={watermarkSrc}
           alt=""
           width={512}
           height={512}
-          className="absolute -bottom-24 -right-24 h-auto w-[32rem] max-w-[58%] opacity-20"
+          className="absolute -bottom-8 -right-8 h-auto w-[min(22rem,52vw)] max-w-[240px] opacity-[0.14] sm:max-w-[280px] md:w-[min(26rem,40%)]"
           priority={false}
         />
       </div>

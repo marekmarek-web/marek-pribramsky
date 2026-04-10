@@ -11,7 +11,20 @@ export type BlogPost = {
   published: boolean;
   published_at: string | null;
   cover_image_url: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  canonical_url: string | null;
+  author_id: string | null;
+  author_name: string | null;
+  reading_time: number | null;
+  featured: boolean;
+  og_image_url: string | null;
+  content_type: string;
+  updated_at?: string | null;
 };
+
+const publicPostFields =
+  "id, slug, title, excerpt, body, category, published, published_at, updated_at, cover_image_url, seo_title, seo_description, canonical_url, author_id, author_name, reading_time, featured, og_image_url, content_type";
 
 export function formatPostDate(iso: string | null): string {
   if (!iso) return "";
@@ -29,9 +42,7 @@ export async function fetchPublishedPosts(limit?: number): Promise<BlogPost[]> {
     const supabase = await createServerSupabaseClient();
     let q = supabase
       .from("posts")
-      .select(
-        "id, slug, title, excerpt, body, category, published, published_at, cover_image_url"
-      )
+      .select(publicPostFields)
       .eq("published", true)
       .order("published_at", { ascending: false });
     if (limit != null) q = q.limit(limit);
@@ -49,9 +60,7 @@ export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
     const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("posts")
-      .select(
-        "id, slug, title, excerpt, body, category, published, published_at, cover_image_url"
-      )
+      .select(publicPostFields)
       .eq("slug", slug)
       .eq("published", true)
       .maybeSingle();
@@ -66,10 +75,7 @@ export async function fetchAllPostSlugs(): Promise<string[]> {
   if (!isSupabaseConfigured()) return [];
   try {
     const supabase = await createServerSupabaseClient();
-    const { data, error } = await supabase
-      .from("posts")
-      .select("slug")
-      .eq("published", true);
+    const { data, error } = await supabase.from("posts").select("slug").eq("published", true);
     if (error || !data) return [];
     return data.map((r) => r.slug as string);
   } catch {

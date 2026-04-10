@@ -5,6 +5,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { InvestmentContactModal } from "./InvestmentContactModal";
 import { InvestmentStrategySwitcher } from "./InvestmentStrategySwitcher";
 import { InvestmentInputPanel } from "./InvestmentInputPanel";
 import { InvestmentResultsPanel } from "./InvestmentResultsPanel";
@@ -31,6 +32,7 @@ export function InvestmentCalculatorPage() {
   const [years, setYears] = useState<number>(INVESTMENT_DEFAULTS.yearsDefault);
   const [profileIndex, setProfileIndex] = useState<number>(INVESTMENT_DEFAULTS.profileIndexDefault);
   const [startYear, setStartYear] = useState<number>(INVESTMENT_DEFAULTS.startYearDefault);
+  const [leadOpen, setLeadOpen] = useState(false);
 
   const profile = INVESTMENT_PROFILES[profileIndex] ?? INVESTMENT_PROFILES[1];
 
@@ -44,13 +46,13 @@ export function InvestmentCalculatorPage() {
   const backtestSeries = useMemo(() => getBacktestChartSeries(backtestResult), [backtestResult]);
 
   return (
+    <>
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
-          <h1 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">
-            Investiční kalkulačka – výpočet
-            <br />
-            <span className="text-brand-navy">hodnoty investice v čase</span>
+          <h1 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] text-brand-navy md:text-5xl md:leading-tight">
+            <span className="block">Investiční kalkulačka</span>
+            <span className="mt-1 block text-brand-navy">Výpočet hodnoty investice v čase</span>
           </h1>
           <p className="mb-8 max-w-2xl text-lg leading-relaxed text-slate-600">
             Spočítejte si orientačně, jak se může vyvíjet vaše pravidelná investice v čase podle zvolené strategie.
@@ -112,6 +114,7 @@ export function InvestmentCalculatorPage() {
               totalInvested={projection.totalInvested}
               totalGain={projection.totalGain}
               totalGainPercent={projection.totalGainPercent}
+              onCtaClick={() => setLeadOpen(true)}
             />
           </div>
         </div>
@@ -147,8 +150,18 @@ export function InvestmentCalculatorPage() {
           totalInvested={projection.totalInvested}
           totalGain={projection.totalGain}
           totalGainPercent={projection.totalGainPercent}
+          onCtaClick={() => setLeadOpen(true)}
         />
       </CalculatorMobileResultDock>
     </div>
+    <InvestmentContactModal
+      open={leadOpen}
+      onClose={() => setLeadOpen(false)}
+      profileName={profile.name}
+      initial={initial}
+      monthly={monthly}
+      years={years}
+    />
+    </>
   );
 }

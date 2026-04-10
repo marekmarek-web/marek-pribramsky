@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  buildFooterLeadPayload,
-  pageUrl,
-  submitToFormSubmit,
-} from "@/lib/forms/leadSubmit";
+import { pageUrl } from "@/lib/forms/leadSubmit";
+import { postLeadJson } from "@/lib/forms/postLeadApi";
 
 export function FooterLeadForm() {
   const [name, setName] = useState("");
@@ -15,6 +12,8 @@ export function FooterLeadForm() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [openedAt] = useState(() => Date.now());
+  const [companyWebsite, setCompanyWebsite] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,44 +29,66 @@ export function FooterLeadForm() {
     }
     setBusy(true);
     try {
-      const payload = buildFooterLeadPayload({
-        name,
-        email,
-        phone,
-        interest,
-        pageHref: pageUrl(),
+      const res = await postLeadJson({
+        source: "footer_quick",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        interest: interest || undefined,
+        sourcePath: pageUrl(),
+        companyWebsite: companyWebsite.trim() || undefined,
+        formOpenedAt: openedAt,
+        resultSummary: `Zájem z patičky: ${interest || "neuvedeno"}`,
       });
-      await submitToFormSubmit(payload);
+      if (!res.ok) {
+        if (res.error === "email_not_configured") {
+          setErr("E-mailový odesílání není na serveru nastavené. Napište na pribramsky@premiumbrokers.cz.");
+        } else {
+          setErr("Odeslání se nepodařilo. Zkuste to znovu.");
+        }
+        return;
+      }
       setName("");
       setEmail("");
       setPhone("");
       setInterest("");
       setMsg("Děkujeme, brzy se ozveme.");
     } catch {
-      const mailto = `mailto:pribramsky@premiumbrokers.cz?subject=${encodeURIComponent("Nezávazná konzultace")}&body=${encodeURIComponent(`Jméno: ${name}\nE-mail: ${email}\nTelefon: ${phone || "-"}\nZájem: ${interest || "-"}`)}`;
-      window.location.href = mailto;
-      setMsg("Otevřete svůj e-mailový klient pro dokončení.");
+      setErr("Chyba spojení. Zkuste to znovu.");
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <form id="footer-quick-lead" className="space-y-3 text-sm" onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="footer-name" className="block text-slate-300 mb-1">
+    <form id="footer-quick-lead" className="grid gap-3 text-sm sm:grid-cols-2 sm:gap-4" onSubmit={onSubmit}>
+      <label className="sr-only" htmlFor="footer-hp">
+        Nepřepisujte
+      </label>
+      <input
+        id="footer-hp"
+        type="text"
+        tabIndex={-1}
+        value={companyWebsite}
+        onChange={(e) => setCompanyWebsite(e.target.value)}
+        className="absolute h-px w-px overflow-hidden opacity-0"
+        autoComplete="off"
+      />
+      <div className="sm:col-span-1">
+        <label htmlFor="footer-name" className="mb-1 block text-slate-400">
           Jméno
         </label>
         <input
           id="footer-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan"
+          autoComplete="name"
+          className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-brand-cyan/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan/35"
           placeholder="Jan Novák"
         />
       </div>
-      <div>
-        <label htmlFor="footer-email" className="block text-slate-300 mb-1">
+      <div className="sm:col-span-1">
+        <label htmlFor="footer-email" className="mb-1 block text-slate-400">
           E-mail
         </label>
         <input
@@ -75,12 +96,13 @@ export function FooterLeadForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan"
+          autoComplete="email"
+          className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-brand-cyan/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan/35"
           placeholder="jan@email.cz"
         />
       </div>
-      <div>
-        <label htmlFor="footer-phone" className="block text-slate-300 mb-1">
+      <div className="sm:col-span-1">
+        <label htmlFor="footer-phone" className="mb-1 block text-slate-400">
           Telefon (volitelně)
         </label>
         <input
@@ -88,18 +110,19 @@ export function FooterLeadForm() {
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:ring-2 focus:ring-brand-cyan"
+          autoComplete="tel"
+          className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-brand-cyan/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan/35"
         />
       </div>
-      <div>
-        <label htmlFor="footer-interest" className="block text-slate-300 mb-1">
+      <div className="sm:col-span-1">
+        <label htmlFor="footer-interest" className="mb-1 block text-slate-400">
           Zájem
         </label>
         <select
           id="footer-interest"
           value={interest}
           onChange={(e) => setInterest(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:ring-2 focus:ring-brand-cyan"
+          className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white focus:border-brand-cyan/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan/35"
         >
           <option value="">— vyberte —</option>
           <option value="investice">Investice</option>
@@ -109,15 +132,17 @@ export function FooterLeadForm() {
           <option value="jine">Jiné</option>
         </select>
       </div>
-      {err && <p className="text-red-300 text-xs">{err}</p>}
-      {msg && <p className="text-brand-cyan text-xs">{msg}</p>}
-      <button
-        type="submit"
-        disabled={busy}
-        className="w-full py-2.5 rounded-lg bg-brand-cyan text-brand-navy font-semibold hover:opacity-95 disabled:opacity-70"
-      >
-        {busy ? "Odesílám…" : "Odeslat"}
-      </button>
+      <div className="sm:col-span-2">
+        {err && <p className="text-xs text-red-300">{err}</p>}
+        {msg && <p className="text-xs text-brand-cyan">{msg}</p>}
+        <button
+          type="submit"
+          disabled={busy}
+          className="mt-1 w-full min-h-[44px] rounded-xl bg-brand-cyan py-2.5 font-semibold text-brand-navy transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy disabled:opacity-70"
+        >
+          {busy ? "Odesílám…" : "Odeslat"}
+        </button>
+      </div>
     </form>
   );
 }

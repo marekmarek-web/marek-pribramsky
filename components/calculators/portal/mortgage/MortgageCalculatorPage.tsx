@@ -5,6 +5,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { MortgageContactModal } from "./MortgageContactModal";
 import { MortgageHeroTopControls } from "./MortgageHeroTopControls";
 import { MortgageInputPanel } from "./MortgageInputPanel";
 import { MortgageResultsPanel } from "./MortgageResultsPanel";
@@ -44,6 +45,8 @@ export function MortgageCalculatorPage() {
     ltvLock: 90,
   });
   const [liveRates, setLiveRates] = useState<NormalizedOffer[] | null>(null);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [leadBankName, setLeadBankName] = useState<string | null>(null);
   const defaultAllowedBanks = useMemo(
     () => BANKS_DATA.filter((bank) => ALLOWED_BANK_IDS.includes(bank.id as (typeof ALLOWED_BANK_IDS)[number])),
     []
@@ -92,7 +95,13 @@ export function MortgageCalculatorPage() {
   const offers = useMemo(() => getOffersWithBanks(state, rankedBanks), [state, rankedBanks]);
   const ratesMeta = rankedBanks?.[0];
 
+  const openLead = (bank: string | null) => {
+    setLeadBankName(bank);
+    setLeadOpen(true);
+  };
+
   return (
+    <>
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
@@ -138,7 +147,7 @@ export function MortgageCalculatorPage() {
             onTypeChange={(type) => setState((s) => ({ ...s, type }))}
           />
           <div className="hidden lg:block sticky top-6">
-            <MortgageResultsPanel result={result} />
+            <MortgageResultsPanel result={result} onCtaConsult={() => openLead(null)} />
           </div>
         </div>
 
@@ -157,13 +166,21 @@ export function MortgageCalculatorPage() {
             fetchedAt={ratesMeta?.fetchedAt}
             source={ratesMeta?.source}
             sourceUrl={ratesMeta?.sourceUrl}
+            onRequestOffer={(bankName) => openLead(bankName)}
           />
         </div>
       </CalculatorPageShell>
 
       <CalculatorMobileResultDock>
-        <MortgageResultsPanel result={result} />
+        <MortgageResultsPanel result={result} onCtaConsult={() => openLead(null)} />
       </CalculatorMobileResultDock>
     </div>
+    <MortgageContactModal
+      open={leadOpen}
+      onClose={() => setLeadOpen(false)}
+      bankName={leadBankName}
+      state={state}
+    />
+    </>
   );
 }

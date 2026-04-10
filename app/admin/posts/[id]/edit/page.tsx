@@ -10,7 +10,9 @@ export default async function EditPostPage({ params }: Props) {
   const { supabase } = await requireEditor();
   const { data, error } = await supabase
     .from("posts")
-    .select("id, slug, title, excerpt, body, category, published, published_at, cover_image_url")
+    .select(
+      "id, slug, title, excerpt, body, category, published, published_at, cover_image_url, seo_title, seo_description, canonical_url, author_id, author_name, reading_time, featured, og_image_url, content_type"
+    )
     .eq("id", id)
     .maybeSingle();
 

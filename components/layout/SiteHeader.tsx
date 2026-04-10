@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { mainNav, toolsDropdown, type NavItem } from "@/config/site";
+import { mainNav, mobileMenuLinks, toolsDropdown, type NavItem } from "@/config/site";
 
 const CALC_PATHS = [
   "/hypotecnikalkulacka",
@@ -19,7 +19,7 @@ function isCalculatorRoute(path: string) {
 
 function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const className =
-    "rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1";
+    "rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC6F2]/50 focus-visible:ring-offset-2";
   if (item.external) {
     return (
       <a
@@ -128,7 +128,7 @@ export function SiteHeader() {
               </svg>
             </button>
             <nav className="hidden md:flex items-center gap-1" aria-label="Hlavní navigace">
-              {mainNav.map((item) => (
+              {mainNav.slice(0, 3).map((item) => (
                 <NavLink key={item.href + item.label} item={item} />
               ))}
               <div className="relative">
@@ -176,6 +176,9 @@ export function SiteHeader() {
                   </div>
                 </div>
               </div>
+              {mainNav.slice(3).map((item) => (
+                <NavLink key={item.href + item.label} item={item} />
+              ))}
             </nav>
             <Link
               href="/#kontakt"
@@ -198,9 +201,9 @@ export function SiteHeader() {
       >
         <div className="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden onClick={closeMenu} />
         <div className="mobile-nav-panel absolute top-0 right-0 w-full max-w-sm h-full flex flex-col pt-20 px-6 pb-8">
-          {mainNav.map((item) => (
+          {mobileMenuLinks.map((item) => (
             <Link
-              key={`m-${item.href}`}
+              key={`m-${item.label}-${item.href}`}
               href={item.href}
               className="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100"
               onClick={closeMenu}
@@ -208,30 +211,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/kalkulacky"
-            className="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100"
-            onClick={closeMenu}
-          >
-            Kalkulačky
-          </Link>
-          {toolsDropdown.map((t) => (
-            <Link
-              key={`mt-${t.href}`}
-              href={t.href}
-              className="py-2 text-sm text-slate-600 border-b border-slate-50 pl-1"
-              onClick={closeMenu}
-            >
-              {t.title}
-            </Link>
-          ))}
-          <Link
-            href="/blog"
-            className="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100"
-            onClick={closeMenu}
-          >
-            Blog
-          </Link>
           <Link
             href="/#kontakt"
             className="mobile-nav-link lead-cta-btn mt-4 py-4 rounded-xl text-white font-semibold text-center no-underline"

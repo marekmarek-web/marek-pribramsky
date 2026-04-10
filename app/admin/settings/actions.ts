@@ -1,11 +1,11 @@
 "use server";
 
-import { requireEditor } from "@/lib/admin/require-editor";
+import { requireAdmin } from "@/lib/admin/require-editor";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function saveSiteSettingsAction(formData: FormData) {
-  const { supabase } = await requireEditor();
+  const { supabase } = await requireAdmin();
   const footer = String(formData.get("footer_tagline") ?? "").slice(0, 5000);
   const blogIntro = String(formData.get("home_blog_intro") ?? "").slice(0, 2000);
 

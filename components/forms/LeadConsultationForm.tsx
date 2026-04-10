@@ -2,11 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {
-  buildMainLeadPayload,
-  pageUrl,
-  submitToFormSubmit,
-} from "@/lib/forms/leadSubmit";
+import { pageUrl } from "@/lib/forms/leadSubmit";
+import { postLeadJson } from "@/lib/forms/postLeadApi";
 
 const TOPICS: { key: string; label: string }[] = [
   { key: "investice", label: "📈 Investovat peníze" },
@@ -25,22 +22,36 @@ export function LeadConsultationForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [openedAt] = useState(() => Date.now());
+  const [companyWebsite, setCompanyWebsite] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setBusy(true);
     try {
-      const payload = buildMainLeadPayload({
-        name,
-        contact: email,
-        phone,
-        topic,
-        message: "",
+      const res = await postLeadJson({
+        source: "homepage_consultation",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        topic: topic || undefined,
         consent,
-        pageHref: pageUrl(),
+        sourcePath: pageUrl(),
+        resultSummary: `Nezávazná konzultace — téma: ${topic}`,
+        companyWebsite: companyWebsite.trim() || undefined,
+        formOpenedAt: openedAt,
       });
-      await submitToFormSubmit(payload);
+      if (!res.ok) {
+        if (res.error === "email_not_configured") {
+          setError("Odesílání zatím není nakonfigurované. Napište na pribramsky@premiumbrokers.cz.");
+        } else if (res.error === "too_fast") {
+          setError("Zkuste formulář odeslat znovu za chvíli.");
+        } else {
+          setError("Nepodařilo se odeslat. Zkuste to prosím znovu.");
+        }
+        return;
+      }
       setDone(true);
     } catch {
       setError("Nepodařilo se odeslat. Zkuste to prosím znovu.");
@@ -93,6 +104,18 @@ export function LeadConsultationForm() {
           <p className="text-brand-muted mb-6">Kam vám mám poslat volné termíny pro 15minutový hovor?</p>
           <form className="space-y-4 text-left" onSubmit={onSubmit}>
             <input type="hidden" name="topic" value={topic} readOnly />
+            <label className="sr-only" htmlFor="lead-hp">
+              Nepřepisujte
+            </label>
+            <input
+              id="lead-hp"
+              type="text"
+              tabIndex={-1}
+              value={companyWebsite}
+              onChange={(e) => setCompanyWebsite(e.target.value)}
+              className="sr-only"
+              autoComplete="off"
+            />
             <div>
               <label htmlFor="lead-name" className="block text-sm font-semibold text-brand-navy mb-1">
                 Jméno

@@ -5,6 +5,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { LifeContactModal, type LifeModalType } from "./LifeContactModal";
 import { LifeHeroMethodology } from "./LifeHeroMethodology";
 import { LifeInputPanel } from "./LifeInputPanel";
 import { LifeResultsPanel } from "./LifeResultsPanel";
@@ -15,15 +16,18 @@ import type { LifeState } from "@/lib/calculators/life/life.types";
 
 export function LifeCalculatorPage() {
   const [state, setState] = useState<LifeState>({ ...DEFAULT_STATE });
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [leadType, setLeadType] = useState<LifeModalType>("proposal");
   const result = useMemo(() => runCalculations(state), [state]);
 
   return (
+    <>
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
-        <CalculatorMarketingHero overflow="visible" badge={<CalculatorGoogleReviewBadge />}>
-          <h2 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">
-            Kalkulačka životního pojištění – <br />
-            <span className="text-brand-navy">výpočet potřebného krytí</span>
+        <CalculatorMarketingHero overflow="hidden" badge={<CalculatorGoogleReviewBadge />}>
+          <h2 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] tracking-tight text-brand-navy md:text-5xl md:leading-tight">
+            <span className="block">Kalkulačka životního pojištění</span>
+            <span className="mt-1 block text-brand-navy">Výpočet potřebného krytí</span>
           </h2>
           <p className="mb-8 max-w-2xl text-lg leading-relaxed text-slate-600">
             Spočítejte si orientačně, jaké krytí životního pojištění dává smysl podle příjmu, výdajů a závazků. Výsledek
@@ -58,7 +62,18 @@ export function LifeCalculatorPage() {
         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_360px]">
           <LifeInputPanel state={state} onStateChange={setState} />
           <div className="hidden lg:block sticky top-6">
-            <LifeResultsPanel state={state} result={result} />
+            <LifeResultsPanel
+              state={state}
+              result={result}
+              onCtaPrimary={() => {
+                setLeadType("proposal");
+                setLeadOpen(true);
+              }}
+              onCtaCheck={() => {
+                setLeadType("check");
+                setLeadOpen(true);
+              }}
+            />
           </div>
         </div>
 
@@ -75,8 +90,27 @@ export function LifeCalculatorPage() {
       </CalculatorPageShell>
 
       <CalculatorMobileResultDock>
-        <LifeResultsPanel state={state} result={result} />
+        <LifeResultsPanel
+          state={state}
+          result={result}
+          onCtaPrimary={() => {
+            setLeadType("proposal");
+            setLeadOpen(true);
+          }}
+          onCtaCheck={() => {
+            setLeadType("check");
+            setLeadOpen(true);
+          }}
+        />
       </CalculatorMobileResultDock>
     </div>
+    <LifeContactModal
+      open={leadOpen}
+      onClose={() => setLeadOpen(false)}
+      type={leadType}
+      state={state}
+      result={result}
+    />
+    </>
   );
 }
