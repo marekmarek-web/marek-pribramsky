@@ -9,7 +9,7 @@
 5. Optionally run `seed.sql` for default `site_settings` rows and three sample blog posts.
 6. **Authentication → Providers**: enable Email (password or magic link as you prefer). Veřejná registrace není potřeba.
 7. Vytvořte uživatele v **Authentication → Users → Add user** (e-mail + heslo).
-8. Pro každého interního uživatele vložte řádek do `public.profiles` (role `admin` nebo `editor`):
+8. Pro každého interního uživatele vložte řádek do `public.profiles` (role `admin` nebo `editor`). Připravený příkaz pro hlavní admin účet: `scripts/ensure-admin-for-auth-user.sql` (spustit v SQL Editoru).
 
 ```sql
 -- vlastník / správce

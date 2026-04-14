@@ -35,8 +35,12 @@ Migrace vytváří veřejný bucket `blog-covers`. Pokud bucket zakládáte ruč
 ## 4. První uživatelé (bez veřejné registrace)
 
 1. **Authentication → Users → Add user** — vytvořte e-mail + heslo (nebo pozvěte magic linkem).
-2. V tabulce `auth.users` zkopírujte **UUID** uživatele.
+2. V tabulce `auth.users` zkopírujte **UUID** uživatele (v UI u uživatele pole **User UID**).
 3. Vložte řádek do `public.profiles`:
+
+**Hotový skript** (účet `malphas@email.cz` / UID z dashboardu): otevři `supabase/scripts/ensure-admin-for-auth-user.sql`, zkopíruj obsah do **SQL Editor** a spusť **Run**.
+
+Obecný vzor ručně:
 
 ```sql
 insert into public.profiles (id, role, full_name)
