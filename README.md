@@ -34,6 +34,10 @@ Validace při startu: `instrumentation.ts` + `lib/env/validate.ts` (varování d
 
 Postup: **`docs/deploy-playbook.md`**. Po nasazení: **`docs/post-deploy-smoke-tests.md`**.
 
+### GitHub Pages (`*.github.io/.../marek-pribramsky/`)
+
+GitHub Pages umí jen statické soubory — **nepouští Next.js**. Kořenové a staré `**/index.html` v repu proto přesměrovávají na produkční web (výchozí `https://www.marekpribramsky.cz`). Při změně domény spusťte `pnpm gh-pages:redirects` nebo `GH_PAGES_REDIRECT_BASE=https://vaše-domena.cz pnpm gh-pages:redirects`, pak commitněte vygenerované HTML.
+
 ## Observability & analytics
 
 - **Sentry:** `sentry.*.config.ts`, runtime reporting pokud je `NEXT_PUBLIC_SENTRY_DSN`.
