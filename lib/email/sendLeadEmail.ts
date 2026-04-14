@@ -13,15 +13,19 @@ function formatMetadata(metadata: Record<string, string> | undefined): string {
 export function buildLeadEmailText(
   payload: CalculatorLeadBody,
   receivedAt: string,
-  opts?: { leadId?: string | null; adminUrl?: string },
+  opts?: { leadId?: string | null; adminUrl?: string; adminSubscribersUrl?: string },
 ): string {
-  const admin = opts?.adminUrl ?? (opts?.leadId ? `${getSiteUrl()}/admin/leads/${opts.leadId}` : "—");
+  const base = getSiteUrl();
+  const admin = opts?.adminUrl ?? (opts?.leadId ? `${base}/admin/leads/${opts.leadId}` : "—");
+  const subscribersAdmin =
+    opts?.adminSubscribersUrl ?? (base ? `${base}/admin/subscribers` : "—");
   const lines = [
-    `Nový lead z webu`,
+    payload.source === "newsletter" ? `Nový záznam: odběr novinek (lead + subscribers)` : `Nový lead z webu`,
     `---`,
     `Čas: ${receivedAt}`,
     opts?.leadId ? `ID leadu (DB): ${opts.leadId}` : null,
-    `Admin (detail): ${admin}`,
+    `Admin (detail leadu): ${admin}`,
+    payload.source === "newsletter" ? `Admin (odběratelé): ${subscribersAdmin}` : null,
     `---`,
     `Zdroj (CRM): ${payload.source}`,
     `Kategorie (odhad): ${inferLeadCategory(payload)}`,
@@ -58,6 +62,8 @@ export function getLeadEmailSubject(payload: CalculatorLeadBody, leadId?: string
   if (payload.source === "homepage_consultation") return `Lead: Konzultace (úvodní strana)${short}`;
   if (payload.source === "contact_page") return `Lead: Kontaktní stránka${short}`;
   if (payload.source === "article_cta") return `Lead: Článek / blog${short}`;
+  if (payload.source === "career") return `Lead: Kariéra / nábor${short}`;
+  if (payload.source === "newsletter") return `Lead: Odběr novinek${short}`;
   return `Lead: Web Premium Brokers${short}`;
 }
 
@@ -78,7 +84,12 @@ export async function sendLeadEmailResend(
   const receivedAt = new Date().toISOString();
   const base = getSiteUrl();
   const adminUrl = leadId && base ? `${base}/admin/leads/${leadId}` : undefined;
-  const text = buildLeadEmailText(payload, receivedAt, { leadId: leadId ?? undefined, adminUrl });
+  const adminSubscribersUrl = base ? `${base}/admin/subscribers` : undefined;
+  const text = buildLeadEmailText(payload, receivedAt, {
+    leadId: leadId ?? undefined,
+    adminUrl,
+    adminSubscribersUrl: payload.source === "newsletter" ? adminSubscribersUrl : undefined,
+  });
   let textWithFile = text;
   if (attachment) {
     textWithFile += `\n\n---\nPříloha: ${attachment.filename} (${attachment.content.length} B)`;

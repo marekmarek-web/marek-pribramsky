@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { sendLeadEmailResend } from "@/lib/email/sendLeadEmail";
-import { payloadToLeadRow } from "@/lib/leads/mapPayload";
-import { insertLeadRow } from "@/lib/leads/insertLead";
+import { processPublicLead } from "@/lib/leads/processPublicLead";
 import { captureException } from "@/lib/observability";
 import { jsonValidationError } from "@/lib/security/publicApiJson";
 import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
 import { isAllowedPublicAttachment, sanitizeUploadFilename } from "@/lib/security/uploadFilename";
-import { isServiceRoleConfigured, isSupabaseConfigured } from "@/lib/supabase/env";
 import {
   type CalculatorLeadBody,
   calculatorLeadBodySchema,
@@ -34,20 +31,6 @@ function parseMetadata(raw: string | null): Record<string, string> | undefined {
     /* ignore */
   }
   return undefined;
-}
-
-async function persistLead(parsed: CalculatorLeadBody, attachmentFilename?: string | null): Promise<string | undefined> {
-  if (!isSupabaseConfigured() || !isServiceRoleConfigured()) {
-    return undefined;
-  }
-  try {
-    const row = payloadToLeadRow(parsed, { attachmentFilename: attachmentFilename ?? null });
-    const out = await insertLeadRow(row);
-    return out.id;
-  } catch (e) {
-    captureException(e, { route: "POST /api/leads", step: "insert" });
-    return undefined;
-  }
 }
 
 export async function POST(req: Request) {
@@ -118,10 +101,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "too_fast" }, { status: 400 });
     }
 
-    const leadId = await persistLead(parsed.data, attachment?.filename);
-
     try {
-      await sendLeadEmailResend(parsed.data, attachment, leadId);
+      const { leadId } = await processPublicLead(parsed.data, {
+        attachment,
+        telemetryStep: "POST /api/leads multipart",
+      });
       return NextResponse.json(
         { ok: true, leadId: leadId ?? null },
         { headers: { "Cache-Control": "no-store" } },
@@ -151,7 +135,7 @@ export async function POST(req: Request) {
     return jsonValidationError(parsed.error);
   }
 
-  const body = parsed.data;
+  const body: CalculatorLeadBody = parsed.data;
 
   if (body.companyWebsite) {
     return NextResponse.json({ ok: true });
@@ -160,10 +144,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "too_fast" }, { status: 400 });
   }
 
-  const leadId = await persistLead(body);
-
   try {
-    await sendLeadEmailResend(body, undefined, leadId);
+    const { leadId } = await processPublicLead(body, { telemetryStep: "POST /api/leads json" });
     return NextResponse.json(
       { ok: true, leadId: leadId ?? null },
       { headers: { "Cache-Control": "no-store" } },

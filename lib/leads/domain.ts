@@ -7,6 +7,8 @@ export const LEAD_SOURCE_TYPES = [
   "calculator",
   "article",
   "service_page",
+  "career",
+  "newsletter",
 ] as const;
 export type LeadSourceType = (typeof LEAD_SOURCE_TYPES)[number];
 
@@ -50,6 +52,8 @@ export const LEAD_SOURCE_TYPE_LABELS: Record<LeadSourceType, string> = {
   calculator: "Kalkulačka",
   article: "Článek",
   service_page: "Služba",
+  career: "Kariéra",
+  newsletter: "Odběr novinek",
 };
 
 export const LEAD_CATEGORY_LABELS: Record<LeadCategory, string> = {

@@ -17,8 +17,14 @@ export function mapSourcePayloadToTypes(
       return { sourceType: "contact", rawSource: "contact_page" };
     case "article_cta":
       return { sourceType: "article", rawSource: "article_cta" };
-    default:
-      return { sourceType: "homepage", rawSource: String(source) };
+    case "career":
+      return { sourceType: "career", rawSource: "career" };
+    case "newsletter":
+      return { sourceType: "newsletter", rawSource: "newsletter" };
+    default: {
+      const _exhaustive: never = source;
+      return { sourceType: "homepage", rawSource: String(_exhaustive) };
+    }
   }
 }
 
@@ -30,6 +36,8 @@ export function inferLeadCategory(body: CalculatorLeadBody): LeadCategory {
 
   if (body.source === "contact_page") return "consultation";
   if (body.source === "article_cta") return "consultation";
+  if (body.source === "career") return "general";
+  if (body.source === "newsletter") return "general";
 
   if (body.topic) {
     const t = body.topic.toLowerCase();

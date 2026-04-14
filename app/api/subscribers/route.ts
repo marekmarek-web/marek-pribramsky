@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { processPublicLead } from "@/lib/leads/processPublicLead";
 import { captureException } from "@/lib/observability";
 import { jsonValidationError } from "@/lib/security/publicApiJson";
 import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
 import { isServiceRoleConfigured, isSupabaseConfigured } from "@/lib/supabase/env";
 import { upsertSubscriberFromBody } from "@/lib/subscribers/insertSubscriber";
+import { subscriberBodyToLeadBody } from "@/lib/subscribers/subscriberToLeadBody";
 import { subscriberBodySchema } from "@/lib/validation/subscriberSchema";
 
 const WINDOW_MS = 10 * 60 * 1000;
@@ -60,8 +62,19 @@ export async function POST(req: Request) {
   }
 
   const subscriberId = await persistSubscriber(body);
-  return NextResponse.json(
-    { ok: true, subscriberId: subscriberId ?? null },
-    { headers: { "Cache-Control": "no-store" } },
-  );
+
+  try {
+    const leadBody = subscriberBodyToLeadBody(body, subscriberId ?? null);
+    const { leadId } = await processPublicLead(leadBody, { telemetryStep: "POST /api/subscribers" });
+    return NextResponse.json(
+      { ok: true, subscriberId: subscriberId ?? null, leadId: leadId ?? null },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  } catch (e) {
+    if (e instanceof Error && e.message === "RESEND_NOT_CONFIGURED") {
+      return NextResponse.json({ ok: false, error: "email_not_configured" }, { status: 503 });
+    }
+    captureException(e, { route: "POST /api/subscribers", kind: "processPublicLead" });
+    return NextResponse.json({ ok: false, error: "send_failed" }, { status: 500 });
+  }
 }

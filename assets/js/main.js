@@ -167,26 +167,33 @@ function init() {
       var fd = new FormData(leadForm);
       var phone = (fd.get('phone') || '').toString().trim();
       var contact = (fd.get('contact') || '').toString().trim();
-      if (phone) contact = contact ? contact + ' | ' + phone : phone;
+      var email = contact.indexOf('@') >= 0 ? contact : '';
+      var phoneField = phone || (contact && contact.indexOf('@') < 0 ? contact : '');
+      var topic = (fd.get('topic') || '').toString().trim();
+      var message = (fd.get('message') || '').toString().trim();
+      var consent = !!fd.get('consent');
       var payload = {
-        _subject: 'Nezávazná konzultace – web',
-        name: fd.get('name') || '',
-        contact: contact,
-        topic: fd.get('topic') || fd.get('message') || '',
-        message: fd.get('message') || '',
-        phone: phone,
-        consent: fd.get('consent') ? 'ano' : 'ne',
-        page: location.href,
-        created_at: new Date().toISOString()
+        source: 'homepage_consultation',
+        name: (fd.get('name') || '').toString().trim(),
+        email: email,
+        phone: phoneField || undefined,
+        topic: topic || undefined,
+        note: message || undefined,
+        consent: consent,
+        sourcePath: location.href,
+        formOpenedAt: Date.now(),
+        resultSummary: topic ? ('Nezávazná konzultace — téma: ' + topic) : 'Nezávazná konzultace (úvodní stránka)'
       };
-      fetch('https://formsubmit.co/ajax/pribramsky@premiumbrokers.cz', {
+      fetch('/api/leads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload)
       })
         .then(function (res) {
-          if (!res.ok) throw new Error('Network error');
-          return res.json().catch(function () { return {}; });
+          return res.json().then(function (j) {
+            if (!res.ok || !j || j.ok !== true) throw new Error('lead_api');
+            return j;
+          });
         })
         .then(function () {
           if (sfStep2) sfStep2.classList.add('hidden');
@@ -219,24 +226,31 @@ function init() {
       if (!email) { if (footerErr) { footerErr.textContent = 'Vyplňte e-mail.'; footerErr.classList.remove('hidden'); } return; }
       var btn = footerQuickLead.querySelector('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.textContent = 'Odesílám…'; }
+      var phoneVal = (document.getElementById('footer-phone') && document.getElementById('footer-phone').value.trim()) || '';
+      var interestVal = (document.getElementById('footer-interest') && document.getElementById('footer-interest').value) || '';
+      var footerConsent = footerQuickLead.querySelector('input[name="consent"]');
+      var consentFooter = !!(footerConsent && footerConsent.checked);
       var payload = {
-        _subject: 'Nezávazná konzultace – footer',
+        source: 'footer_quick',
         name: name,
         email: email,
-        phone: (document.getElementById('footer-phone') && document.getElementById('footer-phone').value.trim()) || '',
-        interest: (document.getElementById('footer-interest') && document.getElementById('footer-interest').value) || '',
-        source: 'footer-lead',
-        page: location.href,
-        created_at: new Date().toISOString()
+        phone: phoneVal || undefined,
+        interest: interestVal || undefined,
+        consent: consentFooter,
+        sourcePath: location.href,
+        formOpenedAt: Date.now(),
+        resultSummary: 'Rychlý kontakt — patička webu'
       };
-      fetch('https://formsubmit.co/ajax/pribramsky@premiumbrokers.cz', {
+      fetch('/api/leads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload)
       })
         .then(function (res) {
-          if (!res.ok) throw new Error('Network error');
-          return res.json().catch(function () { return {}; });
+          return res.json().then(function (j) {
+            if (!res.ok || !j || j.ok !== true) throw new Error('lead_api');
+            return j;
+          });
         })
         .then(function () {
           footerQuickLead.reset();
@@ -244,7 +258,7 @@ function init() {
           if (btn) { btn.disabled = false; btn.textContent = 'Odeslat'; }
         })
         .catch(function () {
-          var mailto = 'mailto:pribramsky@premiumbrokers.cz?subject=Nezávazná konzultace&body=' + encodeURIComponent('Jméno: ' + name + '\nE-mail: ' + email + '\nTelefon: ' + (payload.phone || '-') + '\nZájem: ' + (payload.interest || '-'));
+          var mailto = 'mailto:pribramsky@premiumbrokers.cz?subject=Nezávazná konzultace&body=' + encodeURIComponent('Jméno: ' + name + '\nE-mail: ' + email + '\nTelefon: ' + (phoneVal || '-') + '\nZájem: ' + (interestVal || '-'));
           window.location.href = mailto;
           if (footerMsg) footerMsg.classList.remove('hidden');
           if (btn) { btn.disabled = false; btn.textContent = 'Odeslat'; }

@@ -68,6 +68,8 @@ export function SubscribeInlineForm({
           setError("Zkuste formulář odeslat znovu za sekundu.");
         } else if (res.error === "validation") {
           setError("Zkontrolujte e-mail a souhlas.");
+        } else if (res.error === "email_not_configured") {
+          setError(`Odesílání není na serveru nakonfigurované. Napište na ${siteConfig.contactEmail}.`);
         } else {
           setError("Odeslání se nepodařilo. Zkuste to znovu.");
         }

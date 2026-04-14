@@ -9,6 +9,10 @@ export const leadSourceSchema = z.enum([
   "contact_page",
   /** CTA z článku / blogu — mapuje se na source_type article. */
   "article_cta",
+  /** Nábor /kariéra — jeden kanál s ostatními leady. */
+  "career",
+  /** Odběr novinek — duplicitně se ukládá i do subscribers. */
+  "newsletter",
 ]);
 
 export const lifeIntentSchema = z.enum(["general", "proposal", "check"]);
@@ -50,7 +54,7 @@ export const calculatorLeadBodySchema = z
         path: em.length ? ["email"] : ["phone"],
       });
     }
-    if (data.metadata && Object.keys(data.metadata).length > 25) {
+    if (data.metadata && Object.keys(data.metadata).length > 32) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Příliš mnoho položek v metadatech.",

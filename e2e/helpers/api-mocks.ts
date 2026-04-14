@@ -28,7 +28,7 @@ export async function mockSubscriberSubmitOk(page: Page): Promise<void> {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ ok: true, subscriberId: null }),
+      body: JSON.stringify({ ok: true, subscriberId: null, leadId: null }),
     });
   });
 }

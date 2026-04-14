@@ -1,9 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { sendRecruitmentEmailResend } from "@/lib/email/sendRecruitmentEmail";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { isServiceRoleConfigured } from "@/lib/supabase/env";
+import { processPublicLead } from "@/lib/leads/processPublicLead";
+import type { CalculatorLeadBody } from "@/lib/validation/calculatorLeadSchema";
 
 const wizardAnswersSchema = z
   .record(
@@ -54,6 +53,33 @@ function parseWizardContact(contact: string): { email: string; phone: string } {
   };
 }
 
+function careerDataToLeadBody(data: z.infer<typeof schema>): CalculatorLeadBody {
+  const { email, phone } = parseWizardContact(data.contact);
+  const meta: Record<string, string> = {};
+  const cv = data.cvUrl?.trim();
+  if (cv) meta.cv_url = cv.slice(0, 2000);
+  const pos = data.position?.trim();
+  if (pos) meta.position = pos.slice(0, 200);
+  if (data.wizardAnswers && Object.keys(data.wizardAnswers).length > 0) {
+    let j = JSON.stringify(data.wizardAnswers);
+    const max = 12_000;
+    if (j.length > max) j = j.slice(0, max) + "…";
+    meta.wizard_json = j;
+  }
+
+  return {
+    source: "career",
+    name: data.name.trim(),
+    email,
+    phone: phone.trim() ? phone.trim() : undefined,
+    consent: true,
+    sourcePath: data.pageHref?.trim() || undefined,
+    resultSummary: "Kariéra — zájem o spolupráci (náborový formulář)",
+    note: data.message?.trim() ? data.message.trim().slice(0, 4000) : undefined,
+    metadata: Object.keys(meta).length > 0 ? meta : undefined,
+  };
+}
+
 export async function submitRecruitmentApplication(input: unknown): Promise<RecruitmentActionResult> {
   const parsed = schema.safeParse(input);
   if (!parsed.success) {
@@ -62,78 +88,30 @@ export async function submitRecruitmentApplication(input: unknown): Promise<Recr
     return { ok: false, message: msg };
   }
 
-  const hasResend = Boolean(process.env.RESEND_API_KEY?.trim());
-  const hasDb = isServiceRoleConfigured();
-
-  if (!hasResend && !hasDb) {
+  if (!process.env.RESEND_API_KEY?.trim()) {
     return {
       ok: false,
       message:
-        "Odesílání není na serveru nakonfigurováno. Doplňte RESEND_API_KEY (e-mail) a/nebo Supabase service role (databáze).",
+        "Odesílání není na serveru nakonfigurováno. Doplňte RESEND_API_KEY a RESEND_FROM (Vercel / .env).",
     };
   }
 
-  let emailOk = false;
-  let dbOk = false;
-  const errors: string[] = [];
-
-  if (hasResend) {
-    try {
-      const { email, phone } = parseWizardContact(parsed.data.contact);
-      await sendRecruitmentEmailResend({
-        name: parsed.data.name,
-        emailFromContact: email,
-        phoneFromContact: phone,
-        wizardAnswers: parsed.data.wizardAnswers ?? undefined,
-        pageHref: parsed.data.pageHref,
-      });
-      emailOk = true;
-    } catch (e) {
-      console.error("[recruitment] Resend:", e);
-      const raw = e instanceof Error ? e.message : String(e);
-      let hint = "";
-      if (/domain|verify|not valid|validation|from address|sender/i.test(raw)) {
-        hint =
-          " V Resend ověřte doménu a na Vercelu nastavte RESEND_FROM (odesílatel z té domény). Výchozí onboarding@resend.dev obvykle nepošle na libovolný firemní e-mail.";
-      } else if (/api key|unauthorized|invalid api|401/i.test(raw)) {
-        hint = " Zkontrolujte RESEND_API_KEY na Vercelu (Production).";
-      }
-      errors.push(`E-mail se nepodařilo odeslat.${hint}`);
-    }
-  }
-
-  if (hasDb) {
-    try {
-      const admin = createAdminSupabaseClient();
-      const payload = {
-        name: parsed.data.name,
-        contact: parsed.data.contact,
-        message: parsed.data.message ?? null,
-        position: parsed.data.position ?? null,
-        cv_url: parsed.data.cvUrl?.trim() || null,
-        wizard_answers: parsed.data.wizardAnswers ?? null,
-        consent: true,
-        page_url: parsed.data.pageHref ?? null,
-      };
-      const { error } = await admin.from("job_applications").insert(payload);
-      if (error) {
-        console.error(error);
-        errors.push("Nepodařilo se uložit přihlášku do databáze.");
-      } else {
-        dbOk = true;
-      }
-    } catch (e) {
-      console.error("[recruitment] Supabase:", e);
-      errors.push("Nepodařilo se uložit přihlášku do databáze.");
-    }
-  }
-
-  if (emailOk || dbOk) {
+  try {
+    await processPublicLead(careerDataToLeadBody(parsed.data), { telemetryStep: "recruitment" });
     return { ok: true };
+  } catch (e) {
+    console.error("[recruitment] processPublicLead:", e);
+    const raw = e instanceof Error ? e.message : String(e);
+    let hint = "";
+    if (/domain|verify|not valid|validation|from address|sender/i.test(raw)) {
+      hint =
+        " V Resend ověřte doménu a na Vercelu nastavte RESEND_FROM (odesílatel z té domény). Výchozí onboarding@resend.dev obvykle nepošle na libovolný firemní e-mail.";
+    } else if (/api key|unauthorized|invalid api|401/i.test(raw)) {
+      hint = " Zkontrolujte RESEND_API_KEY na Vercelu (Production).";
+    }
+    return {
+      ok: false,
+      message: `Odeslání se nezdařilo.${hint ? ` ${hint}` : ""}`.trim(),
+    };
   }
-
-  return {
-    ok: false,
-    message: errors.join(" ") || "Odeslání se nezdařilo. Zkuste to prosím znovu.",
-  };
 }
