@@ -13,7 +13,8 @@ type Props = { defaultNext?: string; errorKey?: string };
 const errorMessages: Record<string, string> = {
   config: "Přihlášení do administrace není k dispozici. Obraťte se na správce webu.",
   auth: "Přihlášení se nezdařilo. Zkuste to znovu.",
-  forbidden: "Tento účet nemá oprávnění do administrace.",
+  forbidden:
+    "Tento účet nemá oprávnění do administrace. V Supabase musí existovat řádek v tabulce profiles (role admin nebo editor) se stejným id jako uživatel v Authentication.",
 };
 
 export function LoginForm({ defaultNext = "/admin", errorKey }: Props) {
