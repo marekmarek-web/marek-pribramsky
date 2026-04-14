@@ -37,6 +37,7 @@ export function RecruitmentLpHero() {
               <span className="relative inline-block text-gradient-shimmer-brand">
                 {RECRUITMENT_HERO.titleGradient}
               </span>
+              {" "}
               <br className="hidden md:block" />
               {RECRUITMENT_HERO.titleAfterLine}
             </h1>
