@@ -1,6 +1,5 @@
--- Interní role potřebují vidět profily kolegů (přiřazení leadů, zobrazení editora).
--- Nesmí být EXISTS (SELECT … FROM public.profiles) přímo v politice na profiles —
--- Postgres hlásí: infinite recursion detected in policy for relation "profiles".
+-- Oprava nasazení, kde už běžela stará verze 004: politika četla znovu z profiles
+-- uvnitř RLS na profiles → "infinite recursion detected in policy for relation profiles".
 
 create or replace function public.current_user_is_cms_staff()
 returns boolean
@@ -18,6 +17,8 @@ $$;
 revoke all on function public.current_user_is_cms_staff() from public;
 grant execute on function public.current_user_is_cms_staff() to authenticated;
 grant execute on function public.current_user_is_cms_staff() to service_role;
+
+drop policy if exists "Staff read all profiles" on public.profiles;
 
 create policy "Staff read all profiles"
   on public.profiles for select
