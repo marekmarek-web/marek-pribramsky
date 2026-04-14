@@ -1,6 +1,7 @@
 "use client";
 
 import { formatCurrency, formatRate } from "@/lib/calculators/mortgage/formatters";
+import { PrimaryTailoredCtaButton } from "@/components/ui/PrimaryTailoredCta";
 import type { MortgageResult } from "@/lib/calculators/mortgage/mortgage.types";
 
 export interface MortgageResultsPanelProps {
@@ -100,16 +101,7 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
         </div>
 
         {onCtaConsult != null ? (
-          <button
-            type="button"
-            onClick={onCtaConsult}
-            className="mt-5 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-bold text-white ring-1 ring-white/20 transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/80"
-          >
-            Chci konzultaci k této variantě
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </button>
+          <PrimaryTailoredCtaButton surface="onDarkNavy" className="mt-5 w-full" onClick={onCtaConsult} />
         ) : null}
       </div>
     </div>

@@ -13,11 +13,17 @@ type ServiceCardProps = {
 
 export function ServiceCard({ item, open, onToggle, panelId, triggerId }: ServiceCardProps) {
   return (
-    <div className={`sluzby-accordion-card rounded-2xl border border-white/80 bg-white/[0.97] shadow-lg backdrop-blur-xl transition-shadow duration-300 ${open ? "is-open ring-1 ring-brand-cyan/25" : "hover:shadow-xl"}`}>
+    <div
+      className={`sluzby-accordion-card rounded-2xl border bg-white/[0.97] shadow-lg backdrop-blur-xl transition-all duration-300 ${
+        open
+          ? "is-open border-brand-cyan/60 shadow-xl ring-2 ring-brand-cyan/35"
+          : "border-white/80 hover:border-white hover:shadow-xl"
+      }`}
+    >
       <button
         type="button"
         id={triggerId}
-        className="sluzby-acc-trigger flex w-full cursor-pointer flex-col items-center gap-1 rounded-2xl p-5 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2 sm:p-6"
+        className="sluzby-acc-trigger flex min-h-[52px] w-full cursor-pointer flex-col items-center gap-1 rounded-2xl p-5 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2 sm:min-h-[56px] sm:p-6"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={onToggle}
@@ -36,7 +42,7 @@ export function ServiceCard({ item, open, onToggle, panelId, triggerId }: Servic
         <h3 className="text-lg font-bold text-brand-navy sm:text-xl">{item.title}</h3>
         <p className="text-sm text-slate-600">{item.subtitle}</p>
         <svg
-          className={`sluzby-acc-chevron mt-2 h-5 w-5 text-brand-navy/50 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          className={`sluzby-acc-chevron mt-2 h-5 w-5 text-brand-navy/50 transition-transform duration-300 ease-out ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -58,11 +64,8 @@ export function ServiceCard({ item, open, onToggle, panelId, triggerId }: Servic
             <p className="text-center text-sm leading-relaxed text-slate-700 sm:text-left">{item.detail}</p>
             <Link
               href={item.ctaHref}
-              className="sluzby-acc-cta mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy"
+              className="sluzby-acc-cta mt-4 inline-flex min-h-[44px] w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy"
             >
-              <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
               {item.ctaLabel}
             </Link>
           </div>

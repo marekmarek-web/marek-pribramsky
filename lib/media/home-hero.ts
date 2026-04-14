@@ -1,20 +1,26 @@
+import type { CSSProperties } from "react";
+
 /**
- * Homepage hero — jeden zdroj, art direction přes responsive object-position.
- * Vertikálně vždy ukotvit nahoru (y = 0 %), aby při object-cover nezmizela hlava na žádném poměru stran.
- * Horizontálně mírně doprava — portrét je v pravé části snímku.
+ * Homepage hero — jeden zdroj, art direction přes object-position (inline u next/image).
  *
- * Volitelně lze později přepnout na `<picture>` + heromobile.jpg pro odlišný crop na XS.
+ * Důležité: třídy z imageClassName dřív nefungovaly — tailwind.config neobsahoval ./lib/**,
+ * takže object-* utility vůbec nevznikly a img měl výchozí object-position 50 % 50 % (useknutá hlava).
+ *
+ * Nepoužívat transform: translateY na img — u „cover“ odkryje horní okraj kontejneru a pod ním je
+ * vidět .hero-image-wrapper / sekce (modrý pruh).
  */
 
 export const HOME_HERO = {
   src: "/img/hero3.jpg",
   /** Popisný alt (ne jen jméno) */
   alt: "Marek Příbramský při konzultaci — finanční poradce Premium Brokers",
-  /**
-   * y: 0 % = horní okraj fotky u horního okraje rámu (priorita hlavy). x: jemný posun pod šířku viewportu.
-   */
-  imageClassName:
-    "hero-img-full object-cover max-sm:object-[58%_0%] sm:object-[60%_0%] md:object-[62%_0%] lg:object-[60%_0%] xl:object-[58%_0%] 2xl:object-[56%_0%]",
+  /** Jen základní třída z legacy CSS; object-fit/position řeší imageStyle. */
+  imageClassName: "hero-img-full",
+  /** y0 % = horní okraj snímku u horního okraje rámu (koruna hlavy v záběru). */
+  imageStyle: {
+    objectFit: "cover",
+    objectPosition: "54% 0",
+  } satisfies CSSProperties,
   sizes: "100vw",
   /** Hero je LCP */
   quality: 82 as const,

@@ -51,9 +51,11 @@ export default function GdprPage() {
             </Link>
             .
           </p>
-          <p className="text-sm text-brand-muted leading-relaxed border-l-4 border-brand-cyan/40 pl-4 py-1">
-            {legalConfig.regulatoryDisclaimerFull}
-          </p>
+          <div className="space-y-3 text-sm text-brand-muted leading-relaxed border-l-4 border-brand-cyan/40 pl-4 py-1">
+            {legalConfig.regulatoryDisclaimerFullParagraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
           <Link
             href="/kontakt"
             className="inline-block mt-8 px-6 py-3 rounded-xl bg-brand-navy text-white font-semibold hover:bg-brand-navy/90"

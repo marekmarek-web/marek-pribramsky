@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { legalConfig } from "@/config/legal";
 import { pageOg } from "@/lib/seo/page-meta";
 
 const title = "Jak probíhá spolupráce";
@@ -75,8 +76,17 @@ export default function SpolupracePage() {
             </div>
           </div>
         </div>
+        <aside className="mt-14 max-w-3xl rounded-2xl border border-brand-border bg-slate-50/80 p-6 text-sm leading-relaxed text-brand-muted sm:p-8">
+          <h2 className="mb-4 text-base font-bold text-brand-text">Právní rámec spolupráce</h2>
+          <div className="space-y-3">
+            {legalConfig.regulatoryDisclaimerShortParagraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </aside>
+
         <p className="mt-12">
-          <Link href="/" className="text-brand-navy font-semibold hover:text-brand-cyan">
+          <Link href="/" className="font-semibold text-brand-navy hover:text-brand-cyan">
             ← Zpět na úvod
           </Link>
         </p>

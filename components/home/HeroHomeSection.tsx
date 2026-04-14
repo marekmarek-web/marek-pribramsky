@@ -38,6 +38,7 @@ export function HeroHomeSection({ booted }: { booted: boolean }) {
             fill
             priority
             className={HOME_HERO.imageClassName}
+            style={HOME_HERO.imageStyle}
             sizes={HOME_HERO.sizes}
             quality={HOME_HERO.quality}
           />
@@ -51,10 +52,12 @@ export function HeroHomeSection({ booted }: { booted: boolean }) {
             <span className="text-reveal-line">Jsem</span>
           </div>
           <div className="text-reveal-mask">
-            <span className="text-reveal-line text-gradient-shimmer-blue">Marek Příbramský.</span>
+            <span className="text-reveal-line">
+              <span className="hero-name-gradient inline-block">Marek Příbramský.</span>
+            </span>
           </div>
         </h1>
-        <p className="hero-subtitle mx-auto mt-6 max-w-2xl rounded-2xl bg-black/42 px-5 py-4 text-lg leading-relaxed text-white opacity-0 shadow-[0_12px_40px_rgba(0,0,0,0.35)] ring-1 ring-white/12 backdrop-blur-[6px] hero-text-shadow max-sm:mt-4 max-sm:px-4 max-sm:py-3 max-sm:text-base sm:mt-8 sm:px-6 sm:py-5 md:text-xl">
+        <p className="hero-subtitle hero-subtitle-grid mx-auto mt-6 max-w-2xl rounded-2xl px-5 py-4 text-lg leading-relaxed text-white opacity-0 hero-text-shadow max-sm:mt-4 max-sm:px-4 max-sm:py-3 max-sm:text-base sm:mt-8 sm:px-6 sm:py-5 md:text-xl">
           Finanční plánování pro rodiny a firmy — srozumitelně, bez tlaku na produkt.
           <span className="mt-3 block text-base text-white/95 md:text-lg">
             Sjednotíme cíle, rizika a nástroje tak, aby dávaly smysl vaší situaci.

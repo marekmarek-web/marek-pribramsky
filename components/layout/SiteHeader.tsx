@@ -2,27 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnalyticsEvents } from "@/lib/analytics/events";
 import { track } from "@/lib/analytics/track";
 import { cta } from "@/config/cta";
 import { mainNav, mobileMenuLinks, toolsDropdown, type NavItem } from "@/config/site";
 
-const CALC_PATHS = [
-  "/hypotecnikalkulacka",
-  "/investicnikalkulacka",
-  "/zivotnikalkulacka",
-  "/penzijnikalkulacka",
-];
-
-function isCalculatorRoute(path: string) {
-  return CALC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
-}
-
 function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const className =
-    "rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC6F2]/50 focus-visible:ring-offset-2";
+    "rounded-full px-4 py-2.5 text-base font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC6F2]/50 focus-visible:ring-offset-2 min-h-[46px] inline-flex items-center md:text-[1.0625rem]";
   if (item.external) {
     return (
       <a
@@ -44,31 +32,10 @@ function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void 
 }
 
 export function SiteHeader() {
-  const pathname = usePathname();
-  const reveal = isCalculatorRoute(pathname ?? "");
-  const isHome = pathname === "/";
   const [open, setOpen] = useState(false);
-  const [headerVisible, setHeaderVisible] = useState(!(isHome || reveal));
   const toolsBtnRef = useRef<HTMLButtonElement>(null);
   const toolsPanelRef = useRef<HTMLDivElement>(null);
   const [toolsOpen, setToolsOpen] = useState(false);
-
-  useEffect(() => {
-    if (reveal) {
-      const onScroll = () => setHeaderVisible(window.scrollY > 80);
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-    if (isHome) {
-      const onScroll = () => setHeaderVisible(window.scrollY > 140);
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-    setHeaderVisible(true);
-    return;
-  }, [reveal, isHome, pathname]);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -94,33 +61,32 @@ export function SiteHeader() {
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
-  const headerClass =
-    headerVisible
-      ? "header-entry fixed top-0 left-0 right-0 z-50 transition-transform duration-500 ease-out visible"
-      : "header-entry fixed top-0 left-0 right-0 z-50 transition-transform duration-500 ease-out";
-
   return (
     <>
-      <header id="main-header" className={headerClass} role="banner">
-        <div className="header-inner max-w-6xl mx-auto px-4 pt-4 pb-2">
-          <div className="header-pill-glass px-3 py-2 flex justify-between items-center gap-3">
+      <header
+        id="main-header"
+        className="header-entry fixed top-0 left-0 right-0 z-50 transition-transform duration-500 ease-out visible"
+        role="banner"
+      >
+        <div className="header-inner mx-auto max-w-6xl px-4 pb-2 pt-4">
+          <div className="header-pill-glass flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
             <Link
               href="/"
-              className="flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white/90 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0"
+              className="flex shrink-0 items-center gap-2 rounded-full bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 min-h-[48px]"
               aria-label="Úvodní stránka"
             >
               <Image
                 src="/img/logos/pb-logo-no-bg.png"
                 alt="Premium Brokers"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
+                width={132}
+                height={44}
+                className="h-9 w-auto sm:h-10"
                 priority
               />
             </Link>
             <button
               type="button"
-              className="hamburger-btn md:hidden flex items-center justify-center w-11 h-11 rounded-full text-slate-700 hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40"
+              className="hamburger-btn flex h-12 w-12 items-center justify-center rounded-full text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 md:hidden"
               aria-label={open ? "Zavřít menu" : "Otevřít menu"}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -130,7 +96,7 @@ export function SiteHeader() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <nav className="hidden md:flex items-center gap-1" aria-label="Hlavní navigace">
+            <nav className="hidden items-center gap-0.5 md:flex" aria-label="Hlavní navigace">
               {mainNav.slice(0, 3).map((item) => (
                 <NavLink key={item.href + item.label} item={item} />
               ))}
@@ -138,7 +104,7 @@ export function SiteHeader() {
                 <button
                   ref={toolsBtnRef}
                   type="button"
-                  className="rounded-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1"
+                  className="flex min-h-[46px] items-center gap-1 rounded-full px-4 py-2.5 text-base font-medium text-slate-700 transition hover:bg-white/60 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:text-[1.0625rem]"
                   aria-expanded={toolsOpen}
                   aria-haspopup="true"
                   onClick={(e) => {
@@ -186,10 +152,10 @@ export function SiteHeader() {
             <Link
               href="/#kontakt"
               onClick={() => track(AnalyticsEvents.ctaClick, { cta_id: "header_contact" })}
-              className="header-cta lead-cta-btn hidden md:flex items-center justify-center gap-2 rounded-full text-white px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0 no-underline"
+              className="header-cta lead-cta-btn hidden min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white no-underline transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:flex md:text-[1.0625rem]"
             >
               <span>{cta.headerPrimary}</span>
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
             </Link>
@@ -217,13 +183,16 @@ export function SiteHeader() {
           ))}
           <Link
             href="/#kontakt"
-            className="mobile-nav-link lead-cta-btn mt-4 py-4 rounded-xl text-white font-semibold text-center no-underline"
+            className="mobile-nav-link lead-cta-btn mt-4 inline-flex items-center justify-center gap-2 py-4 rounded-xl text-white font-semibold text-center no-underline"
             onClick={() => {
               track(AnalyticsEvents.ctaClick, { cta_id: "mobile_drawer_contact" });
               closeMenu();
             }}
           >
             {cta.headerPrimary}
+            <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
+            </svg>
           </Link>
         </div>
       </nav>

@@ -16,6 +16,7 @@ export const mainNav: NavItem[] = [
   { label: "Služby", href: "/#sluzby" },
   { label: "Spolupráce", href: "/#spoluprace" },
   { label: "Blog", href: "/blog" },
+  { label: "Kariéra", href: "/kariera" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
 
@@ -26,6 +27,7 @@ export const mobileMenuLinks: NavItem[] = [
   { label: "Spolupráce", href: "/#spoluprace" },
   { label: "Kalkulačky", href: "/kalkulacky" },
   { label: "Blog", href: "/blog" },
+  { label: "Kariéra", href: "/kariera" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
 
@@ -75,10 +77,10 @@ export const footerToolLinks: NavItem[] = [
 export type Branch = { city: string; lines: string[]; muted?: boolean };
 
 export const branches: Branch[] = [
-  { city: "Roudnice nad Labem", lines: ["Nám. Jana z Dražic 99, 413 01"] },
-  { city: "Štětí", lines: ["U Tržnice 701, 411 08"] },
-  { city: "Litoměřice", lines: ["5. května 10, 412 01"] },
-  { city: "Praha", lines: ["Žatecká 55/14, 110 00"] },
+  { city: "Roudnice nad Labem", lines: ["Nám. Jana z Dražic 99, 413\u00A001"] },
+  { city: "Štětí", lines: ["U Tržnice 701, 411\u00A008"] },
+  { city: "Litoměřice", lines: ["5. května 10, 412\u00A001"] },
+  { city: "Praha", lines: ["Žatecká 55/14, 110\u00A000"] },
   { city: "Lovosice", lines: ["Brzy otevíráme"], muted: true },
 ];
 

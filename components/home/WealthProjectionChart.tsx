@@ -4,6 +4,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
 
+function formatCzk(n: number) {
+  return new Intl.NumberFormat("cs-CZ", {
+    style: "currency",
+    currency: "CZK",
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
 export function WealthProjectionChart() {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -89,7 +97,15 @@ export function WealthProjectionChart() {
       const x = ((e.clientX - rect.left) / rect.width) * w;
       let i = Math.round((x / w) * (strategyData.length - 1));
       i = Math.max(0, Math.min(i, strategyData.length - 1));
-      tip.textContent = labels[i];
+      const strat = strategyData[i];
+      const avg = averageData[i];
+      const diff = strat - avg;
+      tip.innerHTML = [
+        `<span class="wealth-tip-line wealth-tip-time">${labels[i]}</span>`,
+        `<span class="wealth-tip-line">Strategie: <strong>${formatCzk(strat)}</strong></span>`,
+        `<span class="wealth-tip-line">Běžný účet: <strong>${formatCzk(avg)}</strong></span>`,
+        `<span class="wealth-tip-line wealth-tip-diff">Rozdíl: <strong>${formatCzk(diff)}</strong></span>`,
+      ].join("");
       tip.classList.add("visible");
       tip.style.left = `${e.clientX - wrapRect.left}px`;
       tip.style.top = `${e.clientY - wrapRect.top}px`;
@@ -137,12 +153,25 @@ export function WealthProjectionChart() {
     };
   }, []);
 
+  const milestoneIdx = [0, 3, 5];
+  const strategyData = [500000, 550000, 650000, 750000, 900000, 1100000];
+  const w = 400;
+  const h = 200;
+  const yMin = 500000;
+  const yMax = 1100000;
+  function yToCoord(val: number) {
+    return h - ((val - yMin) / (yMax - yMin)) * h;
+  }
+  function xToCoord(i: number) {
+    return (i / (strategyData.length - 1)) * w;
+  }
+
   return (
     <div className="relative h-64 w-full wealth-chart-svg-wrap" ref={wrapRef}>
       <svg
         ref={svgRef}
         viewBox="0 0 400 220"
-        className="w-full h-full stroke-[1.5] fill-none wealth-chart-svg"
+        className="h-full w-full stroke-[1.5] fill-none wealth-chart-svg"
         id="wealthChartSvg"
         aria-label="Graf projekce majetku"
       >
@@ -167,6 +196,21 @@ export function WealthProjectionChart() {
             <path id="wealthChartPathAverage" strokeDasharray="6 4" strokeWidth={2} d="" />
             <path id="wealthChartPathFill" fill="url(#wealthChartGradient)" stroke="none" d="" />
             <path id="wealthChartPathLine" strokeWidth={3} d="" className="wealth-chart-line-stroke" />
+            {milestoneIdx.map((i) => {
+              const cx = xToCoord(i);
+              const cy = yToCoord(strategyData[i]) - 8;
+              return (
+                <text
+                  key={i}
+                  x={cx}
+                  y={cy}
+                  className="wealth-milestone-label"
+                  textAnchor={i === 0 ? "start" : i === 5 ? "end" : "middle"}
+                >
+                  {formatCzk(strategyData[i])}
+                </text>
+              );
+            })}
           </g>
         </g>
         <text x="0" y="205" className="wealth-chart-axis" textAnchor="start">

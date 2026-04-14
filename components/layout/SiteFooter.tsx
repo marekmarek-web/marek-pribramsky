@@ -1,7 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FooterLeadForm } from "@/components/forms/FooterLeadForm";
-import { SubscribeInlineForm } from "@/components/forms/SubscribeInlineForm";
 import { legalConfig } from "@/config/legal";
 import {
   branches,
@@ -40,9 +38,9 @@ export async function SiteFooter() {
   const footerTagline = await getFooterTagline();
 
   return (
-    <footer className="bg-brand-navy py-12 text-white sm:py-14 lg:py-16" role="contentinfo">
+    <footer className="bg-brand-navy py-10 text-white sm:py-12 lg:py-14" role="contentinfo">
       <div className="footer-inner mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="grid gap-10 sm:gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <Image src="/img/logos/pb-logo-no-bg-grey.png" alt="Premium Brokers" width={120} height={40} className="h-9 w-auto" />
@@ -126,31 +124,19 @@ export async function SiteFooter() {
                   {siteConfig.contactEmail}
                 </a>
               </li>
+              <li className="pt-1">
+                <Link
+                  href="/kontakt"
+                  className="inline-flex min-h-[44px] items-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/35 hover:bg-white/10"
+                >
+                  Stránka kontakt
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h3 className="text-base font-semibold text-white">Krátká zpráva z patičky</h3>
-              <p className="text-sm text-slate-400">Jedna věta stačí — odpovím osobně, ne hromadnou šablonou.</p>
-            </div>
-          </div>
-          <FooterLeadForm />
-        </div>
-
-        <div id="newsletter-footer" className="mt-8 scroll-mt-24">
-          <SubscribeInlineForm
-            variant="dark"
-            source="footer"
-            interestSegment="blog_audience"
-            headline="Novinky e-mailem (volitelně)"
-            description="Občas tip z praxe nebo oznámení nového článku — ne denní spam. Oddělené od žádosti o konzultaci výše."
-          />
-        </div>
-
-        <div className="mt-10 border-t border-white/10 pt-8">
+        <div className="mt-8 border-t border-white/10 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <p className="text-xs text-slate-500">
               &copy; {new Date().getFullYear()} {siteConfig.name}
@@ -172,9 +158,11 @@ export async function SiteFooter() {
               </Link>
             </div>
           </div>
-          <p className="mt-6 max-w-4xl text-[11px] leading-relaxed text-slate-500">
-            {legalConfig.regulatoryDisclaimerShort}
-          </p>
+          <div className="mt-6 max-w-4xl space-y-3 text-[11px] leading-relaxed text-slate-500">
+            {legalConfig.regulatoryDisclaimerShortParagraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
           <p className="mt-4 text-xs text-slate-500">
             Vytvořil{" "}
             <a

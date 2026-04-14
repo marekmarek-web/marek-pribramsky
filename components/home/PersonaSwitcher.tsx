@@ -122,6 +122,9 @@ export function PersonaSwitcher() {
                   className="lead-cta-btn inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-8 py-3 text-sm font-semibold no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2"
                 >
                   {p.ctaLabel}
+                  <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
                 </Link>
               </div>
             </div>

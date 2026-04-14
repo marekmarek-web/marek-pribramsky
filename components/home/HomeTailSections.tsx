@@ -48,16 +48,24 @@ export function HomeTailSections() {
 function SluzbySection() {
   return (
     <section id="sluzby" className="sluzby-section-bg relative overflow-visible py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32">
-      <div className="absolute inset-0 z-[1] bg-black/78" aria-hidden />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/70 via-black/72 to-black/82" aria-hidden />
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="animate-fade-in-up mb-10 text-center lg:mb-12">
-          <span className="mb-4 inline-block rounded-full border border-white/70 bg-white/50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-sm backdrop-blur-md">
-            PORTFOLIO
-          </span>
-          <h2 className="section-title mb-2 font-bold text-white drop-shadow-md">Moje služby</h2>
-          <p className="mx-auto max-w-2xl text-sm text-white/85 sm:text-base">
-            Rozklikněte oblast — stručný popis a další krok (orientační kalkulačka nebo osobní konzultace).
-          </p>
+        <div className="animate-fade-in-up relative mb-10 text-center lg:mb-12">
+          <div
+            className="pointer-events-none absolute inset-x-0 -top-4 bottom-0 mx-auto max-w-3xl rounded-[2rem] bg-gradient-to-b from-black/50 via-black/35 to-transparent blur-[1px]"
+            aria-hidden
+          />
+          <div className="relative rounded-3xl px-4 py-8 sm:px-8 sm:py-10">
+            <span className="mb-4 inline-block rounded-full border border-white/80 bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-[0_2px_20px_rgba(0,0,0,0.35)] backdrop-blur-md [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]">
+              PORTFOLIO
+            </span>
+            <h2 className="section-title mb-2 font-bold text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.65),0_1px_0_rgba(0,0,0,0.4)]">
+              Moje služby
+            </h2>
+            <p className="mx-auto max-w-2xl text-sm text-white/95 sm:text-base [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
+              Rozklikněte oblast — stručný popis a další krok (orientační kalkulačka nebo osobní konzultace).
+            </p>
+          </div>
         </div>
         <ServicesAccordion />
       </div>
@@ -86,7 +94,7 @@ function MojeCestaSection() {
           </p>
         </div>
         <div
-          className="moje-cesta-box max-h-[min(72vh,680px)] min-h-[360px] overflow-y-auto rounded-3xl border border-slate-200/90 bg-white p-4 shadow-sm sm:p-6 lg:p-8"
+          className="moje-cesta-box max-h-[min(70vh,640px)] min-h-[320px] overflow-y-auto rounded-3xl border border-slate-200/90 bg-white p-4 shadow-sm sm:p-6 lg:p-8"
           style={{ scrollbarWidth: "thin", isolation: "isolate" }}
         >
           {timelineEntries.map((it, idx) => (
@@ -249,30 +257,32 @@ function PobockySection() {
 
 function ReferenceSection() {
   return (
-    <section id="reference" className="py-16 lg:py-24 reference-section relative overflow-hidden">
+    <section id="reference" className="py-16 lg:py-24 reference-section relative overflow-x-hidden">
       <div className="reference-container relative z-10">
-        <div className="text-center mb-10 lg:mb-12 animate-fade-in-up">
-          <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-white text-xs font-semibold mb-3">Google Recenze</span>
-          <h2 className="section-title font-bold text-white mb-3">Reference</h2>
-          <p className="text-white/80 text-base lg:text-lg max-w-xl mx-auto">
+        <div className="mb-10 text-center animate-fade-in-up lg:mb-12">
+          <span className="mb-3 inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white">Google Recenze</span>
+          <h2 className="section-title mb-3 font-bold text-white">Reference</h2>
+          <p className="mx-auto max-w-xl text-base text-white/80 lg:text-lg">
             Ověřená hodnocení na Google — reální klienti, ne marketingové citace.
           </p>
         </div>
-        <div className="reference-marquee reference-marquee-white rounded-3xl border border-slate-200/80 bg-white py-10 px-2 md:px-4 relative overflow-hidden shadow-sm">
-          <div className="reference-marquee-fade reference-marquee-fade-left" />
-          <div className="reference-marquee-fade reference-marquee-fade-right" />
+      </div>
+      <div className="relative z-[5] w-full">
+        <div className="reference-marquee reference-marquee-fullbleed relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden py-6 md:py-8">
+          <div className="reference-marquee-fade reference-marquee-fade-left" aria-hidden />
+          <div className="reference-marquee-fade reference-marquee-fade-right" aria-hidden />
           <ReviewsMarquee />
         </div>
-        <div className="text-center mt-8">
-          <a
-            href="https://www.google.com/search?q=Premium+Brokers+s.r.o.+Recenze&hl=cs-CZ#lkt=LocalPoiReviews"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-brand-navy text-white font-semibold text-sm hover:bg-brand-navy/90 transition"
-          >
-            Zobrazit všechny recenze na Google
-          </a>
-        </div>
+      </div>
+      <div className="reference-container relative z-10 mt-8 text-center">
+        <a
+          href="https://www.google.com/search?q=Premium+Brokers+s.r.o.+Recenze&hl=cs-CZ#lkt=LocalPoiReviews"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-navy/90"
+        >
+          Zobrazit všechny recenze na Google
+        </a>
       </div>
     </section>
   );

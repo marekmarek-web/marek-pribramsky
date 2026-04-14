@@ -4,8 +4,14 @@
  * Secondary = nástroje, čtení, nízký závazek.
  */
 
+/** Hlavní konverzní text (šipka » je v komponentách jako ikona, viz životní kalkulačka). */
+export const CTA_PRIMARY_TAILORED = "Chci řešení na míru" as const;
+
 export const cta = {
-  /** Header, mobilní drawer — hlavní konverze */
+  /** Text + styl modrého CTA na stránkách kalkulaček (panely výsledků) — nesdělujte s hlavičkou/blogem. */
+  primaryTailored: CTA_PRIMARY_TAILORED,
+
+  /** Header, mobilní drawer */
   headerPrimary: "Domluvit konzultaci",
 
   /** Sekce Můj postup (homepage) */

@@ -1,6 +1,7 @@
 "use client";
 
 import { formatCurrency } from "@/lib/calculators/pension/formatters";
+import { PrimaryTailoredCtaButton } from "@/components/ui/PrimaryTailoredCta";
 import type { PensionResult } from "@/lib/calculators/pension/pension.types";
 
 export interface PensionResultsPanelProps {
@@ -55,17 +56,12 @@ export function PensionResultsPanel({ result, onCtaPrimary }: PensionResultsPane
 
         <div className="pt-4">
           {onCtaPrimary != null && (
-            <button
-              type="button"
+            <PrimaryTailoredCtaButton
+              surface="onDarkNavy"
+              className="w-full"
               data-testid="pension-calculator-cta"
               onClick={onCtaPrimary}
-              className="flex min-h-[48px] w-full items-center justify-center gap-3 rounded-[14px] bg-[#2563eb] px-6 py-4 font-bold text-white shadow-lg transition-all hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1f4e]"
-            >
-              <span className="text-sm sm:text-base">Chci tento plán nastavit</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
+            />
           )}
           <p className="text-xs text-slate-300/80 mt-3 text-center leading-relaxed">
             Výpočet předpokládá zhodnocení 7 % p.a. (akciové trhy).
