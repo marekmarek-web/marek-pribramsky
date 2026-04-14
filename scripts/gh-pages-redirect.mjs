@@ -1,16 +1,45 @@
 /**
- * Přepíše statické HTML soubory (pro GitHub Pages) na okamžité přesměrování na produkční Next.js web.
- * Spusť: node scripts/gh-pages-redirect.mjs
- * BASE sjednoťte s NEXT_PUBLIC_SITE_URL na Vercelu (bez koncového lomítka).
+ * Přepíše statické HTML soubory (pro GitHub Pages) na přesměrování na produkční Next.js web.
+ *
+ * Pořadí URL:
+ * 1) proměnná prostředí GH_PAGES_REDIRECT_BASE * 2) první řádek v config/gh-pages-redirect-base.txt začínající na http (řádky začínající # se ignorují)
+ *
+ * Spusť: pnpm gh-pages:redirects
  */
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 
-const BASE = (process.env.GH_PAGES_REDIRECT_BASE || "https://www.marekpribramsky.cz").replace(/\/$/, "");
+function resolveBase() {
+  const fromEnv = process.env.GH_PAGES_REDIRECT_BASE?.trim();
+  if (fromEnv) return fromEnv.replace(/\/$/, "");
+
+  const configPath = join(root, "config/gh-pages-redirect-base.txt");
+  let text;
+  try {
+    text = readFileSync(configPath, "utf8");
+  } catch {
+    console.error("Chybí config/gh-pages-redirect-base.txt nebo GH_PAGES_REDIRECT_BASE.");
+    process.exit(1);
+  }
+
+  const line = text
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .find((l) => l && !l.startsWith("#") && /^https?:\/\//i.test(l));
+
+  if (!line) {
+    console.error("V config/gh-pages-redirect-base.txt chybí řádek s URL (https://…).");
+    process.exit(1);
+  }
+
+  return line.replace(/\/$/, "");
+}
+
+const BASE = resolveBase();
 
 function page(relPath, pathOnSite) {
   const dest = `${BASE}${pathOnSite.startsWith("/") ? pathOnSite : `/${pathOnSite}`}`;

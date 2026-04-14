@@ -1,0 +1,4 @@
+# Kam mají statické stránky na GitHub Pages přesměrovat (bez koncového / na řádku s URL).
+# Dokud DNS pro www.marekpribramsky.cz nevede na Vercel, nastavte níže Production URL z Vercelu
+# (Project → Deployments → Production → Open, nebo Domains → *.vercel.app).
+https://www.marekpribramsky.cz

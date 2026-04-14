@@ -11,6 +11,10 @@
 - **Production:** nastavit `NEXT_PUBLIC_SITE_URL` na produkční doménu (např. `https://www.marekpribramsky.cz`).
 - **Preview:** `NEXT_PUBLIC_SITE_URL` může zůstat výchozí Vercel URL nebo `VERCEL_URL` (Next často používá `metadataBase` z `NEXT_PUBLIC_SITE_URL` — pro preview nastavte explicitně preview URL pokud je potřeba správné OG).
 
+### GitHub Pages a DNS (před přepnutím domény)
+
+Dokud **vlastní doména** ještě **nesměřuje na Vercel**, přesměrování ze statických souborů v repu (GitHub Pages) musí cílit na **funkční URL** — obvykle **Production `*.vercel.app`** z Vercel dashboardu. Upravte **`config/gh-pages-redirect-base.txt`**, spusťte **`pnpm gh-pages:redirects`**, commitněte vygenerované `index.html` soubory. Po přepnutí DNS tam zadejte finální `https://www…` a skript spusťte znovu.
+
 ## 2. Build
 
 - Framework: **Next.js** (auto-detect).

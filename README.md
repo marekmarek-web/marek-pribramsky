@@ -36,7 +36,11 @@ Postup: **`docs/deploy-playbook.md`**. Po nasazení: **`docs/post-deploy-smoke-t
 
 ### GitHub Pages (`*.github.io/.../marek-pribramsky/`)
 
-GitHub Pages umí jen statické soubory — **nepouští Next.js**. Kořenové a staré `**/index.html` v repu proto přesměrovávají na produkční web (výchozí `https://www.marekpribramsky.cz`). Při změně domény spusťte `pnpm gh-pages:redirects` nebo `GH_PAGES_REDIRECT_BASE=https://vaše-domena.cz pnpm gh-pages:redirects`, pak commitněte vygenerované HTML.
+GitHub Pages umí jen statické soubory — **nepouští Next.js**. Kořenové a staré `**/index.html` přesměrovávají na stejnou adresu jako produkční Next.js web.
+
+- **Kam přesměrovat** řídí soubor **`config/gh-pages-redirect-base.txt`** (první řádek s `https://`, řádky s `#` se ignorují), případně jednorázově env **`GH_PAGES_REDIRECT_BASE`**.
+- **Dokud DNS pro `www.marekpribramsky.cz` nevede na Vercel**, nastavte v tom souboru **Production URL z Vercelu** (typicky `https://…vercel.app`), spusťte `pnpm gh-pages:redirects` a commitněte změny v `*.html`.
+- Po přepnutí DNS vraťte do souboru **`https://www.marekpribramsky.cz`**, znovu `pnpm gh-pages:redirects`, commit.
 
 ## Observability & analytics
 
