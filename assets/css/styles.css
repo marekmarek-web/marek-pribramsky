@@ -143,41 +143,34 @@ body {
   object-position: 54% 0;
   vertical-align: middle;
 }
+/* Art direction — bez inline objectPosition u next/image (jinak by CSS neplatilo) */
 @media (max-width: 640px) {
-  .hero-aurora {
-    min-height: 80vh;
+  .hero-aurora .hero-img-full {
+    object-position: 52% 8%;
   }
-  .hero-aurora .hero-image-wrapper {
-    inset: 0.5rem;
-  }
-  /* object-position ?e?? Tailwind v lib/media/home-hero.ts (vrchovat? = hlava v z?b?ru) */
-  .hero-aurora .hero-title {
-    font-size: clamp(2rem, 8vw, 3rem);
-    line-height: 1.15;
-  }
-  .hero-aurora .hero-content {
-    padding-top: 3.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .hero-aurora .hero-subtitle {
-    font-size: 1rem;
-    margin-top: 0.75rem;
-  }
-  .hero-badges-center {
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-  }
-  .hero-scroll-link {
-    bottom: 1rem;
+  .hero-aurora.hero-stack-sm .hero-image-wrapper {
+    position: relative;
+    inset: auto !important;
+    flex-shrink: 0;
   }
 }
 @media (min-width: 641px) and (max-width: 1023px) {
-  .hero-aurora .hero-content {
-    padding-top: 4rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+  .hero-aurora .hero-img-full {
+    object-position: 50% 2%;
   }
+}
+/* Úzký landscape — méně vertikální ořez obličeje */
+@media (max-width: 896px) and (orientation: landscape) and (max-height: 520px) {
+  .hero-aurora .hero-img-full {
+    object-position: 50% 0;
+  }
+}
+@media (max-width: 640px) {
+  .hero-aurora .hero-image-wrapper {
+    inset: 0.5rem;
+  }
+}
+@media (min-width: 641px) and (max-width: 1023px) {
   .hero-aurora .hero-image-wrapper {
     inset: 1rem;
   }
@@ -530,14 +523,17 @@ body {
   justify-content: center;
   color: #15803d;
 }
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .qc-widget {
-    right: 14px;
-    bottom: 14px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
   }
   .qc-button {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
+  }
+  .qc-panel {
+    bottom: 68px;
   }
 }
 

@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     template: siteConfig.titleTemplate,
   },
   description: siteConfig.defaultDescription,
+  icons: {
+    icon: [{ url: "/img/logos/pb-logo-no-bg.png", type: "image/png" }],
+    apple: [{ url: "/img/logos/pb-logo-no-bg.png", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = {

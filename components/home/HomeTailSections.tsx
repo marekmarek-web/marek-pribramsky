@@ -106,7 +106,9 @@ function MojeCestaSection() {
                 <div className={`timeline-year text-5xl font-black sm:text-6xl ${it.yearClass ?? "text-slate-200"}`}>{it.year}</div>
               </div>
               <div className="timeline-content min-w-0 md:w-[70%]">
-                <div className="relative mb-4 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+                <div
+                  className={`relative mb-4 w-full overflow-hidden rounded-2xl bg-slate-100 ${it.year === "2015" ? "aspect-[16/11]" : "aspect-[16/10]"}`}
+                >
                   <Image
                     src={it.img}
                     alt={timelinePhotoAlt(it.title, it.year)}

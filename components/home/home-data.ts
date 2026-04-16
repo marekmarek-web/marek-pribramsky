@@ -160,7 +160,7 @@ export const timelineEntries: TimelineEntry[] = [
     img: "/img/2015.png",
     title: "Přestup do FINGO",
     text: "Pochopení, že existují lepší možnosti – přestup do F&P Consulting s.r.o. (dnešní FINGO).",
-    imagePositionClass: "object-[center_50%] sm:object-[center_46%]",
+    imagePositionClass: "object-[center_28%] sm:object-[center_24%]",
   },
   {
     year: "2016",

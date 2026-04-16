@@ -38,9 +38,9 @@ export async function SiteFooter() {
   const footerTagline = await getFooterTagline();
 
   return (
-    <footer className="bg-brand-navy py-10 text-white sm:py-12 lg:py-14" role="contentinfo">
+    <footer className="bg-brand-navy py-8 text-white sm:py-12 lg:py-14" role="contentinfo">
       <div className="footer-inner mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="grid gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-3">
               <Image src="/img/logos/pb-logo-no-bg-grey.png" alt="Premium Brokers" width={120} height={40} className="h-9 w-auto" />
@@ -63,10 +63,10 @@ export async function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-5">
-            <div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-10 lg:col-span-5">
+            <div className="min-w-0">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Rychlé odkazy</h3>
-              <ul className="mt-4 space-y-2.5 text-sm">
+              <ul className="mt-3 space-y-2 text-sm sm:mt-4 sm:space-y-2.5">
                 {footerQuickLinks.map((l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="text-slate-300 transition hover:text-white">
@@ -76,9 +76,9 @@ export async function SiteFooter() {
                 ))}
               </ul>
             </div>
-            <div>
+            <div className="min-w-0">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Nástroje</h3>
-              <ul className="mt-4 space-y-2.5 text-sm">
+              <ul className="mt-3 space-y-2 text-sm sm:mt-4 sm:space-y-2.5">
                 {footerToolLinks.map((l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="text-slate-300 transition hover:text-white">
@@ -88,7 +88,7 @@ export async function SiteFooter() {
                 ))}
               </ul>
             </div>
-            <div>
+            <div className="col-span-2 min-w-0 sm:col-span-1">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Pobočky</h3>
               <ul className="mt-4 space-y-4 text-sm text-slate-300">
                 {branches.map((b) => (

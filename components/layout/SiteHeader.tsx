@@ -10,7 +10,7 @@ import { mainNav, mobileMenuLinks, toolsDropdown, type NavItem } from "@/config/
 
 function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const className =
-    "rounded-full px-4 py-2.5 text-base font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC6F2]/50 focus-visible:ring-offset-2 min-h-[46px] inline-flex items-center md:text-[1.0625rem]";
+    "rounded-full px-4 py-2.5 text-base font-medium text-slate-700 hover:bg-white/60 hover:text-slate-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC6F2]/50 focus-visible:ring-offset-2 min-h-[46px] inline-flex shrink-0 items-center whitespace-nowrap md:px-2.5 md:py-2 md:text-sm md:min-h-[42px] xl:px-4 xl:py-2.5 xl:min-h-[46px] xl:text-[1.0625rem]";
   if (item.external) {
     return (
       <a
@@ -69,10 +69,10 @@ export function SiteHeader() {
         role="banner"
       >
         <div className="header-inner mx-auto max-w-6xl px-4 pb-2 pt-4">
-          <div className="header-pill-glass flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+          <div className="header-pill-glass flex min-w-0 items-center justify-between gap-1.5 px-2.5 py-2.5 sm:gap-2 sm:px-4 sm:py-3 md:gap-2 md:px-2.5 xl:gap-3 xl:px-4">
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2 rounded-full bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 min-h-[48px]"
+              className="flex min-w-0 shrink-0 items-center gap-2 rounded-full bg-white/80 px-3 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 min-h-[44px] sm:px-4 sm:py-2.5 md:min-h-[48px] xl:px-4"
               aria-label="Úvodní stránka"
             >
               <Image
@@ -80,7 +80,7 @@ export function SiteHeader() {
                 alt="Premium Brokers"
                 width={132}
                 height={44}
-                className="h-9 w-auto sm:h-10"
+                className="h-8 w-auto sm:h-9 md:h-8 xl:h-10"
                 priority
               />
             </Link>
@@ -96,7 +96,7 @@ export function SiteHeader() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <nav className="hidden items-center gap-0.5 md:flex" aria-label="Hlavní navigace">
+            <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0 md:flex md:justify-end md:gap-0 xl:gap-0.5" aria-label="Hlavní navigace">
               {mainNav.slice(0, 3).map((item) => (
                 <NavLink key={item.href + item.label} item={item} />
               ))}
@@ -104,7 +104,7 @@ export function SiteHeader() {
                 <button
                   ref={toolsBtnRef}
                   type="button"
-                  className="flex min-h-[46px] items-center gap-1 rounded-full px-4 py-2.5 text-base font-medium text-slate-700 transition hover:bg-white/60 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:text-[1.0625rem]"
+                  className="flex min-h-[42px] shrink-0 items-center gap-0.5 rounded-full px-2.5 py-2 text-sm font-medium text-slate-700 transition hover:bg-white/60 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 whitespace-nowrap xl:min-h-[46px] xl:gap-1 xl:px-4 xl:py-2.5 xl:text-base xl:text-[1.0625rem]"
                   aria-expanded={toolsOpen}
                   aria-haspopup="true"
                   onClick={(e) => {
@@ -152,10 +152,10 @@ export function SiteHeader() {
             <Link
               href="/#kontakt"
               onClick={() => track(AnalyticsEvents.ctaClick, { cta_id: "header_contact" })}
-              className="header-cta lead-cta-btn hidden min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white no-underline transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:flex md:text-[1.0625rem]"
+              className="header-cta lead-cta-btn hidden min-h-[40px] shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold text-white no-underline transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:flex xl:min-h-[48px] xl:gap-2 xl:px-6 xl:py-3 xl:text-base xl:text-[1.0625rem]"
             >
-              <span>{cta.headerPrimary}</span>
-              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <span className="whitespace-nowrap">{cta.headerPrimary}</span>
+              <svg className="h-3.5 w-3.5 shrink-0 xl:h-4 xl:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
             </Link>
@@ -170,12 +170,12 @@ export function SiteHeader() {
         aria-hidden={!open}
       >
         <div className="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden onClick={closeMenu} />
-        <div className="mobile-nav-panel absolute top-0 right-0 w-full max-w-sm h-full flex flex-col pt-20 px-6 pb-8">
+        <div className="mobile-nav-panel absolute top-0 right-0 flex h-full w-full max-w-sm flex-col px-6 pb-8 pt-20">
           {mobileMenuLinks.map((item) => (
             <Link
               key={`m-${item.label}-${item.href}`}
               href={item.href}
-              className="mobile-nav-link py-3 text-lg font-medium text-slate-800 border-b border-slate-100"
+              className="border-b border-slate-100 py-3 text-lg font-medium text-slate-800"
               onClick={closeMenu}
             >
               {item.label}
@@ -183,13 +183,13 @@ export function SiteHeader() {
           ))}
           <Link
             href="/#kontakt"
-            className="mobile-nav-link lead-cta-btn mt-4 inline-flex items-center justify-center gap-2 py-4 rounded-xl text-white font-semibold text-center no-underline"
+            className="lead-cta-btn mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-white no-underline"
             onClick={() => {
               track(AnalyticsEvents.ctaClick, { cta_id: "mobile_drawer_contact" });
               closeMenu();
             }}
           >
-            {cta.headerPrimary}
+            <span className="text-center">{cta.headerPrimary}</span>
             <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
             </svg>

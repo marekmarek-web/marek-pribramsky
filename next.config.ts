@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/favicon.ico", destination: "/img/logos/pb-logo-no-bg.png", permanent: true },
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/blog/index.html", destination: "/blog", permanent: true },
       { source: "/kontakt/index.html", destination: "/kontakt", permanent: true },
