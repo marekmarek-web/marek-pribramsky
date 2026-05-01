@@ -95,12 +95,12 @@ export const socialLinks = [
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/premiumbrokers.cz/",
+    href: "https://www.instagram.com/marek.pribramsky",
     icon: "ig" as const,
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/marek-pribramsky/",
+    href: "https://cz.linkedin.com/in/marek-pribramsky",
     icon: "li" as const,
   },
 ];
