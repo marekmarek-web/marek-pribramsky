@@ -81,7 +81,10 @@ export const branches: Branch[] = [
   { city: "Štětí", lines: ["U Tržnice 701, 411\u00A008"] },
   { city: "Litoměřice", lines: ["5. května 10, 412\u00A001"] },
   { city: "Praha", lines: ["Žatecká 55/14, 110\u00A000"] },
-  { city: "Lovosice", lines: ["Brzy otevíráme"], muted: true },
+  {
+    city: "Lovosice",
+    lines: ["Žižkova 28/922, 410\u00A002 Lovosice"],
+  },
 ];
 
 export const socialLinks = [

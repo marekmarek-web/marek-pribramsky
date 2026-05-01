@@ -233,7 +233,12 @@ function PobockySection() {
               </address>
             </div>
           </a>
-          <div className="bento-card bento-card-coming">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=%C5%BDi%C5%BEkova%2028%2F922%2C%20410%2002%20Lovosice"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bento-card"
+          >
             <div className="bento-card-img">
               <Image
                 src="/img/lovo.jpg"
@@ -248,9 +253,13 @@ function PobockySection() {
             </div>
             <div className="bento-card-content">
               <h3 className="bento-city">Lovosice</h3>
-              <p className="bento-coming">Brzy otevíráme</p>
+              <address className="bento-address">
+                Žižkova 28/922
+                <br />
+                410 02 Lovosice
+              </address>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
