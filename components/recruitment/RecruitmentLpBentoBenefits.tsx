@@ -77,7 +77,7 @@ export function RecruitmentLpBentoBenefits() {
             {RECRUITMENT_BENTO_INTRO.title}
           </h2>
 
-          <figure className="relative mb-10 w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-brand-border bg-white shadow-[0_24px_60px_-24px_rgba(29,35,84,0.25)] md:mb-12 md:rounded-[2rem]">
+          <figure className="relative mb-10 w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white bg-white shadow-[0_24px_60px_-28px_rgba(29,35,84,0.35)] ring-1 ring-brand-border/70 md:mb-12 md:rounded-[2rem]">
             <Image
               src={RECRUITMENT_WHY_TEAM_PHOTO.src}
               alt={RECRUITMENT_WHY_TEAM_PHOTO.alt}
@@ -85,27 +85,40 @@ export function RecruitmentLpBentoBenefits() {
               height={RECRUITMENT_WHY_TEAM_PHOTO.height}
               className="h-auto w-full object-cover object-center"
               sizes="(min-width: 1024px) 896px, 100vw"
+              quality={100}
               priority={false}
             />
           </figure>
 
           <article
-            className="w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-[#2A3366] bg-gradient-to-br from-[#0a0f29] via-brand-navy to-[#12183a] px-6 py-8 text-left shadow-[0_28px_70px_-28px_rgba(10,15,41,0.55)] md:rounded-[2rem] md:px-10 md:py-10"
+            className="relative w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-brand-border bg-white px-6 py-8 text-left shadow-[0_22px_60px_-32px_rgba(29,35,84,0.35)] md:rounded-[2rem] md:px-10 md:py-10"
             aria-labelledby="kariera-vyzva-badge"
           >
+            <div
+              className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-brand-cyan/15 blur-3xl"
+              aria-hidden
+            />
             <h3
               id="kariera-vyzva-badge"
-              className="mb-6 inline-block rounded-md bg-brand-cyan px-4 py-2.5 text-base font-extrabold tracking-tight text-brand-navy md:text-lg"
+              className="relative mb-6 text-3xl font-extrabold tracking-tight text-brand-navy md:text-4xl"
             >
               {RECRUITMENT_CHALLENGE_CARD.badge}
             </h3>
-            <div className="space-y-5 text-base leading-relaxed md:text-lg">
-              <p className="font-medium text-sky-200/95">{RECRUITMENT_CHALLENGE_CARD.intro}</p>
-              <p className="font-medium text-sky-200/95">{RECRUITMENT_CHALLENGE_CARD.offers}</p>
-              <p className="font-medium text-white">{RECRUITMENT_CHALLENGE_CARD.requirements}</p>
-              <p className="font-medium text-white">{RECRUITMENT_CHALLENGE_CARD.cta}</p>
+            <div className="relative grid gap-5 text-base leading-relaxed text-slate-600 md:grid-cols-2 md:text-lg">
+              <p className="rounded-2xl bg-brand-light/70 p-5 font-medium text-brand-navy">
+                {RECRUITMENT_CHALLENGE_CARD.intro}
+              </p>
+              <p className="rounded-2xl bg-slate-50 p-5 font-medium">
+                {RECRUITMENT_CHALLENGE_CARD.offers}
+              </p>
+              <p className="rounded-2xl border border-brand-line/80 bg-white p-5 font-semibold text-brand-navy">
+                {RECRUITMENT_CHALLENGE_CARD.requirements}
+              </p>
+              <p className="rounded-2xl bg-brand-navy p-5 font-semibold text-white shadow-[0_18px_40px_-24px_rgba(29,35,84,0.8)]">
+                {RECRUITMENT_CHALLENGE_CARD.cta}
+              </p>
             </div>
-            <p className="mt-8 flex flex-wrap items-start gap-2 border-t border-white/10 pt-6 text-sm font-medium text-sky-200/90 md:text-base">
+            <p className="relative mt-8 flex flex-wrap items-start gap-2 border-t border-brand-border pt-6 text-sm font-medium text-slate-600 md:text-base">
               <MapPinGlyph className="mt-0.5 h-5 w-5 shrink-0 text-brand-cyan" />
               <span>
                 <span className="font-semibold text-brand-cyan">{RECRUITMENT_CHALLENGE_CARD.branchesLabel}</span>{" "}
