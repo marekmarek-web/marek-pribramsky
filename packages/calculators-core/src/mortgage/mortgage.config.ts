@@ -4,19 +4,15 @@
 
 import type { BankEntry, ProductSubType } from "./mortgage.types";
 
-/** Logos from public/img; empty string = use initials fallback in UI */
+/** Logos z public/img + orientační statické sazby (záloha při selhání Kurzy fetch). Pouze banky uváděné v srovnávacím widgetu (`ALLOWED_BANK_IDS`). */
 export const BANKS_DATA: BankEntry[] = [
-  { id: "fio", name: "Fio banka", baseRate: 4.18, loanRate: 5.9, logoUrl: "" },
-  { id: "moneta", name: "Moneta Money Bank", baseRate: 4.19, loanRate: 6.0, logoUrl: "" },
   { id: "ucb", name: "UniCredit Bank", baseRate: 4.29, loanRate: 6.5, logoUrl: "/img/unicredit-logo.png" },
-  { id: "airbank", name: "Air Bank", baseRate: 4.39, loanRate: 6.2, logoUrl: "" },
   { id: "rb", name: "Raiffeisenbank", baseRate: 4.34, loanRate: 5.9, logoUrl: "/img/raiffeisenbank-logo.png" },
-  { id: "partners", name: "Partners Banka", baseRate: 4.59, loanRate: 6.4, logoUrl: "" },
-  { id: "csob", name: "ČSOB", baseRate: 4.79, loanRate: 7.9, logoUrl: "/img/csob-logo.png" },
+  { id: "rsts", name: "Raiffeisen stavební spořitelna", baseRate: 4.49, loanRate: 6.1, logoUrl: "/img/raiffeisenbank-logo.png" },
   { id: "kb", name: "Komerční banka", baseRate: 4.59, loanRate: 6.9, logoUrl: "/img/kb-logo.png" },
   { id: "cs", name: "Česká spořitelna", baseRate: 4.59, loanRate: 7.5, logoUrl: "/img/ceskasporitelna-logo.png" },
+  { id: "csob", name: "ČSOB", baseRate: 4.79, loanRate: 7.9, logoUrl: "/img/csob-logo.png" },
   { id: "mbank", name: "mBank", baseRate: 4.79, loanRate: 6.2, logoUrl: "/img/mbank-logo.png" },
-  { id: "rsts", name: "Raiffeisen stavební spořitelna", baseRate: 4.49, loanRate: 6.1, logoUrl: "/img/raiffeisenbank-logo.png" },
 ];
 
 export const PRODUCT_TYPES: Record<"mortgage" | "loan", ProductSubType[]> = {

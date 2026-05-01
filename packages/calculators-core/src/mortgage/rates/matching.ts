@@ -21,13 +21,26 @@ function detectCanonicalBankId(providerId: string, providerName: string): (typeo
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
+  const isRaiffeisenStavebni =
+    id.includes("rsts") ||
+    name.includes("raiffeisen stavebni") ||
+    (name.includes("raiffeisen") && name.includes("stavebni")) ||
+    name.includes("stavebni sporitelna");
+  if (isRaiffeisenStavebni) return "rsts";
+
   if (id.includes("raiff") || name.includes("raiffeisen")) return "rb";
-  if (id.includes("unicredit") || id === "ucb" || name.includes("unicredit")) return "ucb";
+  if (
+    id.includes("unicredit") ||
+    id === "ucb" ||
+    id === "unicredit-bank" ||
+    name.includes("unicredit") ||
+    name.includes("unicreditbank")
+  )
+    return "ucb";
   if (id.includes("csob") || name.includes("csob")) return "csob";
-  if (id === "cs" || id.includes("sporitelna") || name.includes("ceska sporitelna")) return "cs";
+  if (id === "cs" || id === "ceska-sporitelna" || name.includes("ceska sporitelna")) return "cs";
   if (id.includes("mbank") || name.includes("mbank")) return "mbank";
-  if (id === "kb" || name.includes("komercni banka")) return "kb";
-  if (id.includes("rsts") || name.includes("raiffeisen stavebni")) return "rsts";
+  if (id === "kb" || name.includes("komercni banka") || name.includes("komercni")) return "kb";
 
   return null;
 }

@@ -72,4 +72,35 @@ describe("rates matching", () => {
     expect(banks[0].source).toBeDefined();
     expect(banks[0].fetchedAt).toBeDefined();
   });
+
+  it("mapuje Raiffeisen stavební spořitelna na rsts, ne na rb", () => {
+    const rstsOffer: NormalizedOffer = {
+      providerId: "raiffeisen-stavebni-sporitelna",
+      providerName: "Raiffeisen stavební spořitelna",
+      productType: "mortgage",
+      subtype: null,
+      nominalRate: 4.6,
+      minAmount: 500_000,
+      maxAmount: 30_000_000,
+      minTermMonths: 60,
+      maxTermMonths: 420,
+      ltvLimit: 90,
+      fixationOptions: [3, 5, 7, 10],
+      source: "kurzy-cz",
+      fetchedAt: new Date().toISOString(),
+    };
+    const ranked = rankOffersByScenario([rstsOffer], {
+      productType: "mortgage",
+      subtype: "standard",
+      amount: 4_000_000,
+      termMonths: 360,
+      ltvOrAkontace: 80,
+      fixationYears: 5,
+      mode: "new",
+    });
+    const banks = normalizedOffersToBankEntries(ranked, "mortgage");
+    expect(banks).toHaveLength(1);
+    expect(banks[0].id).toBe("rsts");
+    expect(banks[0].name).toBe("Raiffeisen stavební spořitelna");
+  });
 });

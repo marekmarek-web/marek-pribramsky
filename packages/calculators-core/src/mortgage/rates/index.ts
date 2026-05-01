@@ -3,7 +3,8 @@ import { KurzyRateProvider } from "./kurzy.provider";
 import { StaticRateProvider } from "./static.provider";
 import type { NormalizedOffer, RateProvider } from "./types";
 
-const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+/** Aktualizovaněji než výchozích 6 h — po úspěšném scrape chceme rychleji dohnat Kurzy. */
+const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 
 let singletonProvider: RateProvider | null = null;
 const staticProvider = new StaticRateProvider();

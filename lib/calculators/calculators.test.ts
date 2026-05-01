@@ -25,7 +25,7 @@ describe("mortgage engine (CRM parity, static banks)", () => {
     const r = calculateResult(state, BANKS_DATA);
     expect(r.monthlyPayment).toBeGreaterThan(29_000);
     expect(r.monthlyPayment).toBeLessThan(30_100);
-    expect(r.finalRate).toBeCloseTo(4.19, 2);
+    expect(r.finalRate).toBeCloseTo(4.29, 2);
   });
 });
 
