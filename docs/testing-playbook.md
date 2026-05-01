@@ -42,7 +42,7 @@ pnpm test && pnpm test:e2e:smoke
 
 ## Proměnné prostředí
 
-- **`PLAYWRIGHT_BASE_URL`**: výchozí `http://127.0.0.1:3000`. V CI nastavte na URL nasazené preview, pokud netestujete přes vestavěný `webServer`.
+- **`PLAYWRIGHT_BASE_URL`**: výchozí `http://127.0.0.1:3002` (stejný port jako `pnpm dev`). V CI nastavte na URL nasazené preview, pokud netestujete přes vestavěný `webServer`.
 - **Supabase / Resend**: E2E lead a subscribe používají **`page.route`** mock na `/api/leads` a `/api/subscribers`, takže nepotřebují živý Resend ani DB pro happy path.
 - **Blog článek**: test detailu článku přeskočí (`test.skip`), pokud server vrátí 404 (prázdná DB).
 

@@ -21,6 +21,6 @@ values ('PASTE-USER-UUID', 'editor', 'Jméno');
 
 Bez řádku v `profiles` uživatel nemůže spravovat obsah (RLS + aplikační guard).
 
-9. **Authentication → URL configuration**: set **Site URL** to your production domain (and add `http://localhost:3000` for local dev).
+9. **Authentication → URL configuration**: set **Site URL** to your production domain (and add `http://localhost:3002` for local dev with default `pnpm dev`, or `http://localhost:3000` if you use `pnpm dev:3000`).
 
 Podrobnosti: [docs/admin-setup.md](../docs/admin-setup.md).

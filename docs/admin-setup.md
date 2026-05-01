@@ -12,7 +12,7 @@ Zkopírujte `.env.example` do `.env.local` a doplňte:
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Volitelná alternativa — nový formát `sb_publishable_…` z dashboardu; stačí jedno z obou. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Pouze server, např. náborové formuláře — **nikdy do klienta**. |
 
-V **Supabase → Authentication → URL Configuration** přidejte do *Redirect URLs* alespoň `http://localhost:3000/**` (vývoj) a produkční doménu + `https://…/auth/callback`. Bez toho magic link a OAuth přihlášení skončí chybou po přesměrování.
+V **Supabase → Authentication → URL Configuration** přidejte do *Redirect URLs* alespoň `http://localhost:3002/**` (výchozí port tohoto repa po `pnpm dev`; případně též `http://localhost:3000/**`) a produkční doménu + `https://…/auth/callback`. Bez toho magic link a OAuth přihlášení skončí chybou po přesměrování.
 
 ## 2. Migrace databáze
 
@@ -69,7 +69,7 @@ Kontrola probíhá v **RLS** (Supabase) a v **serverových guard** (`lib/admin/r
 
 **Authentication → URL configuration**
 
-- **Site URL**: produkční doména; pro vývoj přidejte `http://localhost:3000` do redirect URL.
+- **Site URL**: produkční doména; pro vývoj přidejte `http://localhost:3002` (nebo `http://localhost:3000` při `pnpm dev:3000`) do redirect URL.
 - Povolený redirect např. na `/auth/callback` (viz implementace magic linku v `LoginForm`).
 
 ## 7. Workflow článku

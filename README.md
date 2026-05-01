@@ -7,7 +7,7 @@ Osobní web finančního poradce. **Next.js (App Router, TypeScript).**
 ```bash
 pnpm install
 cp .env.example .env.local   # doplňte hodnoty
-pnpm dev                      # http://localhost:3000
+pnpm dev                      # http://localhost:3002 (3000 často obsazen jiným projektem)
 pnpm build && pnpm start
 pnpm test                     # Vitest
 ```
