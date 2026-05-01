@@ -1,6 +1,6 @@
-import type { ComponentType } from "react";
+import type { ComponentType, SVGProps } from "react";
 import Image from "next/image";
-import { BookOpen, MapPin, ShieldCheck, TrendingUp, Users } from "lucide-react";
+import { BookOpen, ShieldCheck, TrendingUp, Users } from "lucide-react";
 import {
   RECRUITMENT_BENTO_BENEFITS,
   RECRUITMENT_BENTO_INTRO,
@@ -9,6 +9,25 @@ import {
   type BentoBenefitIcon,
   type RecruitmentBentoBenefit,
 } from "@/components/recruitment/recruitment-data";
+
+/** Lucide-compatible map pin — místo `MapPin` z barrelu (kvůli `optimizePackageImports` může být undefined). */
+function MapPinGlyph(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...props}
+    >
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
 
 const ICONS: Record<
   BentoBenefitIcon,
@@ -87,7 +106,7 @@ export function RecruitmentLpBentoBenefits() {
               <p className="font-medium text-white">{RECRUITMENT_CHALLENGE_CARD.cta}</p>
             </div>
             <p className="mt-8 flex flex-wrap items-start gap-2 border-t border-white/10 pt-6 text-sm font-medium text-sky-200/90 md:text-base">
-              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-brand-cyan" strokeWidth={2} aria-hidden />
+              <MapPinGlyph className="mt-0.5 h-5 w-5 shrink-0 text-brand-cyan" />
               <span>
                 <span className="font-semibold text-brand-cyan">{RECRUITMENT_CHALLENGE_CARD.branchesLabel}</span>{" "}
                 {RECRUITMENT_CHALLENGE_CARD.branches}
