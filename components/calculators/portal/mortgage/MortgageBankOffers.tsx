@@ -128,23 +128,25 @@ function BankOfferCard({
       </div>
 
       <div className="flex items-center gap-3 mb-4">
-        <div
-          className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-sm shadow-sm shrink-0 overflow-hidden border border-slate-200 ${
-            FALLBACK_BRAND_STYLES[offer.bank.id] ?? "bg-slate-100 text-slate-700"
-          }`}
-        >
-          {showLogo ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
+        {showLogo ? (
+          <div className="h-11 shrink-0 flex items-center justify-start min-w-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={offer.bank.logoUrl}
               alt={offer.bank.name}
-              className="w-full h-full object-contain p-1"
+              className="max-h-11 w-auto max-w-[min(100%,9rem)] object-contain object-left"
               onError={() => setLogoError(true)}
             />
-          ) : (
-            initials
-          )}
-        </div>
+          </div>
+        ) : (
+          <div
+            className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
+              FALLBACK_BRAND_STYLES[offer.bank.id] ?? "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {initials}
+          </div>
+        )}
         <div className="min-w-0">
           <h4 className="font-black text-slate-900 text-sm leading-tight truncate">
             {offer.bank.name}
@@ -163,8 +165,9 @@ function BankOfferCard({
           <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">
             Splátka
           </span>
-          <span className="font-black text-xl text-slate-900 break-all leading-none">
-            {formatCurrency(offer.monthlyPayment)} Kč
+          <span className="inline-flex flex-nowrap items-baseline gap-x-1.5 font-black text-xl text-slate-900 leading-none whitespace-nowrap">
+            <span>{formatCurrency(offer.monthlyPayment)}</span>
+            <span className="text-[0.9em] font-bold text-slate-700 shrink-0">Kč</span>
           </span>
         </div>
         {onRequestOffer != null ? (
