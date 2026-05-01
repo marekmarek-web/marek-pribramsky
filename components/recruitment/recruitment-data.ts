@@ -54,7 +54,7 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     icon: "trending",
     title: "78 000 Kč",
     desc: "Taková je průměrná měsíční odměna v mém týmu. Žádné limity, jen tvé nasazení.",
-    theme: "light",
+    theme: "dark",
     accent: "gold",
   },
   {
@@ -86,7 +86,7 @@ export const RECRUITMENT_BENTO_INTRO = {
   title: "Proč do toho jít s námi",
 } as const;
 
-/** Týmová fotka mezi nadpisem a textem výzvy */
+/** Týmová fotka — pro maximum ostrosti nahrajte širší soubor (≥ ~2000 px) do stejné cesty v `public/`. */
 export const RECRUITMENT_WHY_TEAM_PHOTO = {
   src: "/img/kariera/team-premium-brokers.png",
   alt: "Tým Premium Brokers — společná fotografie před kanceláří",

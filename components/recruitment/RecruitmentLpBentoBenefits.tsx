@@ -77,16 +77,17 @@ export function RecruitmentLpBentoBenefits() {
             {RECRUITMENT_BENTO_INTRO.title}
           </h2>
 
-          <figure className="relative mb-10 w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white bg-white shadow-[0_24px_60px_-28px_rgba(29,35,84,0.35)] ring-1 ring-brand-border/70 md:mb-12 md:rounded-[2rem]">
+          <figure className="relative mb-10 w-full overflow-hidden rounded-[1.75rem] border border-white bg-slate-100 shadow-[0_28px_70px_-32px_rgba(29,35,84,0.45)] ring-1 ring-brand-border/60 md:mb-12 md:rounded-[2rem]">
             <Image
               src={RECRUITMENT_WHY_TEAM_PHOTO.src}
               alt={RECRUITMENT_WHY_TEAM_PHOTO.alt}
               width={RECRUITMENT_WHY_TEAM_PHOTO.width}
               height={RECRUITMENT_WHY_TEAM_PHOTO.height}
-              className="h-auto w-full object-cover object-center"
-              sizes="(min-width: 1024px) 896px, 100vw"
+              className="h-auto w-full [image-rendering:auto]"
+              sizes="(min-width: 1280px) 1200px, 100vw"
               quality={100}
-              priority={false}
+              unoptimized
+              priority
             />
           </figure>
 
@@ -135,7 +136,7 @@ export function RecruitmentLpBentoBenefits() {
             return (
               <div
                 key={idx}
-                className={`group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[2rem] p-10 transition-all duration-500 hover:-translate-y-1 ${
+                className={`group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[2rem] p-6 sm:p-10 transition-all duration-500 hover:-translate-y-1 ${
                   b.theme === "light" ? "border border-brand-border bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.03)]" : ""
                 }`}
                 style={
@@ -191,16 +192,18 @@ export function RecruitmentLpBentoBenefits() {
                       alt=""
                       width={512}
                       height={512}
-                      sizes="(min-width: 768px) 200px, 148px"
-                      className="h-auto w-[min(9.25rem,42vw)] max-w-[148px] object-contain object-right object-top brightness-0 invert sm:max-w-[168px] md:w-44 md:max-w-[200px] md:opacity-95"
+                      sizes="(min-width: 640px) 168px, 72px"
+                      className="h-auto w-16 object-contain object-right object-top brightness-0 invert opacity-95 sm:w-[min(9.25rem,42vw)] sm:max-w-[168px] md:w-44 md:max-w-[200px]"
                     />
                   </div>
                 ) : null}
 
-                <div className={`relative z-10 ${isBrandCard ? "pr-[min(10rem,38vw)] sm:pr-40 md:pr-44" : ""}`}>
+                <div
+                  className={`relative z-10 ${isBrandCard ? "pr-20 sm:pr-40 md:pr-44" : ""}`}
+                >
                   {iconBox(b)}
                   <h3
-                    className={`mb-4 text-2xl font-extrabold tracking-tight md:text-3xl ${
+                    className={`mb-4 text-2xl font-extrabold tracking-tight text-balance md:text-3xl ${
                       b.theme === "dark" ? "text-white" : "text-brand-navy"
                     }`}
                   >
@@ -208,9 +211,9 @@ export function RecruitmentLpBentoBenefits() {
                   </h3>
                 </div>
                 <p
-                  className={`relative z-10 text-base font-medium leading-relaxed md:text-lg ${
+                  className={`relative z-10 text-base font-medium leading-snug text-pretty sm:text-lg sm:leading-relaxed ${
                     b.theme === "dark" ? "text-slate-300" : "text-slate-500"
-                  } ${isBrandCard ? "pr-[min(10rem,38vw)] sm:pr-40 md:pr-44" : ""}`}
+                  } ${isBrandCard ? "pr-20 sm:pr-40 md:pr-44" : ""}`}
                 >
                   {b.desc}
                 </p>
