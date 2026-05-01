@@ -199,6 +199,40 @@ function parseKurzyRows(
   return dedupeBestRate(raw);
 }
 
+/**
+ * Zaměří HTML na blok výsledkové tabulky (nadpisy typu „Výsledek srovnání“ / „Výsledná sazba“),
+ * aby řádky z jiných tabulek na stránce nezmátly parsování.
+ */
+function sliceHtmlToKurzyComparisonTable(html: string, kind: "mortgage" | "loan"): string {
+  const patterns =
+    kind === "mortgage"
+      ? [
+          /Výsledek\s+srovnání\s+hypoték/i,
+          /Výsledek\s+srovnání/i,
+          /výsledn[áa]\s+sazba/i,
+        ]
+      : [/Výsledek\s+srovnání/i, /srovnání\s+p[uů]j[čc]ek/i];
+
+  let start = -1;
+  for (const re of patterns) {
+    const m = re.exec(html);
+    if (m && (start < 0 || (m.index != null && m.index < start))) start = m.index ?? -1;
+  }
+  if (start < 0) return html;
+  return html.slice(Math.max(0, start - 160));
+}
+
+function parseWwwComparisonTable(
+  html: string,
+  productType: "mortgage" | "loan",
+  sourceUrl: string
+): NormalizedOffer[] {
+  const narrowed = sliceHtmlToKurzyComparisonTable(html, productType);
+  let offers = parseKurzyRows(narrowed, productType, sourceUrl);
+  if (offers.length === 0) offers = parseKurzyRows(html, productType, sourceUrl);
+  return offers;
+}
+
 function looksLikeHtmlDocument(text: string): boolean {
   return /<\s*(html|table|script|meta)\b/i.test(text);
 }
@@ -368,51 +402,61 @@ async function tryFetchMortgageOffersFromDataEndpoints(
 }
 
 /**
- * Preferuje strukturované zdroje data.kurzy.cz, pak HTML tabulku na www.kurzy.cz.
- * Bot-stěnu na www odmítne výjimkou (bez parsování „prázdného“ obsahu jako nabídek).
+ * Hypotéky: primárně HTML „Výsledek srovnání hypoték“ (sloupec výsledná sazba) na www.kurzy.cz,
+ * teprve při prázdnu / nedostupnosti data.kurzy.cz jako záloha.
  */
 export class KurzyRateProvider implements RateProvider {
   async fetchMortgageRates(): Promise<NormalizedOffer[]> {
-    const fromData = await tryFetchMortgageOffersFromDataEndpoints("mortgage");
-    if (fromData.length > 0) return fromData;
-
-    const response = await fetch(KURZY_MORTGAGE_URL, {
+    const wwwResponse = await fetch(KURZY_MORTGAGE_URL, {
       headers: kurzyFetchHeaders({ Referer: "https://www.kurzy.cz/hypoteky/srovnani-hypotek/" }),
       cache: "no-store",
     });
-    if (!response.ok) {
-      throw new Error(`Kurzy mortgage fetch failed: ${response.status}`);
+    if (!wwwResponse.ok) {
+      throw new Error(`Kurzy mortgage fetch failed: ${wwwResponse.status}`);
     }
 
-    const html = await response.text();
-    assertNotKurzyBotWall(html, KURZY_MORTGAGE_URL);
+    const html = await wwwResponse.text();
 
-    const offers = parseKurzyRows(html, "mortgage", KURZY_MORTGAGE_URL);
-    if (offers.length === 0) {
-      throw new Error("Kurzy mortgage parser found no offers");
+    if (!isKurzyBotWallHtml(html)) {
+      const wwwOffers = parseWwwComparisonTable(html, "mortgage", KURZY_MORTGAGE_URL);
+      if (wwwOffers.length > 0) return wwwOffers;
     }
-    return offers;
+
+    const fromData = await tryFetchMortgageOffersFromDataEndpoints("mortgage");
+    if (fromData.length > 0) return fromData;
+
+    if (isKurzyBotWallHtml(html)) {
+      throw new Error(
+        "Kurzy mortgage: blokace WWW (Ověření uživatele) ani data.zdroj nevrátily řádky srovnání"
+      );
+    }
+    throw new Error("Kurzy mortgage parser found no offers in WWW comparison table");
   }
 
   async fetchLoanRates(): Promise<NormalizedOffer[]> {
-    const fromData = await tryFetchMortgageOffersFromDataEndpoints("loan");
-    if (fromData.length > 0) return fromData;
-
-    const response = await fetch(KURZY_LOAN_URL, {
+    const wwwResponse = await fetch(KURZY_LOAN_URL, {
       headers: kurzyFetchHeaders({ Referer: KURZY_LOAN_URL }),
       cache: "no-store",
     });
-    if (!response.ok) {
-      throw new Error(`Kurzy loan fetch failed: ${response.status}`);
+    if (!wwwResponse.ok) {
+      throw new Error(`Kurzy loan fetch failed: ${wwwResponse.status}`);
     }
 
-    const html = await response.text();
-    assertNotKurzyBotWall(html, KURZY_LOAN_URL);
+    const html = await wwwResponse.text();
 
-    const offers = parseKurzyRows(html, "loan", KURZY_LOAN_URL);
-    if (offers.length === 0) {
-      throw new Error("Kurzy loan parser found no offers");
+    if (!isKurzyBotWallHtml(html)) {
+      const wwwOffers = parseWwwComparisonTable(html, "loan", KURZY_LOAN_URL);
+      if (wwwOffers.length > 0) return wwwOffers;
     }
-    return offers;
+
+    const fromData = await tryFetchMortgageOffersFromDataEndpoints("loan");
+    if (fromData.length > 0) return fromData;
+
+    if (isKurzyBotWallHtml(html)) {
+      throw new Error(
+        "Kurzy loans: blokace WWW (Ověření uživatele) ani data.zdroj nevrátily řádky srovnání"
+      );
+    }
+    throw new Error("Kurzy loan parser found no offers in WWW comparison table");
   }
 }

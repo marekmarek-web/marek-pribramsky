@@ -3,8 +3,26 @@ import { KurzyRateProvider } from "./kurzy.provider";
 import { StaticRateProvider } from "./static.provider";
 import type { NormalizedOffer, RateProvider } from "./types";
 
-/** Aktualizovaněji než výchozích 6 h — po úspěšném scrape chceme rychleji dohnat Kurzy. */
-const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
+/**
+ * Jak často znovu stáhnout tabulku srovnání z Kurzy (server + sdílená cache CDN).
+ * `KURZY_RATES_CACHE_HOURS` např. `24` (1× denně) nebo `72` (1× za 3 dny). Výchozí 24.
+ */
+export function resolveKurzyRatesCacheHours(): number {
+  const raw = process.env.KURZY_RATES_CACHE_HOURS?.trim();
+  if (!raw) return 24;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 1) return 24;
+  return Math.min(Math.floor(n), 168);
+}
+
+export function kurzyRatesCacheTtlMs(): number {
+  return resolveKurzyRatesCacheHours() * 60 * 60 * 1000;
+}
+
+/** Pro hlavičku `Cache-Control: s-maxage=…` u `/api/calculators/rates`. */
+export function kurzyRatesCacheSMaxAgeSeconds(): number {
+  return Math.floor(kurzyRatesCacheTtlMs() / 1000);
+}
 
 let singletonProvider: RateProvider | null = null;
 const staticProvider = new StaticRateProvider();
@@ -52,8 +70,8 @@ function parseOverride(raw: string | undefined, productType: "mortgage" | "loan"
 export function getRateProvider(): RateProvider {
   if (singletonProvider) return singletonProvider;
 
-  // Live mode by default: always try Kurzy.cz first (server-side scraping provider).
-  // Emergency switch: FORCE_STATIC_RATES=true forces static provider.
+  // Live mode by default: Kurzy WWW tabulka + fallback (`kurzy.provider`).
+  // FORCE_STATIC_RATES=true vynucuje statické sazby.
   const forceStatic = process.env.FORCE_STATIC_RATES === "true";
   singletonProvider = forceStatic ? new StaticRateProvider() : new KurzyRateProvider();
   return singletonProvider;
@@ -65,7 +83,7 @@ export async function getMortgageRates(): Promise<NormalizedOffer[]> {
 
   const provider = getRateProvider();
   try {
-    return await getOrFetchWithCache("mortgage-rates", CACHE_TTL_MS, () =>
+    return await getOrFetchWithCache("mortgage-rates", kurzyRatesCacheTtlMs(), () =>
       provider.fetchMortgageRates()
     );
   } catch {
@@ -79,7 +97,7 @@ export async function getLoanRates(): Promise<NormalizedOffer[]> {
 
   const provider = getRateProvider();
   try {
-    return await getOrFetchWithCache("loan-rates", CACHE_TTL_MS, () =>
+    return await getOrFetchWithCache("loan-rates", kurzyRatesCacheTtlMs(), () =>
       provider.fetchLoanRates()
     );
   } catch {

@@ -130,9 +130,9 @@ describe("KurzyRateProvider markup integration", () => {
     expect(byId.get("unicredit-bank")?.nominalRate).toBe(4.69);
   });
 
-  it("zWWW zamítne bot-stěnu", async () => {
+  it("bez tabulky po bot-stěně na WWW a prázdném data zdroji hodí chybu", async () => {
     await expect(
       stubFetchMortgage("<title>Kurzy</title><p>Ověření uživatele …</p>")
-    ).rejects.toThrow(/bot wall/i);
+    ).rejects.toThrow(/blokace WWW|Kurzy mortgage/i);
   });
 });

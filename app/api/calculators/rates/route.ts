@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { getLoanRates, getMortgageRates } from "@/lib/calculators/mortgage/rates";
+import {
+  getLoanRates,
+  getMortgageRates,
+  kurzyRatesCacheSMaxAgeSeconds,
+} from "@/lib/calculators/mortgage/rates";
 import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +26,8 @@ export async function GET(request: Request) {
 
   const rates = type === "loan" ? await getLoanRates() : await getMortgageRates();
 
+  const sMax = kurzyRatesCacheSMaxAgeSeconds();
+
   return NextResponse.json(
     {
       ok: true,
@@ -30,7 +36,7 @@ export async function GET(request: Request) {
     },
     {
       headers: {
-        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
+        "Cache-Control": `public, s-maxage=${sMax}, stale-while-revalidate=${sMax}`,
       },
     }
   );
