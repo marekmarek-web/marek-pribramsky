@@ -86,12 +86,12 @@ export const RECRUITMENT_BENTO_INTRO = {
   title: "Proč do toho jít s námi",
 } as const;
 
-/** Týmová fotka — pro maximum ostrosti nahrajte širší soubor (≥ ~2000 px) do stejné cesty v `public/`. */
+/** Týmová fotka — plné rozlišení z `tymovy marek.JPG` (4096×3072). */
 export const RECRUITMENT_WHY_TEAM_PHOTO = {
-  src: "/img/kariera/team-premium-brokers.png",
+  src: "/img/kariera/team-premium-brokers.jpg",
   alt: "Tým Premium Brokers — společná fotografie před kanceláří",
-  width: 1024,
-  height: 768,
+  width: 4096,
+  height: 3072,
 } as const;
 
 /** Obsah viz inzerát „Hledáte novou výzvu?“ (nahrazuje dřívější dlouhý podnadpis) */

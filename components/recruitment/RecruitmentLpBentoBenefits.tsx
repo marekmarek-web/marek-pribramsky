@@ -86,7 +86,6 @@ export function RecruitmentLpBentoBenefits() {
               className="h-auto w-full [image-rendering:auto]"
               sizes="(min-width: 1280px) 1200px, 100vw"
               quality={100}
-              unoptimized
               priority
             />
           </figure>

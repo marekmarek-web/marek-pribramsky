@@ -82,7 +82,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    qualities: [75, 78, 82],
+    qualities: [75, 78, 82, 90, 95, 100],
     ...(supabaseHost
       ? {
           remotePatterns: [
