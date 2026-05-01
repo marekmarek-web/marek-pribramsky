@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "dev:3005": "next dev --webpack -p 3005",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

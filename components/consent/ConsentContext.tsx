@@ -21,6 +21,19 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const [analytics, setAnalytics] = useState(false);
 
   useEffect(() => {
+    const forceBanner = process.env.NEXT_PUBLIC_SHOW_COOKIE_BANNER_IN_DEV === "1";
+    const host =
+      typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+    const isLoopback = host === "localhost" || host === "127.0.0.1" || host.endsWith(".localhost");
+    const skipBanner = !forceBanner && (process.env.NODE_ENV === "development" || isLoopback);
+
+    if (skipBanner) {
+      setDecided(true);
+      setAnalytics(false);
+      setReady(true);
+      return;
+    }
+
     const c = readConsent();
     setDecided(hasConsentDecision());
     setAnalytics(c?.analytics === true);
