@@ -95,6 +95,33 @@ export const HISTORICAL_DATA: HistoricalDataPoint[] = [
   { date: "2022-10", sp500: 3580, gold: 1650, bonds: 155, re: 230 },
   { date: "2023-12", sp500: 4700, gold: 2040, bonds: 162, re: 245 },
   { date: "2024-04", sp500: 5200, gold: 2350, bonds: 164, re: 250 },
+  // Měsíční řada 2024-05–2026-05: S&P 500 sladěno s měsíčními uzavírkami (^GSPC) škálovanými k dubnu 2024;
+  // zlato / dluhopisy / REET orientační pro zachování poměrů v simulaci.
+  { date: "2024-05", sp500: 5446, gold: 2365, bonds: 163, re: 251 },
+  { date: "2024-06", sp500: 5631, gold: 2380, bonds: 162, re: 252 },
+  { date: "2024-07", sp500: 5710, gold: 2405, bonds: 161, re: 253 },
+  { date: "2024-08", sp500: 5840, gold: 2430, bonds: 160, re: 254 },
+  { date: "2024-09", sp500: 5958, gold: 2455, bonds: 159, re: 255 },
+  { date: "2024-10", sp500: 5899, gold: 2480, bonds: 158, re: 256 },
+  { date: "2024-11", sp500: 6229, gold: 2505, bonds: 157, re: 257 },
+  { date: "2024-12", sp500: 6076, gold: 2610, bonds: 157, re: 258 },
+  { date: "2025-01", sp500: 6238, gold: 2650, bonds: 158, re: 259 },
+  { date: "2025-02", sp500: 6149, gold: 2685, bonds: 157, re: 260 },
+  { date: "2025-03", sp500: 5795, gold: 2820, bonds: 156, re: 261 },
+  { date: "2025-04", sp500: 5750, gold: 2980, bonds: 156, re: 262 },
+  { date: "2025-05", sp500: 6105, gold: 3080, bonds: 155, re: 263 },
+  { date: "2025-06", sp500: 6407, gold: 3120, bonds: 156, re: 264 },
+  { date: "2025-07", sp500: 6546, gold: 3150, bonds: 157, re: 263 },
+  { date: "2025-08", sp500: 6672, gold: 3180, bonds: 158, re: 265 },
+  { date: "2025-09", sp500: 6907, gold: 3050, bonds: 159, re: 266 },
+  { date: "2025-10", sp500: 7064, gold: 3100, bonds: 160, re: 267 },
+  { date: "2025-11", sp500: 7073, gold: 3140, bonds: 161, re: 268 },
+  { date: "2025-12", sp500: 7070, gold: 3090, bonds: 162, re: 262 },
+  { date: "2026-01", sp500: 7161, gold: 3120, bonds: 164, re: 264 },
+  { date: "2026-02", sp500: 6855, gold: 3180, bonds: 165, re: 265 },
+  { date: "2026-03", sp500: 6548, gold: 3110, bonds: 164, re: 266 },
+  { date: "2026-04", sp500: 7444, gold: 3240, bonds: 168, re: 268 },
+  { date: "2026-05", sp500: 7450, gold: 3260, bonds: 169, re: 269 },
 ];
 
 export const INVESTMENT_FAQ: FaqItem[] = [

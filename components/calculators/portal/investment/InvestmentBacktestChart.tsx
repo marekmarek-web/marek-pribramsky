@@ -175,7 +175,7 @@ export function InvestmentBacktestChart({
           </div>
           <div className="flex items-center gap-2 rounded-full border border-green-100 bg-green-50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-green-700">
             <span className="h-2 w-2 rounded-full bg-green-500" />
-            Reálná tržní data 1995–2024
+            Reálná tržní data 1995–2026
           </div>
         </div>
         <p className="text-sm leading-relaxed text-slate-500">
