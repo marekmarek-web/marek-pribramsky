@@ -17,7 +17,6 @@ export const BANKS_DATA: BankEntry[] = [
   { id: "cs", name: "Česká spořitelna", baseRate: 4.59, loanRate: 7.5, logoUrl: "/logos/ceska-sporitelna.png" },
   { id: "mbank", name: "mBank", baseRate: 4.79, loanRate: 6.2, logoUrl: "/logos/mbank-logo.png" },
   { id: "rsts", name: "Raiffeisen stavební spořitelna", baseRate: 4.49, loanRate: 6.1, logoUrl: "/logos/raiffeisenbank-logo.png" },
-  { id: "mpyr", name: "Modrá pyramida", baseRate: 4.69, loanRate: 6.8, logoUrl: "/logos/modra-pyramida.png" },
 ];
 
 export const PRODUCT_TYPES: Record<"mortgage" | "loan", ProductSubType[]> = {

@@ -28,7 +28,6 @@ const FALLBACK_BRAND_STYLES: Record<string, string> = {
   mbank: "bg-[#eef2ff] text-[#1e3a8a]",
   kb: "bg-[#e7ecff] text-[#1e40af]",
   rsts: "bg-[#fff8d6] text-[#111827]",
-  mpyr: "bg-[#e0f2fe] text-[#0369a1]",
 };
 
 export function MortgageBankOffers({
