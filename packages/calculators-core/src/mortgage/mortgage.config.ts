@@ -4,15 +4,18 @@
 
 import type { BankEntry, ProductSubType } from "./mortgage.types";
 
-/** Logos z public/img + orientační statické sazby (záloha při selhání Kurzy fetch). Pouze banky uváděné v srovnávacím widgetu (`ALLOWED_BANK_IDS`). */
+/**
+ * Statické sazby = záloha při výpadku Kurzy API. Musí odpovídat **reálnému scénáři** na kurzy.cz (fixace, LTV, délka, typ nemovitosti) — jinak vypadají „nesmyslně“.
+ * Níže: přibližně tabulka z kurzy.cz (fix **3 roky**, splatnost 20 let, cena nemovitosti ~5,5 M, rodinný dům, doložené příjmy) — nejnižší řádky ~4,89 %, nikoli 4,29 % z jiného nastavení.
+ */
 export const BANKS_DATA: BankEntry[] = [
-  { id: "ucb", name: "UniCredit Bank", baseRate: 4.29, loanRate: 6.5, logoUrl: "/img/unicredit-logo.png" },
-  { id: "rb", name: "Raiffeisenbank", baseRate: 4.34, loanRate: 5.9, logoUrl: "/img/raiffeisenbank-logo.png" },
-  { id: "rsts", name: "Raiffeisen stavební spořitelna", baseRate: 4.49, loanRate: 6.1, logoUrl: "/img/raiffeisenbank-logo.png" },
-  { id: "kb", name: "Komerční banka", baseRate: 4.59, loanRate: 6.9, logoUrl: "/img/kb-logo.png" },
-  { id: "cs", name: "Česká spořitelna", baseRate: 4.59, loanRate: 7.5, logoUrl: "/img/ceskasporitelna-logo.png" },
-  { id: "csob", name: "ČSOB", baseRate: 4.79, loanRate: 7.9, logoUrl: "/img/csob-logo.png" },
-  { id: "mbank", name: "mBank", baseRate: 4.79, loanRate: 6.2, logoUrl: "/img/mbank-logo.png" },
+  { id: "ucb", name: "UniCredit Bank", baseRate: 4.89, loanRate: 7.0, logoUrl: "/img/unicredit-logo.png" },
+  { id: "cs", name: "Česká spořitelna", baseRate: 4.89, loanRate: 8.0, logoUrl: "/img/ceskasporitelna-logo.png" },
+  { id: "rsts", name: "Raiffeisen stavební spořitelna", baseRate: 4.94, loanRate: 6.6, logoUrl: "/img/raiffeisenbank-logo.png" },
+  { id: "mbank", name: "mBank", baseRate: 4.99, loanRate: 7.4, logoUrl: "/img/mbank-logo.png" },
+  { id: "rb", name: "Raiffeisenbank", baseRate: 5.04, loanRate: 6.5, logoUrl: "/img/raiffeisenbank-logo.png" },
+  { id: "kb", name: "Komerční banka", baseRate: 5.19, loanRate: 7.5, logoUrl: "/img/kb-logo.png" },
+  { id: "csob", name: "ČSOB", baseRate: 5.29, loanRate: 8.3, logoUrl: "/img/csob-logo.png" },
 ];
 
 export const PRODUCT_TYPES: Record<"mortgage" | "loan", ProductSubType[]> = {
