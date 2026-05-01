@@ -45,7 +45,7 @@ export default {
         },
       },
       maxWidth: { content: "1120px" },
-      animation: { shimmer: "shimmer 2.5s infinite" },
+      animation: { shimmer: "shimmer 2.8s ease-in-out infinite" },
       keyframes: {
         shimmer: {
           "0%": { transform: "translateX(-150%) skewX(-20deg)" },

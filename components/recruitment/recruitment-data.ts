@@ -6,7 +6,6 @@ export type RecruitmentBentoBenefit = {
   icon: BentoBenefitIcon;
   title: string;
   desc: string;
-  colSpan: "md:col-span-1" | "md:col-span-2";
   theme: "light" | "dark";
   accent: BentoBenefitAccent;
   /** PB vodoznak jen u tmavé karty */
@@ -55,7 +54,6 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     icon: "trending",
     title: "78 000 Kč",
     desc: "Taková je průměrná měsíční odměna v mém týmu. Žádné limity, jen tvé nasazení.",
-    colSpan: "md:col-span-2",
     theme: "light",
     accent: "gold",
   },
@@ -63,7 +61,6 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     icon: "users",
     title: "Růstové prostředí",
     desc: "Moderní kanceláře po celé ČR a tým lidí, co tě potáhnou nahoru.",
-    colSpan: "md:col-span-1",
     theme: "light",
     accent: "navy",
   },
@@ -71,7 +68,6 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     icon: "book",
     title: "Plná podpora",
     desc: "Kompletní zaškolení, stabilní přísun leadů a praxe na reálných schůzkách.",
-    colSpan: "md:col-span-1",
     theme: "light",
     accent: "cyan",
   },
@@ -79,7 +75,6 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     icon: "shield",
     title: "Vlastní silný brand",
     desc: "Propojení světa financí a realit nám dává ještě silnější pozici na trhu a mnohem více obchodních příležitostí.",
-    colSpan: "md:col-span-2",
     theme: "dark",
     accent: "cyan",
     showPbWatermark: true,
@@ -90,7 +85,7 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
 export const RECRUITMENT_BENTO_INTRO = {
   title: "Proč do toho jít s námi",
   subtitle:
-    "Získáte nejen skvělé ohodnocení, ale především know-how a zázemí, které vám umožní vybudovat si vlastní úspěšný byznys.",
+    "Praxe v oblasti finančního poradenství netřeba. Vše vám rádi ukážeme a naučíme. Ať už máte zkušenosti ve financích nebo s obchodem, anebo jste v oboru úplně noví, pomůžeme vám stát se úspěšným obchodníkem, který odvádí kvalitní práci pro své klienty. Všechny postupy vám rádi ukážeme a naučíme.",
 } as const;
 
 export const WIZARD_STEPS: WizardQuestionStep[] = [

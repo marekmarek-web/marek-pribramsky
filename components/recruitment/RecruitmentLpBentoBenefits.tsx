@@ -52,17 +52,19 @@ export function RecruitmentLpBentoBenefits() {
           <h2 id="kariera-proc" className="mb-6 text-4xl font-extrabold tracking-tight text-brand-text md:text-5xl">
             {RECRUITMENT_BENTO_INTRO.title}
           </h2>
-          <p className="max-w-2xl text-lg text-slate-500">{RECRUITMENT_BENTO_INTRO.subtitle}</p>
+          <p className="max-w-3xl text-lg leading-relaxed text-slate-500">
+            {RECRUITMENT_BENTO_INTRO.subtitle}
+          </p>
         </div>
 
-        <div className="grid auto-rows-[minmax(220px,auto)] grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {RECRUITMENT_BENTO_BENEFITS.map((b, idx) => {
             const isBrandCard = b.theme === "dark" && b.showPbWatermark;
 
             return (
               <div
                 key={idx}
-                className={`${b.colSpan} group relative flex flex-col justify-between overflow-hidden rounded-[2rem] p-10 transition-all duration-500 hover:-translate-y-1 ${
+                className={`group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[2rem] p-10 transition-all duration-500 hover:-translate-y-1 ${
                   b.theme === "light" ? "border border-brand-border bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.03)]" : ""
                 }`}
                 style={
@@ -78,7 +80,7 @@ export function RecruitmentLpBentoBenefits() {
               >
                 {b.theme === "light" && (
                   <div
-                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10"
+                    className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10"
                     style={{
                       background:
                         b.accent === "gold"
@@ -93,15 +95,24 @@ export function RecruitmentLpBentoBenefits() {
 
                 {b.theme === "dark" && (
                   <div
-                    className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-20 blur-3xl"
+                    className="pointer-events-none absolute -right-24 -top-24 z-0 h-64 w-64 rounded-full opacity-20 blur-3xl"
                     style={{ backgroundColor: "#4FC6F2" }}
                     aria-hidden
                   />
                 )}
 
+                <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden rounded-[inherit]" aria-hidden>
+                  <div
+                    className={`absolute inset-y-0 -left-1/3 w-2/3 bg-gradient-to-r from-transparent to-transparent animate-shimmer ${
+                      b.theme === "dark" ? "via-white/[0.12]" : "via-white/45"
+                    }`}
+                    style={{ animationDelay: `${idx * 0.35}s` }}
+                  />
+                </div>
+
                 {isBrandCard ? (
                   <div
-                    className="pointer-events-none absolute right-3 top-3 z-0 select-none sm:right-4 sm:top-4 md:right-5 md:top-5"
+                    className="pointer-events-none absolute right-3 top-3 z-[3] select-none sm:right-4 sm:top-4 md:right-5 md:top-5"
                     aria-hidden
                   >
                     <Image
