@@ -180,6 +180,7 @@ export function InvestmentBacktestChart({
         </div>
         <p className="text-sm leading-relaxed text-slate-500">
           Historická simulace ukazuje, jak by se investice vyvíjela při zachování dlouhodobé strategie i v obdobích krizí a poklesů trhu.
+          Po dubnu 2024 odpovídají měsíční body uzavírkám z Yahoo Finance (^GSPC, GLD, BND, VNQ), přepočteným tak, aby navázaly na váš řádek dubna 2024 v tabulce dat.
         </p>
       </div>
 

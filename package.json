@@ -18,7 +18,8 @@
     "test:ci": "vitest run && playwright test --grep @smoke",
     "build:legacy-css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/tailwind.css --minify -c tailwind.legacy.config.js",
     "import-blog-seed": "node scripts/import-blog-seed.mjs",
-    "gh-pages:redirects": "node scripts/gh-pages-redirect.mjs"
+    "gh-pages:redirects": "node scripts/gh-pages-redirect.mjs",
+    "sync-investment-historical": "node scripts/sync-investment-historical.mjs"
   },
   "dependencies": {
     "@sentry/core": "^10.48.0",
