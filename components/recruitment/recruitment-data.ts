@@ -81,11 +81,31 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
   },
 ];
 
-/** Sekce „Proč do toho jít“ — podnadpis z LP */
+/** Sekce „Proč do toho jít“ — nadpis nad týmovou fotkou a blokem výzvy */
 export const RECRUITMENT_BENTO_INTRO = {
   title: "Proč do toho jít s námi",
-  subtitle:
-    "Praxe v oblasti finančního poradenství netřeba. Vše vám rádi ukážeme a naučíme. Ať už máte zkušenosti ve financích nebo s obchodem, anebo jste v oboru úplně noví, pomůžeme vám stát se úspěšným obchodníkem, který odvádí kvalitní práci pro své klienty. Všechny postupy vám rádi ukážeme a naučíme.",
+} as const;
+
+/** Týmová fotka mezi nadpisem a textem výzvy */
+export const RECRUITMENT_WHY_TEAM_PHOTO = {
+  src: "/img/kariera/team-premium-brokers.png",
+  alt: "Tým Premium Brokers — společná fotografie před kanceláří",
+  width: 1024,
+  height: 768,
+} as const;
+
+/** Obsah viz inzerát „Hledáte novou výzvu?“ (nahrazuje dřívější dlouhý podnadpis) */
+export const RECRUITMENT_CHALLENGE_CARD = {
+  badge: "Hledáte novou výzvu?",
+  intro:
+    "Praxe v oblasti finančního poradenství netřeba. Vše vám rádi ukážeme a naučíme.",
+  offers:
+    "Nabízíme: Nadstandardní provizní systém, flexibilitu, pravidelné školení, teambuildingy, MultiSport kartu, spolupráci na IČO a mnoho dalšího.",
+  requirements:
+    "Bez čeho se ale neobejdete? Min. SŠ vzdělání s maturitou, čistého trestního rejstříku a obchodního potenciálu.",
+  cta: "Pokud vás zajímá více, stačí se mi ozvat a rád s vámi proberu možnosti.",
+  branchesLabel: "Pobočky:",
+  branches: "Praha, Jihlava, Roudnice nad Labem, Litoměřice, Štětí, Lovosice",
 } as const;
 
 export const WIZARD_STEPS: WizardQuestionStep[] = [

@@ -1,9 +1,11 @@
 import type { ComponentType } from "react";
 import Image from "next/image";
-import { BookOpen, ShieldCheck, TrendingUp, Users } from "lucide-react";
+import { BookOpen, MapPin, ShieldCheck, TrendingUp, Users } from "lucide-react";
 import {
   RECRUITMENT_BENTO_BENEFITS,
   RECRUITMENT_BENTO_INTRO,
+  RECRUITMENT_CHALLENGE_CARD,
+  RECRUITMENT_WHY_TEAM_PHOTO,
   type BentoBenefitIcon,
   type RecruitmentBentoBenefit,
 } from "@/components/recruitment/recruitment-data";
@@ -48,13 +50,50 @@ export function RecruitmentLpBentoBenefits() {
   return (
     <section className="relative z-20 py-16 md:py-24" aria-labelledby="kariera-proc">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-16 flex flex-col items-center text-center">
-          <h2 id="kariera-proc" className="mb-6 text-4xl font-extrabold tracking-tight text-brand-text md:text-5xl">
+        <div className="mb-16 flex flex-col items-center">
+          <h2
+            id="kariera-proc"
+            className="mb-8 text-center text-4xl font-extrabold tracking-tight text-brand-text md:mb-10 md:text-5xl"
+          >
             {RECRUITMENT_BENTO_INTRO.title}
           </h2>
-          <p className="max-w-3xl text-lg leading-relaxed text-slate-500">
-            {RECRUITMENT_BENTO_INTRO.subtitle}
-          </p>
+
+          <figure className="relative mb-10 w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-brand-border bg-white shadow-[0_24px_60px_-24px_rgba(29,35,84,0.25)] md:mb-12 md:rounded-[2rem]">
+            <Image
+              src={RECRUITMENT_WHY_TEAM_PHOTO.src}
+              alt={RECRUITMENT_WHY_TEAM_PHOTO.alt}
+              width={RECRUITMENT_WHY_TEAM_PHOTO.width}
+              height={RECRUITMENT_WHY_TEAM_PHOTO.height}
+              className="h-auto w-full object-cover object-center"
+              sizes="(min-width: 1024px) 896px, 100vw"
+              priority={false}
+            />
+          </figure>
+
+          <article
+            className="w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-[#2A3366] bg-gradient-to-br from-[#0a0f29] via-brand-navy to-[#12183a] px-6 py-8 text-left shadow-[0_28px_70px_-28px_rgba(10,15,41,0.55)] md:rounded-[2rem] md:px-10 md:py-10"
+            aria-labelledby="kariera-vyzva-badge"
+          >
+            <h3
+              id="kariera-vyzva-badge"
+              className="mb-6 inline-block rounded-md bg-brand-cyan px-4 py-2.5 text-base font-extrabold tracking-tight text-brand-navy md:text-lg"
+            >
+              {RECRUITMENT_CHALLENGE_CARD.badge}
+            </h3>
+            <div className="space-y-5 text-base leading-relaxed md:text-lg">
+              <p className="font-medium text-sky-200/95">{RECRUITMENT_CHALLENGE_CARD.intro}</p>
+              <p className="font-medium text-sky-200/95">{RECRUITMENT_CHALLENGE_CARD.offers}</p>
+              <p className="font-medium text-white">{RECRUITMENT_CHALLENGE_CARD.requirements}</p>
+              <p className="font-medium text-white">{RECRUITMENT_CHALLENGE_CARD.cta}</p>
+            </div>
+            <p className="mt-8 flex flex-wrap items-start gap-2 border-t border-white/10 pt-6 text-sm font-medium text-sky-200/90 md:text-base">
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-brand-cyan" strokeWidth={2} aria-hidden />
+              <span>
+                <span className="font-semibold text-brand-cyan">{RECRUITMENT_CHALLENGE_CARD.branchesLabel}</span>{" "}
+                {RECRUITMENT_CHALLENGE_CARD.branches}
+              </span>
+            </p>
+          </article>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
