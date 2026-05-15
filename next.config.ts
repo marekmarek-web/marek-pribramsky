@@ -20,10 +20,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // Menší klientské bundly: tree-shake ikon a podobných barrel exportů
-    optimizePackageImports: ["lucide-react"],
-  },
   async redirects() {
     return [
       { source: "/favicon.ico", destination: "/img/logos/pb-logo-no-bg.png", permanent: true },
