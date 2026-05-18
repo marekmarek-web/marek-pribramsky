@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, Mail, Phone, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  KIconArrowLeft,
+  KIconCircleCheck,
+  KIconMail,
+  KIconPhone,
+  KIconUser,
+} from "@/components/recruitment/kariera-ui-icons";
 import { submitRecruitmentApplication } from "@/app/actions/recruitment";
 import { legalConfig } from "@/config/legal";
 import { siteConfig } from "@/config/site";
@@ -210,7 +216,7 @@ export function RecruitmentWizard() {
               border: `1px solid ${BRAND_CYAN}`,
             }}
           >
-            <CheckCircle2 size={48} color={BRAND_CYAN} strokeWidth={2} aria-hidden />
+            <KIconCircleCheck size={48} strokeWidth={2} style={{ color: BRAND_CYAN }} aria-hidden />
           </div>
         </div>
         <h3 className="mb-6 text-3xl font-extrabold tracking-tight text-white text-balance md:text-4xl lg:text-5xl">
@@ -262,7 +268,7 @@ export function RecruitmentWizard() {
         <form onSubmit={onSubmitContact} className="mx-auto max-w-lg space-y-5">
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
-              <User size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
+              <KIconUser size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
             </div>
             <input
               required
@@ -278,7 +284,7 @@ export function RecruitmentWizard() {
 
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
-              <Mail size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
+              <KIconMail size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
             </div>
             <input
               required
@@ -294,7 +300,7 @@ export function RecruitmentWizard() {
 
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
-              <Phone size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
+              <KIconPhone size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />
             </div>
             <input
               required
@@ -362,7 +368,7 @@ export function RecruitmentWizard() {
               onClick={handleGoBack}
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden />
+              <KIconArrowLeft className="h-4 w-4" size={16} aria-hidden />
               Zpět
             </button>
             <button
@@ -409,7 +415,7 @@ export function RecruitmentWizard() {
             onClick={handleGoBack}
             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+            <KIconArrowLeft className="h-4 w-4" size={16} aria-hidden />
             Zpět
           </button>
         ) : (

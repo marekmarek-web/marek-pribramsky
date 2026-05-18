@@ -104,6 +104,7 @@ export const RECRUITMENT_BENEFITS_SECTION = {
     "Konkrétní systém podpory a obchodu — ne „motivační omáčka“. Výsledky závisí na tobě, aktivitě a zapracování.",
 } as const;
 
+/** Pořadí pro mřížku 2 sloupce: první řádek 2× světlé, druhý řádek 2× tmavé, poslední karta přes obě pole */
 export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
   {
     icon: "trending",
@@ -120,13 +121,6 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     accent: "cyan",
   },
   {
-    icon: "users",
-    title: "Tým a osobní vedení",
-    desc: "Nejsi na to sám — máš zázemí lidí, kteří ti pomůžou zvednout úroveň komunikace i obchodu.",
-    theme: "light",
-    accent: "navy",
-  },
-  {
     icon: "shield",
     title: "Finance + reality = silnější pozice",
     desc: "Propojení financí a realit ti dává širší příležitosti a silnější vyjednávací pozici vůči klientům.",
@@ -140,6 +134,13 @@ export const RECRUITMENT_BENTO_BENEFITS: RecruitmentBentoBenefit[] = [
     desc: "Průměrná měsíční odměna v mém týmu (orientační údaj). Výsledek závisí na aktivitě, obchodních schopnostech a fázi zapracování — není to garantovaný příjem.",
     theme: "dark",
     accent: "gold",
+  },
+  {
+    icon: "users",
+    title: "Tým a osobní vedení",
+    desc: "Nejsi na to sám — máš zázemí lidí, kteří ti pomůžou zvednout úroveň komunikace i obchodu.",
+    theme: "light",
+    accent: "navy",
   },
 ];
 

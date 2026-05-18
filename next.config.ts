@@ -20,6 +20,14 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  turbopack: {},
+  webpack: (config) => {
+    config.ignoreWarnings = [
+      ...(Array.isArray(config.ignoreWarnings) ? config.ignoreWarnings : []),
+      /Critical dependency: the request of a dependency is an expression/,
+    ];
+    return config;
+  },
   async redirects() {
     return [
       { source: "/favicon.ico", destination: "/img/logos/pb-logo-no-bg.png", permanent: true },

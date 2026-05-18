@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ChevronRight, Image as ImageIcon, Sparkles } from "lucide-react";
+import {
+  KIconArrowRight,
+  KIconChevronRight,
+  KIconImage,
+  KIconSparkles,
+} from "@/components/recruitment/kariera-ui-icons";
 import {
   RECRUITMENT_CONVERSION_CARD,
   RECRUITMENT_HERO,
@@ -32,7 +37,7 @@ export function RecruitmentLpHero() {
         <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="relative max-w-2xl lg:col-span-7">
             <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-line bg-white px-4 py-2 text-sm font-semibold text-[#07122F]/90 shadow-sm">
-              <Sparkles size={16} className="text-brand-gold" aria-hidden />
+              <KIconSparkles size={16} className="text-brand-gold" aria-hidden />
               {RECRUITMENT_HERO.badgeLabel}
             </span>
 
@@ -51,7 +56,7 @@ export function RecruitmentLpHero() {
                 className="group relative inline-flex min-h-[52px] items-center justify-center gap-3 overflow-hidden rounded-full bg-[#07122F] px-8 py-4 text-base font-semibold text-white shadow-[0_18px_44px_-18px_rgba(7,18,47,0.55)] transition hover:-translate-y-0.5 hover:bg-[#0c1d42] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan md:px-10"
               >
                 <span className="relative z-10">{RECRUITMENT_HERO.ctaPrimary}</span>
-                <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden />
+                <KIconArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" size={20} aria-hidden />
               </button>
 
               <button
@@ -60,7 +65,7 @@ export function RecruitmentLpHero() {
                 className="inline-flex min-h-[52px] items-center gap-1 text-base font-semibold text-[#07122F] underline-offset-4 hover:text-brand-cyan hover:underline sm:min-h-0"
               >
                 {RECRUITMENT_HERO.secondaryLinkLabel}
-                <ChevronRight className="h-5 w-5" aria-hidden />
+                <KIconChevronRight className="h-5 w-5" size={20} aria-hidden />
               </button>
             </div>
 
@@ -99,7 +104,7 @@ export function RecruitmentLpHero() {
                 className="relative flex aspect-[3/4] w-full flex-col items-center justify-center overflow-hidden rounded-[2rem] border-2 border-[#07122F]/20 bg-white/70 p-8 backdrop-blur-xl"
                 style={{ boxShadow: "0 25px 50px -12px rgba(7,18,47,0.12)" }}
               >
-                <ImageIcon size={56} className="mb-5 opacity-50 text-[#07122F]" aria-hidden />
+                <KIconImage size={56} className="mb-5 opacity-50 text-[#07122F]" aria-hidden />
                 <p className="mb-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-[#07122F]">Fotografie</p>
                 <p className="max-w-[220px] text-center text-xs font-medium text-brand-muted opacity-80">
                   (Oblast vyhrazená pro profesionální portrét Marka Příbramského)
