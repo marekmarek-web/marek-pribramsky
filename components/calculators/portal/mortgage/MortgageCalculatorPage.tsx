@@ -66,6 +66,7 @@ export function MortgageCalculatorPage() {
       try {
         const response = await fetch(`/api/calculators/rates?type=${state.product}`, {
           method: "GET",
+          cache: "no-store",
           signal: ctrl.signal,
         });
         if (!response.ok) return;

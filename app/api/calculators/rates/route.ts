@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   getLoanRates,
   getMortgageRates,
-  kurzyRatesCacheSMaxAgeSeconds,
+  kurzyRatesEdgeCacheSMaxAgeSeconds,
 } from "@/lib/calculators/mortgage/rates";
 import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
 
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
   const rates = type === "loan" ? await getLoanRates() : await getMortgageRates();
 
-  const sMax = kurzyRatesCacheSMaxAgeSeconds();
+  const sMax = kurzyRatesEdgeCacheSMaxAgeSeconds();
 
   return NextResponse.json(
     {
@@ -36,7 +36,8 @@ export async function GET(request: Request) {
     },
     {
       headers: {
-        "Cache-Control": `public, s-maxage=${sMax}, stale-while-revalidate=${sMax}`,
+        // Browser revalidates immediately; CDN edge cache stays short vs scrape TTL.
+        "Cache-Control": `public, max-age=0, s-maxage=${sMax}, stale-while-revalidate=600`,
       },
     }
   );

@@ -4,8 +4,16 @@ type CacheEntry<T> = {
   expiresAtMs: number;
 };
 
+type SnapshotEntry = {
+  data: unknown;
+  fetchedAtMs: number;
+};
+
 const cacheStore = new Map<string, CacheEntry<unknown>>();
-const lastValidSnapshot = new Map<string, unknown>();
+const lastValidSnapshot = new Map<string, SnapshotEntry>();
+
+/** Do not serve stale scraped snapshots forever when upstream fetch keeps failing. */
+export const MAX_SNAPSHOT_AGE_MS = 24 * 60 * 60 * 1000;
 
 export async function getOrFetchWithCache<T>(
   key: string,
@@ -25,12 +33,15 @@ export async function getOrFetchWithCache<T>(
       fetchedAtMs: now,
       expiresAtMs: now + ttlMs,
     });
-    lastValidSnapshot.set(key, data);
+    lastValidSnapshot.set(key, { data, fetchedAtMs: now });
     return data;
   } catch (error) {
-    const snapshot = lastValidSnapshot.get(key) as T | undefined;
-    if (snapshot !== undefined) {
-      return snapshot;
+    const snapshot = lastValidSnapshot.get(key);
+    if (
+      snapshot !== undefined &&
+      now - snapshot.fetchedAtMs <= MAX_SNAPSHOT_AGE_MS
+    ) {
+      return snapshot.data as T;
     }
     throw error;
   }

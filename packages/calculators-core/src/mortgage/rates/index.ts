@@ -4,14 +4,14 @@ import { StaticRateProvider } from "./static.provider";
 import type { NormalizedOffer, RateProvider } from "./types";
 
 /**
- * Jak často znovu stáhnout tabulku srovnání z Kurzy (server + sdílená cache CDN).
- * `KURZY_RATES_CACHE_HOURS` např. `24` (1× denně) nebo `72` (1× za 3 dny). Výchozí 24.
+ * Jak často znovu stáhnout tabulku srovnání z Kurzy (in-process server cache).
+ * `KURZY_RATES_CACHE_HOURS` např. `2` (výchozí) nebo `24` (1× denně). Max 168 h.
  */
 export function resolveKurzyRatesCacheHours(): number {
   const raw = process.env.KURZY_RATES_CACHE_HOURS?.trim();
-  if (!raw) return 24;
+  if (!raw) return 2;
   const n = Number(raw);
-  if (!Number.isFinite(n) || n < 1) return 24;
+  if (!Number.isFinite(n) || n < 1) return 2;
   return Math.min(Math.floor(n), 168);
 }
 
@@ -19,9 +19,14 @@ export function kurzyRatesCacheTtlMs(): number {
   return resolveKurzyRatesCacheHours() * 60 * 60 * 1000;
 }
 
-/** Pro hlavičku `Cache-Control: s-maxage=…` u `/api/calculators/rates`. */
+/** Krátká edge cache u `/api/calculators/rates` — oddělená od intervalu scrapu. */
+export function kurzyRatesEdgeCacheSMaxAgeSeconds(): number {
+  return 300;
+}
+
+/** @deprecated Prefer `kurzyRatesEdgeCacheSMaxAgeSeconds` — edge cache je kratší než scrape TTL. */
 export function kurzyRatesCacheSMaxAgeSeconds(): number {
-  return Math.floor(kurzyRatesCacheTtlMs() / 1000);
+  return kurzyRatesEdgeCacheSMaxAgeSeconds();
 }
 
 let singletonProvider: RateProvider | null = null;
