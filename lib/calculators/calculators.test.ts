@@ -8,20 +8,20 @@ import { DEFAULT_STATE as PENSION_DEFAULT } from "@/lib/calculators/pension/pens
 import { runCalculations as runPension } from "@/lib/calculators/pension/pension.engine";
 
 describe("mortgage engine (CRM parity, static banks)", () => {
-  it("default-like scenario: 6M loan, 600k own, 30y, fix 5y, standard, new", () => {
+  it("default-like scenario: 6M loan, 667k own, 30y, fix 5y, standard, new", () => {
     const state: MortgageState = {
       ...DEFAULT_STATE,
       product: "mortgage",
       mortgageType: "standard",
       loanType: "consumer",
       loan: LIMITS.mortgage.default,
-      own: 600_000,
+      own: 667_000,
       term: 30,
       fix: 5,
       type: "new",
       ltvLock: 90,
     };
-    expect(getCalculatedLtv(state)).toBe(91);
+    expect(getCalculatedLtv(state)).toBe(90);
     const r = calculateResult(state, BANKS_DATA);
     expect(r.monthlyPayment).toBeGreaterThan(31_400);
     expect(r.monthlyPayment).toBeLessThan(32_300);

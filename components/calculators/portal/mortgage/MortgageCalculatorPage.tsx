@@ -45,7 +45,7 @@ export function MortgageCalculatorPage() {
     mortgageType: "standard",
     loanType: "consumer",
     loan: LIMITS.mortgage.default,
-    own: 600_000,
+    own: 667_000,
     extra: 0,
     term: 30,
     fix: 5,
@@ -136,7 +136,7 @@ export function MortgageCalculatorPage() {
                 ...s,
                 product,
                 ...(product === "mortgage"
-                  ? { loan: LIMITS.mortgage.default, own: 600_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
+                  ? { loan: LIMITS.mortgage.default, own: 667_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
                   : { loan: LIMITS.loan.default, own: 0, term: 12, type: "new" as const, ltvLock: null }),
               }))
             }
@@ -154,7 +154,7 @@ export function MortgageCalculatorPage() {
                 ...s,
                 product,
                 ...(product === "mortgage"
-                  ? { loan: LIMITS.mortgage.default, own: 600_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
+                  ? { loan: LIMITS.mortgage.default, own: 667_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
                   : { loan: LIMITS.loan.default, own: 0, term: 12, type: "new" as const, ltvLock: null }),
               }))
             }

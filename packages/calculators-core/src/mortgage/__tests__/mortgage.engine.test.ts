@@ -25,8 +25,8 @@ describe("mortgage.engine", () => {
   });
 
   it("calculates LTV for mortgage and akontace for auto", () => {
-    expect(getCalculatedLtv(state({ product: "mortgage", loan: 6_000_000, own: 600_000 }))).toBe(
-      91
+    expect(getCalculatedLtv(state({ product: "mortgage", loan: 6_000_000, own: 667_000 }))).toBe(
+      90
     );
 
     expect(
@@ -48,8 +48,8 @@ describe("mortgage.engine", () => {
     expect(investment).toBeGreaterThan(base);
     expect(american).toBeGreaterThan(investment);
     expect(refi).toBeLessThanOrEqual(base);
-    expect(shortFix).toBeGreaterThan(base);
-    expect(longFix).toBeLessThanOrEqual(base);
+    expect(shortFix).toBeCloseTo(base, 5);
+    expect(longFix).toBeCloseTo(base, 5);
   });
 
   it("computes loan rate by subtype", () => {
@@ -81,7 +81,8 @@ describe("mortgage.engine", () => {
   });
 
   it("computes own resources from LTV and akontace", () => {
-    expect(ownFromLtvMortgage(6_000_000, 90)).toBe(600_000);
+    expect(ownFromLtvMortgage(6_000_000, 90)).toBe(667_000);
+    expect(ownFromLtvMortgage(10_000_000, 80)).toBe(2_500_000);
     expect(ownFromLtvAuto(500_000, 20)).toBe(100_000);
   });
 

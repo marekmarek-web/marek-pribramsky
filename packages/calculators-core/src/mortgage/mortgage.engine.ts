@@ -65,11 +65,8 @@ export function computeMortgageRateWithBanks(
   let finalRate = base + penalty;
   if (finalRate < MORTGAGE_MIN_RATE) finalRate = MORTGAGE_MIN_RATE;
 
-  if (fixYears < 5) finalRate += 0.1;
-  else if (fixYears > 7) {
-    const discounted = finalRate - 0.15;
-    finalRate = discounted < MORTGAGE_MIN_RATE ? MORTGAGE_MIN_RATE : discounted;
-  }
+  // Bank rates (static fallback and kurzy.cz) already reflect the selected fixation;
+  // do not apply extra fix-length surcharges on top.
   return finalRate;
 }
 
@@ -133,18 +130,12 @@ export function calculateResult(
   const monthlyPayment = computePMT(borrowingAmount, finalRate, state.term);
   const totalPaid = monthlyPayment * n;
 
-  const displayLtv = state.ltvLock !== null ? state.ltvLock : calcLtv;
-  if (state.product === "loan" && state.loanType === "auto") {
-    // display is still calculated LTV (akontace %)
-    // In HTML they show getCalculatedLtv() for auto. So displayLtv for auto = calcLtv.
-  }
-
   return {
     monthlyPayment: Math.round(monthlyPayment),
     finalRate,
     totalPaid: Math.round(totalPaid),
     borrowingAmount,
-    displayLtv: state.product === "mortgage" && state.ltvLock !== null ? state.ltvLock : calcLtv,
+    displayLtv: calcLtv,
     propertyValue,
     showLtvRow,
     ltvLabel,
@@ -168,11 +159,6 @@ function getBankMortgageRate(
 
   let rate = baseRate + penalty;
   if (rate < MORTGAGE_MIN_RATE) rate = MORTGAGE_MIN_RATE;
-  if (fixYears < 5) rate += 0.1;
-  else if (fixYears > 7) {
-    const discounted = rate - 0.15;
-    rate = discounted < MORTGAGE_MIN_RATE ? MORTGAGE_MIN_RATE : discounted;
-  }
   return rate;
 }
 
@@ -221,10 +207,10 @@ export function getOffersWithBanks(
   });
 }
 
-/** Compute own from LTV for mortgage: own = loan * (100 - ltv) / 100, rounded to 1000. */
+/** Compute own from target LTV for mortgage: LTV = loan/(loan+own) → own = loan×(100−LTV)/LTV. */
 export function ownFromLtvMortgage(loan: number, ltv: number): number {
-  const ownPercent = (100 - ltv) / 100;
-  return Math.round((loan * ownPercent) / 1000) * 1000;
+  if (ltv <= 0 || ltv >= 100) return 0;
+  return Math.round((loan * (100 - ltv)) / ltv / 1000) * 1000;
 }
 
 /** Compute own from akontace for auto: own = loan * (akontace%) / 100. */

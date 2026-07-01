@@ -123,10 +123,16 @@ export function MortgageInputPanel({
 
   const subTypes = PRODUCT_TYPES[state.product];
   const result = calculateResult(state);
+  const calcLtv = result.displayLtv;
   const loanLabel = isMortgage ? "Výše hypotéky" : isConsolidation ? "Stávající závazky" : isAuto ? "Cena vozu" : "Výše úvěru";
   const loanMinLabel = isMortgage ? "500 tis. Kč" : "20 tis. Kč";
   const loanMaxLabel = isMortgage ? "30 mil. Kč" : "2,5 mil. Kč";
-  const ownResources = Math.max(0, result.propertyValue - state.loan);
+
+  const isLtvButtonActive = (pct: number) => {
+    if (state.ltvLock === pct) return true;
+    if (state.ltvLock !== null) return false;
+    return Math.abs(calcLtv - pct) <= 1;
+  };
 
   return (
     <div className="bg-white rounded-[20px] border-[1.5px] border-[#e2e8f0] shadow-[0_1px_3px_rgba(13,31,78,0.06),0_1px_2px_rgba(13,31,78,0.04)] p-5 sm:p-6 md:p-7">
@@ -329,7 +335,7 @@ export function MortgageInputPanel({
                     type="button"
                     onClick={() => setLtv(pct)}
                     className={`py-1 px-2.5 rounded-[7px] border-[1.5px] text-xs font-semibold transition-all min-h-[32px] touch-manipulation ${
-                      state.ltvLock === pct
+                      isLtvButtonActive(pct)
                         ? "bg-[#2563eb] border-[#2563eb] text-white"
                         : "border-[#cbd5e1] text-[#475569] hover:border-[#2563eb] hover:text-[#2563eb]"
                     }`}
@@ -339,8 +345,8 @@ export function MortgageInputPanel({
                 ))}
             </div>
             {isMortgage && (
-              <div className="ml-auto bg-[#eff4ff] rounded-[7px] py-1 px-2.5 text-xs font-medium text-[#2563eb]">
-                Vlastní zdroje: <strong>{formatCurrency(ownResources)}</strong> Kč
+              <div className="ml-auto bg-[#eff4ff] rounded-[7px] py-1 px-2.5 text-xs font-medium text-[#2563eb] whitespace-nowrap">
+                Aktuální LTV: <strong>{calcLtv} %</strong>
               </div>
             )}
           </div>

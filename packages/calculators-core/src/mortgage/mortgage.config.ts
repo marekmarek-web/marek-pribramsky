@@ -54,7 +54,7 @@ export const DEFAULT_STATE = {
   mortgageType: "standard" as const,
   loanType: "consumer" as const,
   loan: 6_000_000,
-  own: 600_000,
+  own: 667_000,
   extra: 0,
   term: 30,
   fix: 5,
