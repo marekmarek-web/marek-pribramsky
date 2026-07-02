@@ -26,6 +26,7 @@ import {
 } from "@/lib/calculators/mortgage/mortgage.config";
 import {
   calculateResult,
+  getBorrowingAmount,
   getCalculatedLtv,
   getOffersWithBanks,
 } from "@/lib/calculators/mortgage/mortgage.engine";
@@ -45,7 +46,7 @@ export function MortgageCalculatorPage() {
     mortgageType: "standard",
     loanType: "consumer",
     loan: LIMITS.mortgage.default,
-    own: 667_000,
+    own: 600_000,
     extra: 0,
     term: 30,
     fix: 5,
@@ -89,7 +90,7 @@ export function MortgageCalculatorPage() {
     const scenario = {
       productType: state.product,
       subtype: state.product === "mortgage" ? state.mortgageType : state.loanType,
-      amount: state.loan,
+      amount: getBorrowingAmount(state),
       termMonths: state.term * 12,
       ltvOrAkontace: getCalculatedLtv(state),
       fixationYears: state.product === "mortgage" ? state.fix : undefined,
@@ -116,7 +117,7 @@ export function MortgageCalculatorPage() {
   return (
     <>
     <CalculatorEngagement calculator="mortgage" />
-    <div className="pt-0 pb-56 lg:pb-0">
+    <div className="pt-0 pb-36 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
           <h2 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">
@@ -136,7 +137,7 @@ export function MortgageCalculatorPage() {
                 ...s,
                 product,
                 ...(product === "mortgage"
-                  ? { loan: LIMITS.mortgage.default, own: 667_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
+                  ? { loan: LIMITS.mortgage.default, own: 600_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
                   : { loan: LIMITS.loan.default, own: 0, term: 12, type: "new" as const, ltvLock: null }),
               }))
             }
@@ -154,7 +155,7 @@ export function MortgageCalculatorPage() {
                 ...s,
                 product,
                 ...(product === "mortgage"
-                  ? { loan: LIMITS.mortgage.default, own: 667_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
+                  ? { loan: LIMITS.mortgage.default, own: 600_000, term: 30, fix: 5, type: "new" as const, ltvLock: 90 as number | null }
                   : { loan: LIMITS.loan.default, own: 0, term: 12, type: "new" as const, ltvLock: null }),
               }))
             }
@@ -186,7 +187,7 @@ export function MortgageCalculatorPage() {
       </CalculatorPageShell>
 
       <CalculatorMobileResultDock>
-        <MortgageResultsPanel result={result} onCtaConsult={() => openLead(null)} />
+        <MortgageResultsPanel compact result={result} onCtaConsult={() => openLead(null)} />
       </CalculatorMobileResultDock>
     </div>
     <MortgageContactModal

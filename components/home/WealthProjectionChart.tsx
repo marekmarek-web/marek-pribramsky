@@ -84,7 +84,7 @@ export function WealthProjectionChart() {
             scrollTrigger: {
               trigger: svgRoot,
               start: "top 85%",
-              toggleActions: "play none none reverse",
+              once: true,
             },
           });
         }

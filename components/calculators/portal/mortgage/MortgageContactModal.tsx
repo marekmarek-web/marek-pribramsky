@@ -1,7 +1,7 @@
 "use client";
 
 import { CalculatorLeadModal } from "@/components/forms/CalculatorLeadModal";
-import { getCalculatedLtv } from "@/lib/calculators/mortgage/mortgage.engine";
+import { getBorrowingAmount, getCalculatedLtv } from "@/lib/calculators/mortgage/mortgage.engine";
 import type { MortgageState } from "@/lib/calculators/mortgage/mortgage.types";
 
 export interface MortgageContactModalProps {
@@ -14,20 +14,29 @@ export interface MortgageContactModalProps {
 
 export function MortgageContactModal({ open, onClose, bankName, state, onSubmitSuccess }: MortgageContactModalProps) {
   const ltv = getCalculatedLtv(state);
+  const borrowing = getBorrowingAmount(state);
   const resultSummary = [
     `Produkt: ${state.product === "mortgage" ? "Hypotéka" : "Úvěr"}`,
     bankName ? `Banka / kontext: ${bankName}` : "Obecná poptávka (bez vybrané banky)",
-    `Částka: ${state.loan.toLocaleString("cs-CZ")} Kč`,
+    state.product === "mortgage"
+      ? `Cena nemovitosti: ${state.loan.toLocaleString("cs-CZ")} Kč`
+      : `Částka: ${state.loan.toLocaleString("cs-CZ")} Kč`,
+    state.product === "mortgage"
+      ? `Výše úvěru: ${borrowing.toLocaleString("cs-CZ")} Kč`
+      : null,
     `Vlastní zdroje: ${state.own.toLocaleString("cs-CZ")} Kč`,
     `Doba: ${state.term} let`,
     `LTV / akontace: ${ltv} %`,
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   const metadata: Record<string, string> = {
     banka: bankName ?? "",
     typProduktu: state.product === "mortgage" ? "hypoteka" : "uver",
     typDetail: state.product === "mortgage" ? state.mortgageType : state.loanType,
-    vyse: String(state.loan),
+    vyse: String(state.product === "mortgage" ? borrowing : state.loan),
+    cenaNemovitosti: state.product === "mortgage" ? String(state.loan) : "",
     vlastni: String(state.own),
     splatnostLet: String(state.term),
     fixace: String(state.fix),

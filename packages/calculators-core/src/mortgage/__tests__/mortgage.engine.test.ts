@@ -19,13 +19,13 @@ function state(patch: Partial<MortgageState>): MortgageState {
 
 describe("mortgage.engine", () => {
   it("computePMT returns expected annuity payment range", () => {
-    const pmt = computePMT(6_000_000, 4.18, 30);
-    expect(pmt).toBeGreaterThan(29_000);
+    const pmt = computePMT(5_400_000, 4.89, 30);
+    expect(pmt).toBeGreaterThan(28_000);
     expect(pmt).toBeLessThan(30_000);
   });
 
   it("calculates LTV for mortgage and akontace for auto", () => {
-    expect(getCalculatedLtv(state({ product: "mortgage", loan: 6_000_000, own: 667_000 }))).toBe(
+    expect(getCalculatedLtv(state({ product: "mortgage", loan: 6_000_000, own: 600_000 }))).toBe(
       90
     );
 
@@ -66,8 +66,8 @@ describe("mortgage.engine", () => {
 
   it("returns borrowing amount by product logic", () => {
     expect(
-      getBorrowingAmount(state({ product: "mortgage", loan: 3_000_000, own: 500_000 }))
-    ).toBe(3_000_000);
+      getBorrowingAmount(state({ product: "mortgage", loan: 6_000_000, own: 600_000 }))
+    ).toBe(5_400_000);
 
     expect(
       getBorrowingAmount(state({ product: "loan", loanType: "auto", loan: 600_000, own: 150_000 }))
@@ -81,8 +81,8 @@ describe("mortgage.engine", () => {
   });
 
   it("computes own resources from LTV and akontace", () => {
-    expect(ownFromLtvMortgage(6_000_000, 90)).toBe(667_000);
-    expect(ownFromLtvMortgage(10_000_000, 80)).toBe(2_500_000);
+    expect(ownFromLtvMortgage(6_000_000, 90)).toBe(600_000);
+    expect(ownFromLtvMortgage(10_000_000, 80)).toBe(2_000_000);
     expect(ownFromLtvAuto(500_000, 20)).toBe(100_000);
   });
 
@@ -93,7 +93,7 @@ describe("mortgage.engine", () => {
     expect(offers[0].monthlyPayment).toBeGreaterThan(0);
   });
 
-  it("recalculates own resources when LTV lock and loan changes", () => {
+  it("recalculates own resources when LTV lock and property value changes", () => {
     const initial = state({ product: "mortgage", loan: 6_000_000, ltvLock: 90 });
     const resultInitial = calculateResult({ ...initial, own: ownFromLtvMortgage(6_000_000, 90) });
     const resultUpdated = calculateResult({
@@ -102,6 +102,7 @@ describe("mortgage.engine", () => {
       own: ownFromLtvMortgage(7_000_000, 90),
     });
     expect(resultUpdated.propertyValue).toBeGreaterThan(resultInitial.propertyValue);
+    expect(resultUpdated.borrowingAmount).toBe(6_300_000);
     expect(resultUpdated.displayLtv).toBe(90);
   });
 

@@ -64,7 +64,10 @@ export function MortgageInputPanel({
   };
 
   const clampLoan = (v: number) => Math.min(lim.max, Math.max(lim.min, v));
-  const clampOwn = (v: number) => Math.min(OWN_LIMITS.max, Math.max(OWN_LIMITS.min, v));
+  const clampOwn = (v: number) => {
+    const max = isMortgage ? Math.min(OWN_LIMITS.max, state.loan) : OWN_LIMITS.max;
+    return Math.min(max, Math.max(OWN_LIMITS.min, v));
+  };
   const clampExtra = (v: number) => Math.min(EXTRA_LIMITS.max, Math.max(EXTRA_LIMITS.min, v));
   const clampTerm = (v: number) => Math.min(termLimits.max, Math.max(termLimits.min, v));
 
@@ -124,7 +127,7 @@ export function MortgageInputPanel({
   const subTypes = PRODUCT_TYPES[state.product];
   const result = calculateResult(state);
   const calcLtv = result.displayLtv;
-  const loanLabel = isMortgage ? "Výše hypotéky" : isConsolidation ? "Stávající závazky" : isAuto ? "Cena vozu" : "Výše úvěru";
+  const loanLabel = isMortgage ? "Cena nemovitosti" : isConsolidation ? "Stávající závazky" : isAuto ? "Cena vozu" : "Výše úvěru";
   const loanMinLabel = isMortgage ? "500 tis. Kč" : "20 tis. Kč";
   const loanMaxLabel = isMortgage ? "30 mil. Kč" : "2,5 mil. Kč";
 

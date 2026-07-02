@@ -6,6 +6,8 @@ import type { MortgageResult } from "@/lib/calculators/mortgage/mortgage.types";
 
 export interface MortgageResultsPanelProps {
   result: MortgageResult;
+  /** Kompaktní mobilní lišta bez koláče a detailního breakdownu */
+  compact?: boolean;
   /** Obecná konzultace / nabídka bez výběru banky z karty */
   onCtaConsult?: () => void;
 }
@@ -23,31 +25,74 @@ function CurrencyAmount({
 }) {
   const sizeClass =
     size === "lg"
-      ? "text-[2.25rem] sm:text-[2.5rem] font-extrabold"
+      ? "text-[1.75rem] sm:text-[2.5rem] font-extrabold"
       : size === "sm"
         ? "text-sm font-bold"
         : "text-[15px] font-bold";
 
+  const textColor = "text-white";
+  const suffixClass =
+    size === "lg"
+      ? "text-sm font-medium text-white/50 shrink-0"
+      : "text-[11px] font-semibold text-white/40 shrink-0";
+
   return (
     <span
-      className={`inline-flex flex-nowrap items-baseline gap-x-1 leading-none whitespace-nowrap ${sizeClass} text-white`}
+      className={`inline-flex flex-nowrap items-baseline gap-x-1 leading-none whitespace-nowrap ${sizeClass} ${textColor}`}
     >
       {prefix ? <span className="text-white/70">{prefix}</span> : null}
       <span>{formatCurrency(value)}</span>
-      <span
-        className={
-          size === "lg"
-            ? "text-base font-medium text-white/50 shrink-0"
-            : "text-[11px] font-semibold text-white/40 shrink-0"
-        }
-      >
-        Kč
-      </span>
+      <span className={suffixClass}>Kč</span>
     </span>
   );
 }
 
-export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPanelProps) {
+function CompactResultsPanel({ result, onCtaConsult }: MortgageResultsPanelProps) {
+  const principal = result.borrowingAmount;
+  const totalInterest = Math.max(0, result.totalPaid - principal);
+
+  return (
+    <div className="bg-[#0d1f4e] px-4 py-3 text-white">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[9px] font-semibold uppercase tracking-[0.1em] text-white/45 mb-0.5">
+            Měsíční splátka
+          </div>
+          <CurrencyAmount value={result.monthlyPayment} size="lg" />
+        </div>
+        <div className="shrink-0 text-right">
+          <div className="inline-flex items-center gap-1 rounded-full bg-[rgba(5,150,105,0.2)] border border-[rgba(5,150,105,0.3)] px-2 py-0.5 text-[10px] font-semibold text-[#34d399] whitespace-nowrap">
+            {formatRate(result.finalRate)} p.a.
+          </div>
+          <div className="mt-1 text-[10px] text-white/40">LTV {result.displayLtv} %</div>
+        </div>
+      </div>
+
+      <div className="mt-2 flex items-center justify-between gap-2 border-t border-white/10 pt-2 text-[11px] text-white/45">
+        <span>
+          Úvěr {formatCurrency(principal)} Kč · Úroky +{formatCurrency(totalInterest)} Kč
+        </span>
+        <span className="font-semibold text-white/70 whitespace-nowrap">
+          Celkem {formatCurrency(result.totalPaid)} Kč
+        </span>
+      </div>
+
+      {onCtaConsult != null ? (
+        <PrimaryTailoredCtaButton
+          surface="onDarkNavy"
+          className="mt-2.5 w-full !py-2.5 !text-sm"
+          onClick={onCtaConsult}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+export function MortgageResultsPanel({ result, compact = false, onCtaConsult }: MortgageResultsPanelProps) {
+  if (compact) {
+    return <CompactResultsPanel result={result} onCtaConsult={onCtaConsult} />;
+  }
+
   const principal = result.borrowingAmount;
   const totalInterest = Math.max(0, result.totalPaid - principal);
   const total = principal + totalInterest;
@@ -76,19 +121,17 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
       </div>
 
       <div className="relative z-10 flex flex-col gap-5">
-        {/* Monthly payment hero */}
         <div>
           <div className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50 mb-2">
             Odhadovaná měsíční splátka
           </div>
           <CurrencyAmount value={result.monthlyPayment} size="lg" />
           <div className="mt-3 inline-flex items-center gap-1.5 bg-[rgba(5,150,105,0.2)] border border-[rgba(5,150,105,0.35)] rounded-full px-3 py-1 text-xs font-semibold text-[#34d399] whitespace-nowrap">
-            <span className="w-[5px] h-[5px] rounded-full bg-[#34d399] animate-pulse shrink-0" />
+            <span className="w-[5px] h-[5px] rounded-full bg-[#34d399] shrink-0" />
             Úrok od {formatRate(result.finalRate)} p.a.
           </div>
         </div>
 
-        {/* Cost breakdown */}
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
           <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/35 mb-3">
             Struktura celkových nákladů
@@ -109,7 +152,6 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
                   strokeDashoffset="0"
                   strokeLinecap="butt"
                   transform="rotate(-90 48 48)"
-                  style={{ transition: "stroke-dasharray 0.5s ease" }}
                 />
                 <circle
                   cx="48"
@@ -122,7 +164,6 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
                   strokeDashoffset={`${(-interestLen).toFixed(2)}`}
                   strokeLinecap="butt"
                   transform="rotate(-90 48 48)"
-                  style={{ transition: "stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease" }}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -135,7 +176,7 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-[7px] h-[7px] rounded-full bg-[#60A5FA] shrink-0" />
-                  <span className="text-[11px] text-white/50">Jistina</span>
+                  <span className="text-[11px] text-white/50">Výše úvěru</span>
                 </div>
                 <CurrencyAmount value={principal} size="md" />
               </div>
@@ -150,7 +191,6 @@ export function MortgageResultsPanel({ result, onCtaConsult }: MortgageResultsPa
           </div>
         </div>
 
-        {/* Total */}
         <div className="flex items-center justify-between gap-3 border-t border-white/10 pt-4">
           <span className="text-xs text-white/50 shrink-0">Celkem zaplatíte bance</span>
           <CurrencyAmount value={result.totalPaid} size="sm" />

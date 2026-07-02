@@ -3,7 +3,7 @@
  * No DOM; all inputs via state-like object.
  *
  * Parity (verified vs html/hypotecni.html):
- * - Scenario: mortgage, 6M loan, 600k own, 30y, 5y fix, standard, new
+ * - Scenario: mortgage, 6M property, 600k own (90% LTV → 5.4M úvěr), 30y, 5y fix, standard, new
  *   → same monthly payment and rate as HTML.
  * - Loan/auto: borrowingAmount = loan - own; rate = avg(loanRate) - 1.0.
  * - Consolidation: borrowingAmount = loan + extra; rate = avg(loanRate) - 0.5.
@@ -29,11 +29,12 @@ export function computePMT(
   return (borrowingAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
-/** LTV for mortgage: loan/(loan+own)*100. For auto: own/loan*100 (akontace). */
+/** LTV for mortgage: (propertyValue − own) / propertyValue. For auto: own/loan (akontace). */
 export function getCalculatedLtv(state: MortgageState): number {
   if (state.product === "mortgage") {
-    const propertyValue = state.loan + state.own;
-    if (propertyValue > 0) return Math.round((state.loan / propertyValue) * 100);
+    const propertyValue = state.loan;
+    const borrowing = Math.max(0, propertyValue - state.own);
+    if (propertyValue > 0) return Math.round((borrowing / propertyValue) * 100);
     return 0;
   }
   if (state.product === "loan" && state.loanType === "auto") {
@@ -85,9 +86,9 @@ export function computeLoanRateWithBanks(state: MortgageState, banks: BankEntry[
   return avgRate + typeMod;
 }
 
-/** Borrowing amount: mortgage = loan; auto = loan - own; consolidation = loan + extra. */
+/** Borrowing amount: mortgage = property − own; auto = loan − own; consolidation = loan + extra. */
 export function getBorrowingAmount(state: MortgageState): number {
-  if (state.product === "mortgage") return state.loan;
+  if (state.product === "mortgage") return Math.max(0, state.loan - state.own);
   if (state.loanType === "auto") return Math.max(0, state.loan - state.own);
   if (state.loanType === "consolidation") return state.loan + state.extra;
   return state.loan;
@@ -112,7 +113,7 @@ export function calculateResult(
 
   if (state.product === "mortgage") {
     finalRate = computeMortgageRateWithBanks(state, fixYears, bankData);
-    propertyValue = state.loan + state.own;
+    propertyValue = state.loan;
     showLtvRow = true;
     ltvLabel = "LTV";
     showLtvWarning = calcLtv > 91;
@@ -207,10 +208,10 @@ export function getOffersWithBanks(
   });
 }
 
-/** Compute own from target LTV for mortgage: LTV = loan/(loan+own) → own = loan×(100−LTV)/LTV. */
-export function ownFromLtvMortgage(loan: number, ltv: number): number {
+/** Compute own from target LTV: own = propertyValue × (100 − LTV) / 100. */
+export function ownFromLtvMortgage(propertyValue: number, ltv: number): number {
   if (ltv <= 0 || ltv >= 100) return 0;
-  return Math.round((loan * (100 - ltv)) / ltv / 1000) * 1000;
+  return Math.round((propertyValue * (100 - ltv)) / 100 / 1000) * 1000;
 }
 
 /** Compute own from akontace for auto: own = loan * (akontace%) / 100. */

@@ -5,10 +5,18 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { HOME_HERO } from "@/lib/media/home-hero";
 
-export function HeroHomeSection({ booted }: { booted: boolean }) {
+export function HeroHomeSection({ booted, skipIntro = false }: { booted: boolean; skipIntro?: boolean }) {
   useEffect(() => {
     if (!booted) return;
     const revealLines = document.querySelectorAll(".text-reveal-line");
+    if (skipIntro) {
+      revealLines.forEach((line) => {
+        (line as HTMLElement).style.transform = "translateY(0%)";
+      });
+      const heroSub = document.querySelector(".hero-subtitle");
+      if (heroSub) (heroSub as HTMLElement).style.opacity = "1";
+      return;
+    }
     if (revealLines.length && typeof gsap !== "undefined") {
       gsap.to(revealLines, {
         y: "0%",
@@ -22,7 +30,7 @@ export function HeroHomeSection({ booted }: { booted: boolean }) {
         gsap.to(heroSub, { opacity: 1, duration: 1, delay: 1, ease: "power2.out" });
       }
     }
-  }, [booted]);
+  }, [booted, skipIntro]);
 
   return (
     <section
