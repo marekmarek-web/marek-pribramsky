@@ -7,6 +7,7 @@ import { CalculatorCurrencyAmount } from "../core/CalculatorCurrencyAmount";
 import {
   CalculatorCompactDockBadge,
   CalculatorCompactDockPanel,
+  CalculatorPanelBadge,
 } from "../core/CalculatorCompactDockPanel";
 
 export interface MortgageResultsPanelProps {
@@ -78,10 +79,16 @@ export function MortgageResultsPanel({ result, compact = false, onCtaConsult }: 
           <div className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50 mb-2">
             Odhadovaná měsíční splátka
           </div>
-          <CalculatorCurrencyAmount value={formatCurrency(result.monthlyPayment)} size="lg" />
-          <div className="mt-3 inline-flex items-center gap-1.5 bg-[rgba(5,150,105,0.2)] border border-[rgba(5,150,105,0.35)] rounded-full px-3 py-1 text-xs font-semibold text-[#34d399] whitespace-nowrap">
-            <span className="w-[5px] h-[5px] rounded-full bg-[#34d399] shrink-0" />
-            Úrok od {formatRate(result.finalRate)} p.a.
+          <div className="flex items-end justify-between gap-3">
+            <CalculatorCurrencyAmount value={formatCurrency(result.monthlyPayment)} size="lg" />
+            <div className="flex shrink-0 flex-col items-end gap-1.5 pb-1">
+              <CalculatorPanelBadge dot>
+                Úrok od {formatRate(result.finalRate)} p.a.
+              </CalculatorPanelBadge>
+              <span className="text-[11px] font-medium text-white/45 whitespace-nowrap">
+                LTV {result.displayLtv} %
+              </span>
+            </div>
           </div>
         </div>
 

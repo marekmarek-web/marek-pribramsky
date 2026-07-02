@@ -31,18 +31,18 @@ export function CalculatorCompactDockPanel({
 }: CalculatorCompactDockPanelProps) {
   return (
     <div className="bg-[#0d1f4e] px-4 py-3 text-white">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+      <div className="flex items-end justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <div className="text-[9px] font-semibold uppercase tracking-[0.1em] text-white/45 mb-0.5">
             {primaryLabel}
           </div>
           {primaryValue}
         </div>
         {badge != null || badgeSubtext != null ? (
-          <div className="shrink-0 text-right">
+          <div className="flex shrink-0 flex-col items-end gap-1 pb-0.5">
             {badge}
             {badgeSubtext != null ? (
-              <div className="mt-1 text-[10px] text-white/40">{badgeSubtext}</div>
+              <div className="text-[10px] font-medium text-white/45 whitespace-nowrap">{badgeSubtext}</div>
             ) : null}
           </div>
         ) : null}
@@ -72,6 +72,22 @@ export function CalculatorCompactDockPanel({
 export function CalculatorCompactDockBadge({ children }: { children: React.ReactNode }) {
   return (
     <div className="inline-flex items-center gap-1 rounded-full bg-[rgba(5,150,105,0.2)] border border-[rgba(5,150,105,0.3)] px-2 py-0.5 text-[10px] font-semibold text-[#34d399] whitespace-nowrap">
+      {children}
+    </div>
+  );
+}
+
+/** Stejný chip pro desktop panel — větší padding, zarovnání k metrice. */
+export function CalculatorPanelBadge({
+  children,
+  dot = false,
+}: {
+  children: React.ReactNode;
+  dot?: boolean;
+}) {
+  return (
+    <div className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(5,150,105,0.2)] border border-[rgba(5,150,105,0.35)] px-3 py-1 text-xs font-semibold text-[#34d399] whitespace-nowrap">
+      {dot ? <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-[#34d399]" aria-hidden /> : null}
       {children}
     </div>
   );
