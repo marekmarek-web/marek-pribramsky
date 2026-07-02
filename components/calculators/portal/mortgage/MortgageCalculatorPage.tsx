@@ -9,6 +9,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { CALCULATOR_MOBILE_PAGE_PADDING } from "../core/CalculatorCompactDockPanel";
 import { MortgageContactModal } from "./MortgageContactModal";
 import { MortgageHeroTopControls } from "./MortgageHeroTopControls";
 import { MortgageInputPanel } from "./MortgageInputPanel";
@@ -117,7 +118,7 @@ export function MortgageCalculatorPage() {
   return (
     <>
     <CalculatorEngagement calculator="mortgage" />
-    <div className="pt-0 pb-36 lg:pb-0">
+    <div className={`pt-0 ${CALCULATOR_MOBILE_PAGE_PADDING}`}>
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
           <h1 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">

@@ -5,12 +5,18 @@ import { PrimaryTailoredCtaButton } from "@/components/ui/PrimaryTailoredCta";
 import { EUCS_LABELS } from "@/lib/calculators/life/life.config";
 import type { LifeResult } from "@/lib/calculators/life/life.types";
 import type { LifeState } from "@/lib/calculators/life/life.types";
+import { CalculatorCurrencyAmount } from "../core/CalculatorCurrencyAmount";
+import {
+  CalculatorCompactDockBadge,
+  CalculatorCompactDockPanel,
+} from "../core/CalculatorCompactDockPanel";
+
 import { Umbrella, Activity, HeartPulse, Zap, Scale } from "lucide-react";
 
 export interface LifeResultsPanelProps {
   state: LifeState;
   result: LifeResult;
-  /** Optional: when provided, CTA buttons are shown (web/lead mode). */
+  compact?: boolean;
   onCtaPrimary?: () => void;
   onCtaCheck?: () => void;
 }
@@ -25,9 +31,30 @@ function DeathSubtext(state: LifeState): string {
 export function LifeResultsPanel({
   state,
   result,
+  compact = false,
   onCtaPrimary,
   onCtaCheck,
 }: LifeResultsPanelProps) {
+  if (compact) {
+    return (
+      <CalculatorCompactDockPanel
+        primaryLabel="Invalidita III. + II. st."
+        primaryValue={
+          <CalculatorCurrencyAmount value={formatCurrency(result.capitalD3)} size="lg" />
+        }
+        badge={<CalculatorCompactDockBadge>Klesající krytí</CalculatorCompactDockBadge>}
+        badgeSubtext="Do 65 let"
+        summaryLeft={
+          <>
+            Smrt {formatCurrency(result.deathCoverage)} Kč · PN {formatCurrency(result.pnDailyNeed)} Kč/den
+          </>
+        }
+        summaryRight={<>Renta {formatCurrency(result.gapD3Renta)} Kč/měs</>}
+        onCta={onCtaPrimary}
+      />
+    );
+  }
+
   const rows = [
     {
       label: "Smrt",

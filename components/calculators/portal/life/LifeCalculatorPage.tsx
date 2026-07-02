@@ -9,6 +9,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { CALCULATOR_MOBILE_PAGE_PADDING } from "../core/CalculatorCompactDockPanel";
 import { LifeContactModal, type LifeModalType } from "./LifeContactModal";
 import { LifeHeroMethodology } from "./LifeHeroMethodology";
 import { LifeInputPanel } from "./LifeInputPanel";
@@ -36,7 +37,7 @@ export function LifeCalculatorPage() {
   return (
     <>
     <CalculatorEngagement calculator="life" />
-    <div className="pt-0 pb-56 lg:pb-0">
+    <div className={`pt-0 ${CALCULATOR_MOBILE_PAGE_PADDING}`}>
       <CalculatorPageShell>
         <CalculatorMarketingHero overflow="hidden" badge={<CalculatorGoogleReviewBadge />}>
           <h1 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] tracking-tight text-brand-navy md:text-5xl md:leading-tight">
@@ -99,10 +100,10 @@ export function LifeCalculatorPage() {
 
       <CalculatorMobileResultDock>
         <LifeResultsPanel
+          compact
           state={state}
           result={result}
           onCtaPrimary={() => openLead("proposal")}
-          onCtaCheck={() => openLead("check")}
         />
       </CalculatorMobileResultDock>
     </div>

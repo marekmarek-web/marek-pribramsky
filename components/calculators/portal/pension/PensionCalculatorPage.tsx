@@ -6,6 +6,7 @@ import { AnalyticsEvents } from "@/lib/analytics/events";
 import { track } from "@/lib/analytics/track";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { CALCULATOR_MOBILE_PAGE_PADDING } from "../core/CalculatorCompactDockPanel";
 import { PensionContactModal } from "./PensionContactModal";
 import { PensionInputPanel } from "./PensionInputPanel";
 import { PensionResultsPanel } from "./PensionResultsPanel";
@@ -26,7 +27,7 @@ export function PensionCalculatorPage() {
   return (
     <>
       <CalculatorEngagement calculator="pension" />
-      <div className="pt-0 pb-56 lg:pb-0">
+      <div className={`pt-0 ${CALCULATOR_MOBILE_PAGE_PADDING}`}>
         <CalculatorPageShell>
           <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_360px]">
             <PensionInputPanel
@@ -41,7 +42,7 @@ export function PensionCalculatorPage() {
         </CalculatorPageShell>
 
         <CalculatorMobileResultDock>
-          <PensionResultsPanel result={result} onCtaPrimary={openLead} />
+          <PensionResultsPanel compact result={result} onCtaPrimary={openLead} />
         </CalculatorMobileResultDock>
       </div>
       <PensionContactModal

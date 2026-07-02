@@ -3,18 +3,44 @@
 import { formatCurrency } from "@/lib/calculators/pension/formatters";
 import { PrimaryTailoredCtaButton } from "@/components/ui/PrimaryTailoredCta";
 import type { PensionResult } from "@/lib/calculators/pension/pension.types";
+import { CalculatorCurrencyAmount } from "../core/CalculatorCurrencyAmount";
+import {
+  CalculatorCompactDockBadge,
+  CalculatorCompactDockPanel,
+} from "../core/CalculatorCompactDockPanel";
 
 export interface PensionResultsPanelProps {
   result: PensionResult;
-  /** Optional: when provided, CTA button is shown (web/lead mode). */
+  compact?: boolean;
   onCtaPrimary?: () => void;
 }
 
-export function PensionResultsPanel({ result, onCtaPrimary }: PensionResultsPanelProps) {
+export function PensionResultsPanel({ result, compact = false, onCtaPrimary }: PensionResultsPanelProps) {
   const targetCapitalMillions =
-    result.targetCapital > 0
-      ? (result.targetCapital / 1_000_000).toFixed(1)
-      : "0,0";
+    result.targetCapital > 0 ? (result.targetCapital / 1_000_000).toFixed(1) : "0,0";
+
+  if (compact) {
+    return (
+      <CalculatorCompactDockPanel
+        primaryLabel="Chybí vám měsíčně"
+        primaryValue={
+          <CalculatorCurrencyAmount
+            value={formatCurrency(result.monthlyGap)}
+            size="lg"
+            valueClassName="text-[#34d399]"
+          />
+        }
+        badge={<CalculatorCompactDockBadge>Model 7 % p.a.</CalculatorCompactDockBadge>}
+        badgeSubtext="Zhodnocení"
+        summaryLeft={
+          <>Investovat {formatCurrency(Math.round(result.monthlyInvestment))} Kč/měs</>
+        }
+        summaryRight={<>Cíl {targetCapitalMillions} mil. Kč</>}
+        onCta={onCtaPrimary}
+        ctaTestId="pension-calculator-cta"
+      />
+    );
+  }
 
   return (
     <div className="relative overflow-hidden rounded-[20px] border border-slate-800 bg-[#0d1f4e] p-6 text-white shadow-[0_16px_48px_rgba(13,31,78,0.14),0_4px_12px_rgba(13,31,78,0.06)] md:p-7">
@@ -45,12 +71,8 @@ export function PensionResultsPanel({ result, onCtaPrimary }: PensionResultsPane
             </span>
           </div>
           <div className="flex justify-between items-center border-t border-white/10 py-2">
-            <span className="text-sm text-slate-200">
-              Cílový majetek v 65 letech
-            </span>
-            <span className="text-lg sm:text-xl font-bold text-white">
-              {targetCapitalMillions} mil. Kč
-            </span>
+            <span className="text-sm text-slate-200">Cílový majetek v 65 letech</span>
+            <span className="text-lg sm:text-xl font-bold text-white">{targetCapitalMillions} mil. Kč</span>
           </div>
         </div>
 

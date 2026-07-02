@@ -3,13 +3,18 @@
 import { formatCurrency } from "@/lib/calculators/investment/formatters";
 import { PrimaryTailoredCtaButton } from "@/components/ui/PrimaryTailoredCta";
 import { CalculatorResultsCard } from "../core/CalculatorResultsCard";
+import { CalculatorCurrencyAmount } from "../core/CalculatorCurrencyAmount";
+import {
+  CalculatorCompactDockBadge,
+  CalculatorCompactDockPanel,
+} from "../core/CalculatorCompactDockPanel";
 
 export interface InvestmentResultsPanelProps {
   totalBalance: number;
   totalInvested: number;
   totalGain: number;
   totalGainPercent: number;
-  /** Optional: when provided, CTA button is shown (web/lead mode). */
+  compact?: boolean;
   onCtaClick?: () => void;
 }
 
@@ -18,8 +23,25 @@ export function InvestmentResultsPanel({
   totalInvested,
   totalGain,
   totalGainPercent,
+  compact = false,
   onCtaClick,
 }: InvestmentResultsPanelProps) {
+  if (compact) {
+    return (
+      <CalculatorCompactDockPanel
+        primaryLabel="Předpokládaná hodnota"
+        primaryValue={
+          <CalculatorCurrencyAmount value={formatCurrency(Math.round(totalBalance))} size="lg" />
+        }
+        badge={<CalculatorCompactDockBadge>+{totalGainPercent.toFixed(1)} %</CalculatorCompactDockBadge>}
+        badgeSubtext={`Zisk +${formatCurrency(Math.round(totalGain))} Kč`}
+        summaryLeft={<>Váš vklad {formatCurrency(Math.round(totalInvested))} Kč</>}
+        summaryRight={<>Celkem {formatCurrency(Math.round(totalBalance))} Kč</>}
+        onCta={onCtaClick}
+      />
+    );
+  }
+
   const rows = [
     { label: "Váš vklad", value: `${formatCurrency(Math.round(totalInvested))} Kč` },
     {

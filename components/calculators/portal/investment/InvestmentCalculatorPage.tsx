@@ -9,6 +9,7 @@ import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
+import { CALCULATOR_MOBILE_PAGE_PADDING } from "../core/CalculatorCompactDockPanel";
 import { InvestmentContactModal } from "./InvestmentContactModal";
 import { InvestmentStrategySwitcher } from "./InvestmentStrategySwitcher";
 import { InvestmentInputPanel } from "./InvestmentInputPanel";
@@ -64,7 +65,7 @@ export function InvestmentCalculatorPage() {
   return (
     <>
     <CalculatorEngagement calculator="investment" />
-    <div className="pt-0 pb-56 lg:pb-0">
+    <div className={`pt-0 ${CALCULATOR_MOBILE_PAGE_PADDING}`}>
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
           <h1 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] text-brand-navy md:text-5xl md:leading-tight">
@@ -163,6 +164,7 @@ export function InvestmentCalculatorPage() {
 
       <CalculatorMobileResultDock>
         <InvestmentResultsPanel
+          compact
           totalBalance={projection.totalBalance}
           totalInvested={projection.totalInvested}
           totalGain={projection.totalGain}
