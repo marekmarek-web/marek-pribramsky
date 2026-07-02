@@ -1,12 +1,29 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { LeadConsultationForm } from "@/components/forms/LeadConsultationForm";
 import { HomeBlogSection, HomeBlogSectionFallback } from "@/components/home/HomeBlogSection";
 import { timelineEntries } from "@/components/home/home-data";
 import { timelinePhotoAlt } from "@/lib/media/a11y";
-import { PersonaSwitcher } from "@/components/home/PersonaSwitcher";
-import { ReviewsMarquee } from "@/components/home/ReviewsMarquee";
-import { ServicesAccordion } from "@/components/home/ServicesAccordion";
+
+const PersonaSwitcher = dynamic(
+  () => import("@/components/home/PersonaSwitcher").then((m) => m.PersonaSwitcher),
+  { loading: () => <div className="h-56 animate-pulse rounded-2xl bg-slate-100/80" aria-hidden /> },
+);
+
+const ServicesAccordion = dynamic(
+  () => import("@/components/home/ServicesAccordion").then((m) => m.ServicesAccordion),
+  { loading: () => <div className="h-72 animate-pulse rounded-2xl bg-white/10" aria-hidden /> },
+);
+
+const ReviewsMarquee = dynamic(
+  () => import("@/components/home/ReviewsMarquee").then((m) => m.ReviewsMarquee),
+  { loading: () => <div className="h-40 animate-pulse rounded-2xl bg-slate-100" aria-hidden /> },
+);
+
+const LeadConsultationForm = dynamic(
+  () => import("@/components/forms/LeadConsultationForm").then((m) => m.LeadConsultationForm),
+  { loading: () => <div className="min-h-[420px] animate-pulse rounded-2xl bg-slate-50" aria-hidden /> },
+);
 
 /** Sekce #proc-ja až #kontakt z kořenového `index.html`. */
 export function HomeTailSections() {

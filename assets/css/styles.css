@@ -1,5 +1,4 @@
 /* Marek P??bramsk? ? Premium UX/UI 2026 */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
 
 /* === RESPONZIVN? Z?KLAD ? mobil, tablet, notebook, desktop === */
 html {
@@ -52,16 +51,26 @@ body {
   }
 }
 
-/* Loader (Aurora style) */
+/* Loader (Aurora style) — průhledné pozadí, hero pod ním = rychlejší LCP */
 .loader {
   position: fixed;
   inset: 0;
-  background: #F8FAFC;
+  background: transparent;
   z-index: 99999;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
+}
+.loader-card {
+  pointer-events: auto;
+  background: rgba(248, 250, 252, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.25rem;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 24px 48px rgba(13, 31, 78, 0.12);
 }
 .loader-progress { transition: width 0.1s linear; }
 
@@ -298,15 +307,10 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url("../img/hero3.jpg");
-  background-size: cover;
-  background-position: center;
-  filter: blur(50px);
-  opacity: 0.14;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(79, 198, 242, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 80% 70%, rgba(29, 35, 84, 0.08) 0%, transparent 50%);
   pointer-events: none;
-}
-@media (min-width: 768px) {
-  .persona-section-bg { filter: blur(60px); opacity: 0.12; }
 }
 
 /* Pro koho ? karta s efektem ml??n?ho skla (Glassmorphism) */

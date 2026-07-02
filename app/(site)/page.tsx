@@ -3,6 +3,7 @@ import { HomeRestSections } from "@/components/home/HomeRestSections";
 import { homeMetadata } from "@/lib/seo/page-meta";
 
 export const metadata = homeMetadata();
+export const revalidate = 60;
 
 export default function HomePage() {
   return (

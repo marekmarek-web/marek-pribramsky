@@ -1,7 +1,5 @@
 "use client";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
 
 function formatCzk(n: number) {
@@ -69,27 +67,33 @@ export function WealthProjectionChart() {
     pathAvg.setAttribute("d", dataToPathSmooth(averageData));
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let cancelled = false;
+    let ctx: { revert: () => void } | null = null;
 
-    const ctx = gsap.context(() => {
-      if (!reduced) {
-        gsap.registerPlugin(ScrollTrigger);
-        const pathLen = pathLine.getTotalLength?.() ?? 0;
-        if (pathLen) {
-          pathLine.style.strokeDasharray = `${pathLen}`;
-          pathLine.style.strokeDashoffset = `${pathLen}`;
-          gsap.to(pathLine, {
-            strokeDashoffset: 0,
-            duration: 1.5,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: svgRoot,
-              start: "top 85%",
-              once: true,
-            },
-          });
-        }
-      }
-    }, wrapRoot);
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
+      ([{ default: gsap }, { ScrollTrigger }]) => {
+        if (cancelled || reduced) return;
+
+        ctx = gsap.context(() => {
+          gsap.registerPlugin(ScrollTrigger);
+          const pathLen = pathLine.getTotalLength?.() ?? 0;
+          if (pathLen) {
+            pathLine.style.strokeDasharray = `${pathLen}`;
+            pathLine.style.strokeDashoffset = `${pathLen}`;
+            gsap.to(pathLine, {
+              strokeDashoffset: 0,
+              duration: 1.5,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: svgRoot,
+                start: "top 85%",
+                once: true,
+              },
+            });
+          }
+        }, wrapRoot);
+      },
+    );
 
     function onMove(e: MouseEvent) {
       const rect = svgRoot.getBoundingClientRect();
@@ -117,9 +121,10 @@ export function WealthProjectionChart() {
     wrapRoot.addEventListener("mouseleave", onLeave);
 
     return () => {
+      cancelled = true;
       wrapRoot.removeEventListener("mousemove", onMove);
       wrapRoot.removeEventListener("mouseleave", onLeave);
-      ctx.revert();
+      ctx?.revert();
     };
   }, []);
 
@@ -128,18 +133,24 @@ export function WealthProjectionChart() {
     if (!chartCard || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     chartCard.style.setProperty("--angle", "135deg");
+    let tiltTicking = false;
     const onMove = (e: MouseEvent) => {
-      const rect = chartCard.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      chartCard.style.setProperty("--x", `${x}px`);
-      chartCard.style.setProperty("--y", `${y}px`);
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * 8;
-      const rotateY = ((x - centerX) / centerX) * -8;
-      chartCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      chartCard.style.setProperty("--angle", `${135 + rotateX - rotateY}deg`);
+      if (tiltTicking) return;
+      tiltTicking = true;
+      requestAnimationFrame(() => {
+        const rect = chartCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        chartCard.style.setProperty("--x", `${x}px`);
+        chartCard.style.setProperty("--y", `${y}px`);
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * 8;
+        const rotateY = ((x - centerX) / centerX) * -8;
+        chartCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        chartCard.style.setProperty("--angle", `${135 + rotateX - rotateY}deg`);
+        tiltTicking = false;
+      });
     };
     const onLeave = () => {
       chartCard.style.transform = "rotateX(0deg) rotateY(0deg)";

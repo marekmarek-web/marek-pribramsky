@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { HashScrollHandler } from "@/components/layout/HashScrollHandler";
-import { QuickCalcWidget } from "@/components/layout/QuickCalcWidget";
+import { LazyQuickCalcWidget } from "@/components/layout/LazyQuickCalcWidget";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
@@ -22,7 +22,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <div id="site-main" tabIndex={-1} className="outline-none">
         {children}
       </div>
-      <QuickCalcWidget />
+      <LazyQuickCalcWidget />
       <SiteFooter />
     </>
   );

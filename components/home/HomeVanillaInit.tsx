@@ -29,15 +29,24 @@ export function HomeVanillaInit({ enabled }: { enabled: boolean }) {
     checkFade();
 
     const postupBento = document.getElementById("postup-bento");
+    let postupTicking = false;
     const onPostupMove = (e: MouseEvent) => {
-      if (!postupBento) return;
-      const cards = postupBento.getElementsByClassName("postup-item");
-      for (let i = 0; i < cards.length; i++) {
-        const card = cards[i] as HTMLElement;
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-        card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-      }
+      if (!postupBento || postupTicking) return;
+      postupTicking = true;
+      requestAnimationFrame(() => {
+        if (!postupBento) {
+          postupTicking = false;
+          return;
+        }
+        const cards = postupBento.getElementsByClassName("postup-item");
+        for (let i = 0; i < cards.length; i++) {
+          const card = cards[i] as HTMLElement;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+          card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+        }
+        postupTicking = false;
+      });
     };
     if (postupBento) postupBento.addEventListener("mousemove", onPostupMove);
 
