@@ -19,6 +19,18 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 | 8 | HIGH | Hero blank on SSR / slow LCP | Hero renders immediately; transparent loader |
 | 9 | — | Mortgage LTV/rates/mobile UI | See prior commits on this branch |
 | 10 | — | Performance lazy-load bundle | GSAP, tail components, Sentry defer |
+| 11 | HIGH | In-memory rate limits not global on serverless | `rateLimit.ts` + optional Upstash Redis |
+| 12 | HIGH | Export API weaker session helper | `get-editor-session.ts` service-role fallback |
+| 13 | MEDIUM | DB insert ok, email fail → user error | `processPublicLead.ts` — lead saved, `emailSent: false` |
+| 14 | MEDIUM | Subscriber insert fails silently | `persist_failed` when DB configured |
+| 15 | MEDIUM | Contact form missing `too_fast` / `rate_limit` UX | `ContactPageForm.tsx` |
+| 16 | MEDIUM | Attribution before cookie consent | `AttributionCapture` gated on consent |
+| 17 | HIGH | Missing `<h1>` on life calculator | `LifeCalculatorPage.tsx` |
+| 18 | — | No default OG images | `page-meta.ts`, root `layout.tsx` |
+| 19 | — | Sitemap always `new Date()` | Real blog dates; static fixed date |
+| 20 | LOW | Admin export missing `consent` | CSV export column added |
+| 21 | MEDIUM | Mobile nav no focus trap | `SiteHeader.tsx` |
+| 22 | — | Shared spam checks duplicated | `publicFormSpam.ts` |
 
 ---
 
@@ -32,21 +44,10 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 - Plausible consent-gated; Sentry scrubs cookies/user PII
 - `safeInternalPath` on login redirect
 
-### Open — HIGH
-
-| Issue | Location | Recommendation |
-|-------|----------|----------------|
-| In-memory rate limits not global on serverless | `rateLimitInMemory.ts` | Upstash Redis at scale |
-| Export API uses weaker session helper vs admin pages | `get-editor-session.ts` | Align with `requireEditor()` service-role fallback |
-
 ### Open — MEDIUM
 
 | Issue | Recommendation |
 |-------|----------------|
-| Recruitment Resend errors hinted config details | Generic messages (partially fixed) |
-| DB insert succeeds, email fails → orphan lead | Outbox/retry or transactional UX |
-| Subscriber insert fails silently with `ok: true` | Fail or surface `subscriberId: null` |
-| Attribution in sessionStorage before analytics consent | Gate on consent or document as essential |
 | Sentry loads without cookie consent | Legal review (common for error monitoring) |
 
 ---
@@ -57,7 +58,6 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 
 | Issue | Location |
 |-------|----------|
-| Missing `<h1>` on life calculator page | `LifeCalculatorPage.tsx` |
 | Zero/thin unit tests for pension/investment engines | `packages/calculators-core` |
 
 ### Open — MEDIUM
@@ -65,11 +65,9 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 | Issue | Location |
 |-------|----------|
 | `CustomDropdown` missing keyboard ARIA | `CustomDropdown.tsx` |
-| Mobile nav no focus trap | `SiteHeader.tsx` |
 | FAQ tabs incomplete WAI-ARIA | `HomeTailSections.tsx`, `HomeVanillaInit.tsx` |
 | Life chart values hover-only | `LifeRiskChart.tsx` |
 | Tykání on `/kariera` vs vykání elsewhere | `RecruitmentWizard.tsx` |
-| Contact form missing `too_fast` handling | `ContactPageForm.tsx` |
 
 ### Open — LOW
 
@@ -77,7 +75,6 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 |-------|----------|
 | Dead code: `FooterLeadForm`, `CalculatorHero`, unused calculator shell components | various |
 | Legacy `partials/*.html`, `assets/js/main.js` | not used by Next |
-| Admin lead export missing `consent` column | `app/api/admin/leads/export` |
 
 ---
 
@@ -111,9 +108,7 @@ Consolidated findings from security, bug/quality, performance, and data-flow aud
 
 | Issue | Fix |
 |-------|-----|
-| No default OG/Twitter images on marketing pages | Add to `pageOg()` or root metadata |
-| Sitemap `lastModified: new Date()` always | Use real dates for blog posts |
-| `NEXT_PUBLIC_SITE_URL` fallback localhost in sitemap | Fail CI if unset in production |
+| `NEXT_PUBLIC_SITE_URL` fallback localhost in sitemap | Warn in production; set env in Vercel |
 
 ---
 
@@ -129,6 +124,7 @@ Current: smoke, pension lead, blog, admin redirect (desktop only).
 
 - `packages/calculators-core/src/life/__tests__/life.engine.test.ts`
 - `calculatorLeadSchema.test.ts` — consent enforcement
+- `publicFormSpam.test.ts` — honeypot + timing
 
 ---
 
@@ -137,4 +133,4 @@ Current: smoke, pension lead, blog, admin redirect (desktop only).
 This branch merges:
 - **PR #2** — Mortgage calculator fixes (LTV, rates, mobile UI, nav scroll, loader session)
 - **PR #3** — Homepage performance optimizations
-- **This audit pass** — Critical/high fixes from multi-agent review
+- **This audit pass** — Critical/high fixes from multi-agent review + anti-spam hardening

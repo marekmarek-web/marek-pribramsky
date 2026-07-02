@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { processPublicLead } from "@/lib/leads/processPublicLead";
 import { captureException } from "@/lib/observability";
 import { jsonValidationError } from "@/lib/security/publicApiJson";
-import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
+import { checkPublicFormSpam } from "@/lib/security/publicFormSpam";
+import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimit";
 import { isServiceRoleConfigured, isSupabaseConfigured } from "@/lib/supabase/env";
 import { upsertSubscriberFromBody } from "@/lib/subscribers/insertSubscriber";
 import { subscriberBodyToLeadBody } from "@/lib/subscribers/subscriberToLeadBody";
@@ -10,7 +11,11 @@ import { subscriberBodySchema } from "@/lib/validation/subscriberSchema";
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_PER_WINDOW = 15;
-const checkRate = createIpRateLimiter({ windowMs: WINDOW_MS, maxPerWindow: MAX_PER_WINDOW });
+const checkRate = createIpRateLimiter({
+  windowMs: WINDOW_MS,
+  maxPerWindow: MAX_PER_WINDOW,
+  prefix: "subscribers",
+});
 const MAX_JSON_BYTES = 64 * 1024;
 
 async function persistSubscriber(parsed: ReturnType<typeof subscriberBodySchema.parse>): Promise<string | undefined> {
@@ -28,7 +33,7 @@ async function persistSubscriber(parsed: ReturnType<typeof subscriberBodySchema.
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  const limited = checkRate(ip);
+  const limited = await checkRate(ip);
   if (!limited.ok) {
     return NextResponse.json(
       { ok: false, error: "rate_limit" },
@@ -54,14 +59,19 @@ export async function POST(req: Request) {
   }
 
   const body = parsed.data;
-  if (body.companyWebsite) {
+  const spam = checkPublicFormSpam(body, { minElapsedMs: 1500 });
+  if (spam.ok === false && spam.reason === "honeypot") {
     return NextResponse.json({ ok: true, subscriberId: null });
   }
-  if (body.formOpenedAt != null && Date.now() - body.formOpenedAt < 1500) {
+  if (spam.ok === false && spam.reason === "too_fast") {
     return NextResponse.json({ ok: false, error: "too_fast" }, { status: 400 });
   }
 
+  const dbRequired = isSupabaseConfigured() && isServiceRoleConfigured();
   const subscriberId = await persistSubscriber(body);
+  if (dbRequired && subscriberId == null) {
+    return NextResponse.json({ ok: false, error: "persist_failed" }, { status: 503 });
+  }
 
   try {
     const leadBody = subscriberBodyToLeadBody(body, subscriberId ?? null);

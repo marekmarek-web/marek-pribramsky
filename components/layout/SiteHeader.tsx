@@ -35,6 +35,8 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const toolsBtnRef = useRef<HTMLButtonElement>(null);
   const toolsPanelRef = useRef<HTMLDivElement>(null);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const [toolsOpen, setToolsOpen] = useState(false);
 
   useEffect(() => {
@@ -61,6 +63,37 @@ export function SiteHeader() {
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
+  useEffect(() => {
+    if (!open) return;
+    const panel = menuPanelRef.current;
+    const trigger = menuBtnRef.current;
+    const focusables = panel?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    const first = focusables?.[0];
+    const last = focusables?.[focusables.length - 1];
+    first?.focus();
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Tab" || !focusables?.length) return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      trigger?.focus();
+    };
+  }, [open]);
+
   return (
     <>
       <header
@@ -85,6 +118,7 @@ export function SiteHeader() {
               />
             </Link>
             <button
+              ref={menuBtnRef}
               type="button"
               className="hamburger-btn flex h-12 w-12 items-center justify-center rounded-full text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 md:hidden"
               aria-label={open ? "Zavřít menu" : "Otevřít menu"}
@@ -170,7 +204,7 @@ export function SiteHeader() {
         aria-hidden={!open}
       >
         <div className="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden onClick={closeMenu} />
-        <div className="mobile-nav-panel absolute top-0 right-0 flex h-full w-full max-w-sm flex-col px-6 pb-8 pt-20">
+        <div ref={menuPanelRef} className="mobile-nav-panel absolute top-0 right-0 flex h-full w-full max-w-sm flex-col px-6 pb-8 pt-20">
           {mobileMenuLinks.map((item) => (
             <Link
               key={`m-${item.label}-${item.href}`}

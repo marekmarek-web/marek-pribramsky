@@ -16,7 +16,7 @@ export async function GET() {
   const { data: rows, error } = await session.supabase
     .from("leads")
     .select(
-      "id,created_at,updated_at,status,name,email,phone,source_type,raw_source,source_path,lead_category,calculator_type,result_summary,topic,interest,possible_duplicate,duplicate_of_id,assignee_id,internal_notes",
+      "id,created_at,updated_at,status,name,email,phone,consent,source_type,raw_source,source_path,lead_category,calculator_type,result_summary,topic,interest,possible_duplicate,duplicate_of_id,assignee_id,internal_notes",
     )
     .order("created_at", { ascending: false });
 
@@ -35,6 +35,7 @@ export async function GET() {
     "name",
     "email",
     "phone",
+    "consent",
     "source_type",
     "raw_source",
     "source_path",

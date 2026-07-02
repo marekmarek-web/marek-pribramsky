@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { fetchAllPostSlugs } from "@/lib/posts";
+import { fetchPublishedPostsForSitemap } from "@/lib/posts";
 import { getSiteUrl } from "@/lib/seo/page-meta";
 
 const STATIC: { path: string; changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"]; priority: number }[] =
@@ -18,21 +18,30 @@ const STATIC: { path: string; changeFrequency: MetadataRoute.Sitemap[0]["changeF
     { path: "/gdpr", changeFrequency: "yearly", priority: 0.3 },
   ];
 
+function resolveSitemapBase(): string {
+  const base = getSiteUrl();
+  if (base) return base;
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL === "1") {
+    console.warn("[sitemap] NEXT_PUBLIC_SITE_URL is not set in production");
+  }
+  return "http://localhost:3000";
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = getSiteUrl() || "http://localhost:3000";
-  const lastModified = new Date();
+  const base = resolveSitemapBase();
+  const staticLastModified = new Date("2026-01-01");
 
   const staticEntries: MetadataRoute.Sitemap = STATIC.map(({ path, changeFrequency, priority }) => ({
     url: `${base}${path}`,
-    lastModified,
+    lastModified: staticLastModified,
     changeFrequency,
     priority,
   }));
 
   let blogEntries: MetadataRoute.Sitemap = [];
   try {
-    const slugs = await fetchAllPostSlugs();
-    blogEntries = slugs.map((slug) => ({
+    const posts = await fetchPublishedPostsForSitemap();
+    blogEntries = posts.map(({ slug, lastModified }) => ({
       url: `${base}/blog/${slug}`,
       lastModified,
       changeFrequency: "monthly" as const,

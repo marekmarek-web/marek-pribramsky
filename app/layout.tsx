@@ -26,6 +26,16 @@ export const metadata: Metadata = {
     icon: [{ url: "/img/logos/pb-logo-no-bg.png", type: "image/png" }],
     apple: [{ url: "/img/logos/pb-logo-no-bg.png", type: "image/png" }],
   },
+  openGraph: {
+    siteName: siteConfig.name,
+    locale: "cs_CZ",
+    type: "website",
+    images: [{ url: "/img/logos/pb-logo-no-bg.png", alt: siteConfig.name }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/img/logos/pb-logo-no-bg.png"],
+  },
 };
 
 export const viewport: Viewport = {

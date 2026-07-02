@@ -10,20 +10,23 @@ type StoredAttr = {
   utm_term?: string;
 };
 
-/** Jednou za session uloží landing + UTM z aktuální URL (první hit). */
-export function captureSessionAttribution(): void {
+/** Jednou za session uloží landing + volitelně UTM z aktuální URL (první hit). */
+export function captureSessionAttribution(opts?: { includeUtm?: boolean; force?: boolean }): void {
   if (typeof window === "undefined") return;
+  const includeUtm = opts?.includeUtm ?? false;
   try {
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    if (!opts?.force && sessionStorage.getItem(STORAGE_KEY)) return;
     const path = window.location.pathname.slice(0, 200);
     const sp = new URLSearchParams(window.location.search);
     const row: StoredAttr = {
       landing_path: path,
       captured_at: Date.now(),
     };
-    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const) {
-      const v = sp.get(k)?.trim();
-      if (v) row[k] = v.slice(0, 120);
+    if (includeUtm) {
+      for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const) {
+        const v = sp.get(k)?.trim();
+        if (v) row[k] = v.slice(0, 120);
+      }
     }
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(row));
   } catch {

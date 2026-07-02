@@ -39,10 +39,10 @@ export function LifeCalculatorPage() {
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero overflow="hidden" badge={<CalculatorGoogleReviewBadge />}>
-          <h2 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] tracking-tight text-brand-navy md:text-5xl md:leading-tight">
+          <h1 className="mb-4 max-w-4xl text-3xl font-extrabold leading-[1.15] tracking-tight text-brand-navy md:text-5xl md:leading-tight">
             <span className="block">Kalkulačka životního pojištění</span>
             <span className="mt-1 block text-brand-navy">Výpočet potřebného krytí</span>
-          </h2>
+          </h1>
           <p className="mb-8 max-w-2xl text-lg leading-relaxed text-slate-600">
             Spočítejte si orientačně, jaké krytí životního pojištění dává smysl podle příjmu, výdajů a závazků. Výsledek
             vysvětlím a navrhnu další postup. Telefon je volitelný.

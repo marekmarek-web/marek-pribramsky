@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { processPublicLead } from "@/lib/leads/processPublicLead";
 import { captureException } from "@/lib/observability";
 import { jsonValidationError } from "@/lib/security/publicApiJson";
-import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
+import { checkPublicFormSpam } from "@/lib/security/publicFormSpam";
+import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimit";
 import { isAllowedPublicAttachment, sanitizeUploadFilename } from "@/lib/security/uploadFilename";
 import {
   type CalculatorLeadBody,
@@ -11,7 +12,11 @@ import {
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_PER_WINDOW = 20;
-const checkRate = createIpRateLimiter({ windowMs: WINDOW_MS, maxPerWindow: MAX_PER_WINDOW });
+const checkRate = createIpRateLimiter({
+  windowMs: WINDOW_MS,
+  maxPerWindow: MAX_PER_WINDOW,
+  prefix: "leads",
+});
 /** Ochrana proti obřím JSON payloadům (DoS). */
 const MAX_JSON_BYTES = 512 * 1024;
 
@@ -35,7 +40,7 @@ function parseMetadata(raw: string | null): Record<string, string> | undefined {
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  const limited = checkRate(ip);
+  const limited = await checkRate(ip);
   if (!limited.ok) {
     return NextResponse.json(
       { ok: false, error: "rate_limit" },
@@ -94,10 +99,11 @@ export async function POST(req: Request) {
       return jsonValidationError(parsed.error);
     }
 
-    if (parsed.data.companyWebsite) {
+    const spam = checkPublicFormSpam(parsed.data);
+    if (spam.ok === false && spam.reason === "honeypot") {
       return NextResponse.json({ ok: true });
     }
-    if (parsed.data.formOpenedAt != null && Date.now() - parsed.data.formOpenedAt < 2000) {
+    if (spam.ok === false && spam.reason === "too_fast") {
       return NextResponse.json({ ok: false, error: "too_fast" }, { status: 400 });
     }
 
@@ -137,10 +143,11 @@ export async function POST(req: Request) {
 
   const body: CalculatorLeadBody = parsed.data;
 
-  if (body.companyWebsite) {
+  const spam = checkPublicFormSpam(body);
+  if (spam.ok === false && spam.reason === "honeypot") {
     return NextResponse.json({ ok: true });
   }
-  if (body.formOpenedAt != null && Date.now() - body.formOpenedAt < 2000) {
+  if (spam.ok === false && spam.reason === "too_fast") {
     return NextResponse.json({ ok: false, error: "too_fast" }, { status: 400 });
   }
 

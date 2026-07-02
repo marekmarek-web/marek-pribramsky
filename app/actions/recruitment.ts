@@ -6,12 +6,14 @@ import { processPublicLead } from "@/lib/leads/processPublicLead";
 import {
   createIpRateLimiter,
   getClientIpFromHeaders,
-} from "@/lib/security/rateLimitInMemory";
+} from "@/lib/security/rateLimit";
+import { checkPublicFormSpam } from "@/lib/security/publicFormSpam";
 import type { CalculatorLeadBody } from "@/lib/validation/calculatorLeadSchema";
 
 const careerRateLimit = createIpRateLimiter({
   windowMs: 10 * 60 * 1000,
   maxPerWindow: 15,
+  prefix: "recruitment",
 });
 
 const wizardAnswersSchema = z
@@ -100,19 +102,16 @@ export async function submitRecruitmentApplication(input: unknown): Promise<Recr
     return { ok: false, message: msg };
   }
 
-  if (parsed.data.companyWebsite?.trim()) {
+  const spam = checkPublicFormSpam(parsed.data);
+  if (spam.ok === false && spam.reason === "honeypot") {
     return { ok: true };
   }
-
-  if (
-    parsed.data.formOpenedAt != null &&
-    Date.now() - parsed.data.formOpenedAt < 2000
-  ) {
+  if (spam.ok === false && spam.reason === "too_fast") {
     return { ok: false, message: "Odeslání bylo příliš rychlé — zkuste to prosím znovu." };
   }
 
   const h = await headers();
-  const limited = careerRateLimit(getClientIpFromHeaders(h));
+  const limited = await careerRateLimit(getClientIpFromHeaders(h));
   if (!limited.ok) {
     return { ok: false, message: "Příliš mnoho pokusů — zkuste to prosím za chvíli." };
   }

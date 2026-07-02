@@ -57,6 +57,8 @@ export function LeadConsultationForm() {
           setError(`Odesílání zatím není nakonfigurované. Napište na ${siteConfig.contactEmail}.`);
         } else if (res.error === "too_fast") {
           setError("Zkuste formulář odeslat znovu za chvíli.");
+        } else if (res.error === "rate_limit") {
+          setError("Příliš mnoho pokusů. Zkuste to za chvíli.");
         } else {
           setError("Nepodařilo se odeslat. Zkuste to prosím znovu.");
         }

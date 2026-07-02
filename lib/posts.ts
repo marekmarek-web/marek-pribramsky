@@ -90,3 +90,26 @@ export async function fetchAllPostSlugs(): Promise<string[]> {
     return [];
   }
 }
+
+export type SitemapPostEntry = { slug: string; lastModified: Date };
+
+/** Pro sitemap — slug + reálné datum poslední úpravy / publikace. */
+export async function fetchPublishedPostsForSitemap(): Promise<SitemapPostEntry[]> {
+  if (!isSupabaseConfigured()) return [];
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("posts")
+      .select("slug, updated_at, published_at")
+      .eq("published", true);
+    if (error || !data) return [];
+    return data.map((row) => ({
+      slug: row.slug as string,
+      lastModified: new Date(
+        (row.updated_at as string | null) ?? (row.published_at as string | null) ?? Date.now(),
+      ),
+    }));
+  } catch {
+    return [];
+  }
+}

@@ -4,16 +4,20 @@ import {
   getMortgageRates,
   kurzyRatesEdgeCacheSMaxAgeSeconds,
 } from "@/lib/calculators/mortgage/rates";
-import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimitInMemory";
+import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimit";
 
 export const dynamic = "force-dynamic";
 
 /** Omezí scrape veřejného endpointu (stále best-effort na serverless). */
-const checkRate = createIpRateLimiter({ windowMs: 60_000, maxPerWindow: 90 });
+const checkRate = createIpRateLimiter({
+  windowMs: 60_000,
+  maxPerWindow: 90,
+  prefix: "calc-rates",
+});
 
 export async function GET(request: Request) {
   const ip = getClientIp(request);
-  const limited = checkRate(ip);
+  const limited = await checkRate(ip);
   if (!limited.ok) {
     return NextResponse.json(
       { ok: false, error: "rate_limit" },
