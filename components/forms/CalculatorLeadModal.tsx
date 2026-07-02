@@ -79,6 +79,7 @@ export function CalculatorLeadModal({
       sourcePath: typeof window !== "undefined" ? window.location.pathname + window.location.search : "",
       resultSummary,
       metadata,
+      consent: true,
       companyWebsite: companyWebsite.trim() || undefined,
       formOpenedAt: openedAt ?? undefined,
     };
@@ -98,6 +99,7 @@ export function CalculatorLeadModal({
         fd.set("metadataJson", JSON.stringify(metadata));
         if (companyWebsite.trim()) fd.set("companyWebsite", companyWebsite.trim());
         else fd.set("companyWebsite", "");
+        fd.set("consent", "true");
         fd.set("formOpenedAt", String(openedAt ?? ""));
         fd.set("attachment", file);
         const res = await postLeadFormData(fd);
@@ -176,8 +178,8 @@ export function CalculatorLeadModal({
             </p>
             <p className="mt-3 text-sm text-slate-600">
               Chcete jen občas tip z praxe e-mailem?{" "}
-              <Link href="/#newsletter-footer" className="font-semibold text-brand-navy hover:underline">
-                Přihlášení k novinkám v patičce
+              <Link href="/blog#novinky" className="font-semibold text-brand-navy hover:underline">
+                Přihlášení k novinkám
               </Link>{" "}
               — oddělené od této poptávky.
             </p>

@@ -29,7 +29,7 @@ const LeadConsultationForm = dynamic(
 export function HomeTailSections() {
   return (
     <>
-      <section id="proc-ja" className="persona-section relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28">
+      <section id="proc-ja" className="persona-section relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 scroll-mt-28 md:scroll-mt-32">
         <div className="persona-section-bg" aria-hidden />
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 text-center lg:mb-14">
@@ -64,7 +64,7 @@ export function HomeTailSections() {
 
 function SluzbySection() {
   return (
-    <section id="sluzby" className="sluzby-section-bg relative overflow-visible py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32">
+    <section id="sluzby" className="sluzby-section-bg relative overflow-visible py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 scroll-mt-28 md:scroll-mt-32">
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/70 via-black/72 to-black/82" aria-hidden />
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="animate-fade-in-up relative mb-10 text-center lg:mb-12">
@@ -94,7 +94,7 @@ function MojeCestaSection() {
   return (
     <section
       id="moje-cesta"
-      className="moje-cesta-section relative overflow-hidden bg-[#EAF3FF] py-12 text-brand-navy sm:py-16 md:py-20 lg:py-24"
+      className="moje-cesta-section relative overflow-hidden bg-[#EAF3FF] py-12 text-brand-navy sm:py-16 md:py-20 lg:py-24 scroll-mt-28 md:scroll-mt-32"
       style={{ contain: "layout" }}
       aria-label="Moje cesta"
     >
@@ -149,7 +149,7 @@ function MojeCestaSection() {
 
 function PobockySection() {
   return (
-    <section id="pobocky" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 bg-white">
+    <section id="pobocky" className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 bg-white scroll-mt-28 md:scroll-mt-32">
       <div className="max-w-content mx-auto px-4 sm:px-6">
         <div className="text-center mb-14 lg:mb-16 animate-fade-in-up">
           <h2 className="section-title font-bold text-brand-text mb-4">Kde nás najdete</h2>
@@ -285,7 +285,7 @@ function PobockySection() {
 
 function ReferenceSection() {
   return (
-    <section id="reference" className="py-16 lg:py-24 reference-section relative overflow-x-hidden">
+    <section id="reference" className="py-16 lg:py-24 reference-section relative overflow-x-hidden scroll-mt-28 md:scroll-mt-32">
       <div className="reference-container relative z-10">
         <div className="mb-10 text-center animate-fade-in-up lg:mb-12">
           <span className="mb-3 inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white">Google Recenze</span>
@@ -467,7 +467,7 @@ function KontaktSection() {
   return (
     <section
       id="kontakt"
-      className="lead-form-section relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px] flex items-center"
+      className="lead-form-section relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px] flex items-center scroll-mt-28 md:scroll-mt-32"
     >
       {/* Legacy anchor z původního webu (#lead-form) — stejná sekce jako #kontakt */}
       <div

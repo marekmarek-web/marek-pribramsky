@@ -1,8 +1,18 @@
 "use server";
 
+import { headers } from "next/headers";
 import { z } from "zod";
 import { processPublicLead } from "@/lib/leads/processPublicLead";
+import {
+  createIpRateLimiter,
+  getClientIpFromHeaders,
+} from "@/lib/security/rateLimitInMemory";
 import type { CalculatorLeadBody } from "@/lib/validation/calculatorLeadSchema";
+
+const careerRateLimit = createIpRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  maxPerWindow: 15,
+});
 
 const wizardAnswersSchema = z
   .record(
@@ -23,6 +33,8 @@ const schema = z
       .boolean()
       .refine((v) => v === true, { message: "Souhlas se zpracováním údajů je povinný." }),
     pageHref: z.string().max(2000).optional(),
+    companyWebsite: z.string().max(120).optional(),
+    formOpenedAt: z.number().optional(),
   })
   .superRefine((data, ctx) => {
     const u = data.cvUrl?.trim();
@@ -88,11 +100,27 @@ export async function submitRecruitmentApplication(input: unknown): Promise<Recr
     return { ok: false, message: msg };
   }
 
+  if (parsed.data.companyWebsite?.trim()) {
+    return { ok: true };
+  }
+
+  if (
+    parsed.data.formOpenedAt != null &&
+    Date.now() - parsed.data.formOpenedAt < 2000
+  ) {
+    return { ok: false, message: "Odeslání bylo příliš rychlé — zkuste to prosím znovu." };
+  }
+
+  const h = await headers();
+  const limited = careerRateLimit(getClientIpFromHeaders(h));
+  if (!limited.ok) {
+    return { ok: false, message: "Příliš mnoho pokusů — zkuste to prosím za chvíli." };
+  }
+
   if (!process.env.RESEND_API_KEY?.trim()) {
     return {
       ok: false,
-      message:
-        "Odesílání není na serveru nakonfigurováno. Doplňte RESEND_API_KEY a RESEND_FROM (Vercel / .env).",
+      message: "Odeslání se nezdařilo. Zkuste to prosím později nebo nás kontaktujte e-mailem.",
     };
   }
 
@@ -101,17 +129,9 @@ export async function submitRecruitmentApplication(input: unknown): Promise<Recr
     return { ok: true };
   } catch (e) {
     console.error("[recruitment] processPublicLead:", e);
-    const raw = e instanceof Error ? e.message : String(e);
-    let hint = "";
-    if (/domain|verify|not valid|validation|from address|sender/i.test(raw)) {
-      hint =
-        " V Resend ověřte doménu a na Vercelu nastavte RESEND_FROM (odesílatel z té domény). Výchozí onboarding@resend.dev obvykle nepošle na libovolný firemní e-mail.";
-    } else if (/api key|unauthorized|invalid api|401/i.test(raw)) {
-      hint = " Zkontrolujte RESEND_API_KEY na Vercelu (Production).";
-    }
     return {
       ok: false,
-      message: `Odeslání se nezdařilo.${hint ? ` ${hint}` : ""}`.trim(),
+      message: "Odeslání se nezdařilo. Zkuste to prosím později.",
     };
   }
 }

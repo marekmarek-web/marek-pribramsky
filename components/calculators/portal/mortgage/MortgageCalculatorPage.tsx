@@ -120,11 +120,11 @@ export function MortgageCalculatorPage() {
     <div className="pt-0 pb-36 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
-          <h2 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">
+          <h1 className="mb-4 text-3xl font-extrabold leading-tight text-brand-navy md:text-5xl">
             Kalkulačka hypoték a úvěrů
             <br />
             <span className="text-brand-navy">Srovnání bez kontaktu</span>
-          </h2>
+          </h1>
           <p className="mb-8 max-w-2xl text-lg leading-relaxed text-slate-600">
             <strong className="text-brand-navy">Hypotéka bez telefonního čísla</strong> a nutnosti registrace.
             Spočítejte si splátku pro nové bydlení, auto či konsolidaci úvěrů. Přesně, rychle a zcela anonymně.

@@ -8,6 +8,7 @@ describe("calculatorLeadBodySchema", () => {
       calculatorType: "pension",
       name: "Jan",
       email: "jan@example.com",
+      consent: true,
       formOpenedAt: Date.now() - 10_000,
     });
     expect(out.success).toBe(true);
@@ -19,6 +20,7 @@ describe("calculatorLeadBodySchema", () => {
       name: "Jan",
       email: "",
       phone: "+420 601 234 567",
+      consent: true,
     });
     expect(out.success).toBe(true);
   });
@@ -38,6 +40,16 @@ describe("calculatorLeadBodySchema", () => {
       source: "calculator",
       name: "   ",
       email: "a@b.cz",
+      consent: true,
+    });
+    expect(out.success).toBe(false);
+  });
+
+  it("rejects inquiry lead without consent", () => {
+    const out = calculatorLeadBodySchema.safeParse({
+      source: "contact_page",
+      name: "Jan",
+      email: "jan@example.com",
     });
     expect(out.success).toBe(false);
   });

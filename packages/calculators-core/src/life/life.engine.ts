@@ -67,13 +67,13 @@ export function runCalculations(state: LifeState): LifeResult {
   const pnGapMonthly = Math.max(0, netIncome - stateSicknessMonthly);
   const pnDailyNeed = Math.ceil((pnGapMonthly / 30) / 100) * 100;
 
-  // 2. Invalidita (D3)
+  // 2. Invalidita (D3) — spojité pásma bez skoků na hranicích 80k / 100k
   let pensionD3 = 0;
   if (netIncome < 20000) pensionD3 = netIncome * 0.85;
   else if (netIncome < 40000) pensionD3 = netIncome * 0.55;
-  else if (netIncome < 80000)
+  else if (netIncome < 100000)
     pensionD3 = 22000 + (netIncome - 40000) * 0.15;
-  else pensionD3 = 25000 + (netIncome - 100000) * 0.1;
+  else pensionD3 = 31000 + (netIncome - 100000) * 0.1;
 
   const gapD3 = Math.max(0, targetMonthlyIncome - pensionD3);
   const capitalD3Raw = Math.max(

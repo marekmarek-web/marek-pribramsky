@@ -61,6 +61,20 @@ export const calculatorLeadBodySchema = z
         path: ["metadata"],
       });
     }
+    const inquirySources = new Set([
+      "calculator",
+      "footer_quick",
+      "homepage_consultation",
+      "contact_page",
+      "article_cta",
+    ]);
+    if (inquirySources.has(data.source) && data.consent !== true) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Souhlas se zpracováním údajů je povinný.",
+        path: ["consent"],
+      });
+    }
   });
 
 export type CalculatorLeadBody = z.infer<typeof calculatorLeadBodySchema>;

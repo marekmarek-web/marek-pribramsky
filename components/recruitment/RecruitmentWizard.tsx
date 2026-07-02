@@ -82,6 +82,8 @@ export function RecruitmentWizard() {
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
   const [consent, setConsent] = useState(false);
+  const [companyWebsite, setCompanyWebsite] = useState("");
+  const [formOpenedAt] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -174,6 +176,8 @@ export function RecruitmentWizard() {
         consent: consent === true,
         pageHref: pageUrl(),
         wizardAnswers: answers,
+        companyWebsite: companyWebsite.trim() || undefined,
+        formOpenedAt,
       });
       if (!result.ok) {
         setError(friendlyServerError(result.message));
@@ -266,6 +270,18 @@ export function RecruitmentWizard() {
         </div>
 
         <form onSubmit={onSubmitContact} className="mx-auto max-w-lg space-y-5">
+          <label className="sr-only" htmlFor="wiz-company-website">
+            Nepřepisujte
+          </label>
+          <input
+            id="wiz-company-website"
+            type="text"
+            value={companyWebsite}
+            onChange={(e) => setCompanyWebsite(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            className="absolute h-px w-px overflow-hidden opacity-0"
+          />
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
               <KIconUser size={20} className="text-slate-500 transition-colors group-focus-within:text-brand-cyan" aria-hidden />

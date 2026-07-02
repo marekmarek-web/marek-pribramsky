@@ -23,7 +23,11 @@ export function createIpRateLimiter(opts: { windowMs: number; maxPerWindow: numb
 }
 
 export function getClientIp(req: Request): string {
-  const xf = req.headers.get("x-forwarded-for");
+  return getClientIpFromHeaders(req.headers);
+}
+
+export function getClientIpFromHeaders(headers: Headers): string {
+  const xf = headers.get("x-forwarded-for");
   if (xf) return xf.split(",")[0]?.trim() || "unknown";
-  return req.headers.get("x-real-ip")?.trim() || "unknown";
+  return headers.get("x-real-ip")?.trim() || "unknown";
 }

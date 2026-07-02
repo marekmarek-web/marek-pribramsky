@@ -14,7 +14,7 @@ export type NavItem = { label: string; href: string; external?: boolean };
 export const mainNav: NavItem[] = [
   { label: "O mně", href: "/#proc-ja" },
   { label: "Služby", href: "/#sluzby" },
-  { label: "Spolupráce", href: "/#spoluprace" },
+  { label: "Můj postup", href: "/#spoluprace" },
   { label: "Blog", href: "/blog" },
   { label: "Kariéra", href: "/kariera" },
   { label: "Kontakt", href: "/#kontakt" },
@@ -24,7 +24,7 @@ export const mainNav: NavItem[] = [
 export const mobileMenuLinks: NavItem[] = [
   { label: "O mně", href: "/#proc-ja" },
   { label: "Služby", href: "/#sluzby" },
-  { label: "Spolupráce", href: "/#spoluprace" },
+  { label: "Můj postup", href: "/#spoluprace" },
   { label: "Kalkulačky", href: "/kalkulacky" },
   { label: "Blog", href: "/blog" },
   { label: "Kariéra", href: "/kariera" },
