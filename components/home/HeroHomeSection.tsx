@@ -1,5 +1,6 @@
 "use client";
 
+import gsap from "gsap";
 import Image from "next/image";
 import { useEffect } from "react";
 import { HOME_HERO } from "@/lib/media/home-hero";
@@ -7,7 +8,6 @@ import { HOME_HERO } from "@/lib/media/home-hero";
 export function HeroHomeSection({ booted, skipIntro = false }: { booted: boolean; skipIntro?: boolean }) {
   useEffect(() => {
     if (!booted) return;
-
     const revealLines = document.querySelectorAll(".text-reveal-line");
     if (skipIntro) {
       revealLines.forEach((line) => {
@@ -17,28 +17,19 @@ export function HeroHomeSection({ booted, skipIntro = false }: { booted: boolean
       if (heroSub) (heroSub as HTMLElement).style.opacity = "1";
       return;
     }
-
-    let cancelled = false;
-
-    void import("gsap").then(({ default: gsap }) => {
-      if (cancelled || !revealLines.length) return;
-
+    if (revealLines.length && typeof gsap !== "undefined") {
       gsap.to(revealLines, {
         y: "0%",
-        duration: 1,
-        stagger: 0.08,
+        duration: 1.2,
+        stagger: 0.1,
         ease: "power4.out",
-        delay: 0.1,
+        delay: 0.2,
       });
       const heroSub = document.querySelector(".hero-subtitle");
       if (heroSub) {
-        gsap.to(heroSub, { opacity: 1, duration: 0.8, delay: 0.7, ease: "power2.out" });
+        gsap.to(heroSub, { opacity: 1, duration: 1, delay: 1, ease: "power2.out" });
       }
-    });
-
-    return () => {
-      cancelled = true;
-    };
+    }
   }, [booted, skipIntro]);
 
   return (
