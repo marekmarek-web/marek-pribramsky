@@ -16,7 +16,11 @@ const TOPICS: { key: string; label: string }[] = [
   { key: "firemni", label: "Firemní finance" },
 ];
 
-export function LeadConsultationForm() {
+type LeadConsultationFormProps = {
+  source?: "homepage_consultation" | "contact_page";
+};
+
+export function LeadConsultationForm({ source = "homepage_consultation" }: LeadConsultationFormProps) {
   const [step, setStep] = useState<1 | 2>(1);
   const [topic, setTopic] = useState("");
   const [name, setName] = useState("");
@@ -31,9 +35,9 @@ export function LeadConsultationForm() {
 
   useEffect(() => {
     if (step === 2) {
-      track(AnalyticsEvents.leadModalOpen, { funnel: "homepage_consultation" });
+      track(AnalyticsEvents.leadModalOpen, { funnel: source === "contact_page" ? "contact_page" : "homepage_consultation" });
     }
-  }, [step]);
+  }, [step, source]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,7 +45,7 @@ export function LeadConsultationForm() {
     setBusy(true);
     try {
       const res = await postLeadJson({
-        source: "homepage_consultation",
+        source,
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim() || undefined,

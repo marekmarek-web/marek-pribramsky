@@ -2,49 +2,27 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-
-const HEADER_OFFSET = 88;
-const MAX_RETRIES = 40;
-const RETRY_MS = 120;
-
-function scrollToHash(hash: string, attempt = 0) {
-  const id = hash.replace(/^#/, "");
-  if (!id) return;
-
-  const el = document.getElementById(id);
-  if (el) {
-    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-    window.scrollTo({ top: Math.max(0, top), behavior: attempt === 0 ? "auto" : "smooth" });
-    return;
-  }
-
-  if (attempt < MAX_RETRIES) {
-    window.setTimeout(() => scrollToHash(hash, attempt + 1), RETRY_MS);
-  }
-}
+import { scrollToHashFromLocation } from "@/lib/navigation/hashScroll";
 
 export function HashScrollHandler() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (!hash) return;
+    if (pathname !== "/") return;
 
-    scrollToHash(hash);
+    scrollToHashFromLocation();
 
-    const onReady = () => scrollToHash(hash);
+    const onReady = () => scrollToHashFromLocation({ behavior: "smooth" });
     window.addEventListener("pb:page-ready", onReady);
-    return () => window.removeEventListener("pb:page-ready", onReady);
-  }, [pathname]);
 
-  useEffect(() => {
-    const onHashChange = () => {
-      const hash = window.location.hash;
-      if (hash) scrollToHash(hash);
-    };
+    const onHashChange = () => scrollToHashFromLocation({ behavior: "smooth" });
     window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+
+    return () => {
+      window.removeEventListener("pb:page-ready", onReady);
+      window.removeEventListener("hashchange", onHashChange);
+    };
+  }, [pathname]);
 
   return null;
 }

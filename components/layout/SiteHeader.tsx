@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HashLink } from "@/components/navigation/HashLink";
 import { AnalyticsEvents } from "@/lib/analytics/events";
 import { track } from "@/lib/analytics/track";
 import { cta } from "@/config/cta";
@@ -24,7 +25,11 @@ function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void 
       </a>
     );
   }
-  return (
+  return item.href.includes("#") ? (
+    <HashLink href={item.href} className={className} onClick={onNavigate}>
+      {item.label}
+    </HashLink>
+  ) : (
     <Link href={item.href} className={className} onClick={onNavigate}>
       {item.label}
     </Link>
@@ -183,7 +188,7 @@ export function SiteHeader() {
                 <NavLink key={item.href + item.label} item={item} />
               ))}
             </nav>
-            <Link
+            <HashLink
               href="/#kontakt"
               onClick={() => track(AnalyticsEvents.ctaClick, { cta_id: "header_contact" })}
               className="header-cta lead-cta-btn hidden min-h-[40px] shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold text-white no-underline transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 md:flex xl:min-h-[48px] xl:gap-2 xl:px-6 xl:py-3 xl:text-base xl:text-[1.0625rem]"
@@ -192,7 +197,7 @@ export function SiteHeader() {
               <svg className="h-3.5 w-3.5 shrink-0 xl:h-4 xl:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
-            </Link>
+            </HashLink>
           </div>
         </div>
       </header>
@@ -205,17 +210,28 @@ export function SiteHeader() {
       >
         <div className="mobile-nav-backdrop absolute inset-0" data-close-menu aria-hidden onClick={closeMenu} />
         <div ref={menuPanelRef} className="mobile-nav-panel absolute top-0 right-0 flex h-full w-full max-w-sm flex-col px-6 pb-8 pt-20">
-          {mobileMenuLinks.map((item) => (
-            <Link
-              key={`m-${item.label}-${item.href}`}
-              href={item.href}
-              className="border-b border-slate-100 py-3 text-lg font-medium text-slate-800"
-              onClick={closeMenu}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Link
+          {mobileMenuLinks.map((item) =>
+            item.href.includes("#") ? (
+              <HashLink
+                key={`m-${item.label}-${item.href}`}
+                href={item.href}
+                className="border-b border-slate-100 py-3 text-lg font-medium text-slate-800"
+                onClick={closeMenu}
+              >
+                {item.label}
+              </HashLink>
+            ) : (
+              <Link
+                key={`m-${item.label}-${item.href}`}
+                href={item.href}
+                className="border-b border-slate-100 py-3 text-lg font-medium text-slate-800"
+                onClick={closeMenu}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
+          <HashLink
             href="/#kontakt"
             className="lead-cta-btn mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-white no-underline"
             onClick={() => {
@@ -227,7 +243,7 @@ export function SiteHeader() {
             <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
             </svg>
-          </Link>
+          </HashLink>
         </div>
       </nav>
     </>

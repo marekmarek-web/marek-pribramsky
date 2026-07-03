@@ -3,6 +3,7 @@
 import gsap from "gsap";
 import Image from "next/image";
 import { useEffect } from "react";
+import { HashLink } from "@/components/navigation/HashLink";
 import { HOME_HERO } from "@/lib/media/home-hero";
 
 export function HeroHomeSection({ booted, skipIntro = false }: { booted: boolean; skipIntro?: boolean }) {
@@ -109,15 +110,15 @@ export function HeroHomeSection({ booted, skipIntro = false }: { booted: boolean
           </div>
         </div>
       </div>
-      <a
-        href="#spoluprace"
+      <HashLink
+        href="/#spoluprace"
         className="hero-scroll-link absolute bottom-[max(2rem,env(safe-area-inset-bottom))] left-1/2 z-10 -translate-x-1/2 text-white/85 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent hero-text-shadow max-sm:relative max-sm:order-3 max-sm:bottom-auto max-sm:left-1/2 max-sm:mt-2 max-sm:mb-1 max-sm:h-10 max-sm:-translate-x-1/2"
         aria-label="Přejít na sekci Jak pracuji"
       >
         <svg className="h-8 w-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
-      </a>
+      </HashLink>
     </section>
   );
 }
