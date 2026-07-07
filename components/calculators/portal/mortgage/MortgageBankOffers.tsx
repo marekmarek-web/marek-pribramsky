@@ -10,6 +10,8 @@ export interface MortgageBankOffersProps {
   fetchedAt?: string;
   source?: string;
   sourceUrl?: string;
+  /** Přihlášený uživatel má aktivní VIP sazby */
+  vipActive?: boolean;
   /** Optional: when provided, "Chci nabídku" button is shown (web/lead mode). */
   onRequestOffer?: (bankName: string) => void;
 }
@@ -35,6 +37,7 @@ export function MortgageBankOffers({
   fetchedAt,
   source,
   sourceUrl,
+  vipActive,
   onRequestOffer,
 }: MortgageBankOffersProps) {
   const sortedByMonthly = [...offers].sort(
@@ -46,6 +49,17 @@ export function MortgageBankOffers({
 
   return (
     <div className="space-y-6">
+      {vipActive ? (
+        <div className="rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 px-4 py-3 text-sm text-amber-950 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 shadow-sm">
+            VIP
+          </span>
+          <span>
+            Zobrazujeme vaše VIP sazby. Nabídky označené VIP jsou nižší než aktuální trh (kurzy.cz).
+          </span>
+        </div>
+      ) : null}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
           Srovnání nabídek trhu
@@ -120,6 +134,11 @@ function BankOfferCard({
             Nejnižší splátka
           </span>
         )}
+        {offer.isVip ? (
+          <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 shadow-sm">
+            VIP
+          </span>
+        ) : null}
         {index === 0 && (
           <span className="inline-flex items-center rounded-full bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 gap-1">
             <CheckCircle2 size={10} /> Top volba
@@ -154,6 +173,11 @@ function BankOfferCard({
           <span className="text-xs font-bold text-indigo-600">
             {formatRate(offer.rate)} p.a.
           </span>
+          {offer.isVip && offer.bank.marketRate != null ? (
+            <div className="text-[11px] text-amber-700 mt-0.5 font-semibold">
+              Trh {formatRate(offer.bank.marketRate)} · VIP sleva
+            </div>
+          ) : null}
           {offer.apr != null ? (
             <div className="text-[11px] text-slate-400 mt-0.5">RPSN {formatRate(offer.apr)}</div>
           ) : null}

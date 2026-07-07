@@ -4,7 +4,7 @@ import type { NormalizedOffer } from "./types";
 
 export const ALLOWED_BANK_IDS = ["rb", "ucb", "csob", "cs", "mbank", "kb", "rsts"] as const;
 
-const CANONICAL_BANK_META: Record<(typeof ALLOWED_BANK_IDS)[number], { name: string }> = {
+export const CANONICAL_BANK_META: Record<(typeof ALLOWED_BANK_IDS)[number], { name: string }> = {
   rb: { name: "Raiffeisenbank" },
   ucb: { name: "UniCredit Bank" },
   csob: { name: "ČSOB" },
@@ -14,7 +14,10 @@ const CANONICAL_BANK_META: Record<(typeof ALLOWED_BANK_IDS)[number], { name: str
   rsts: { name: "Raiffeisen stavební spořitelna" },
 };
 
-function detectCanonicalBankId(providerId: string, providerName: string): (typeof ALLOWED_BANK_IDS)[number] | null {
+export function detectCanonicalBankId(
+  providerId: string,
+  providerName: string,
+): (typeof ALLOWED_BANK_IDS)[number] | null {
   const id = providerId.toLowerCase();
   const name = providerName
     .toLowerCase()
@@ -90,7 +93,7 @@ function scoreOffer(offer: NormalizedOffer, scenario: RateScenario): number {
 
 export function rankOffersByScenario(
   offers: NormalizedOffer[],
-  scenario: RateScenario
+  scenario: RateScenario,
 ): NormalizedOffer[] {
   const filtered = offers.filter((offer) => offer.productType === scenario.productType);
   return [...filtered].sort((a, b) => {
@@ -102,7 +105,7 @@ export function rankOffersByScenario(
 
 export function normalizedOffersToBankEntries(
   rankedOffers: NormalizedOffer[],
-  productType: "mortgage" | "loan"
+  productType: "mortgage" | "loan",
 ): BankEntry[] {
   const logosById = new Map(BANKS_DATA.map((bank) => [bank.id, bank.logoUrl] as const));
   const bestByCanonicalId = new Map<(typeof ALLOWED_BANK_IDS)[number], NormalizedOffer>();
@@ -127,6 +130,7 @@ export function normalizedOffersToBankEntries(
     source: offer.source,
     sourceUrl: offer.sourceUrl,
     fetchedAt: offer.fetchedAt,
+    marketRate: offer.nominalRate,
   }));
 
   return entries.sort((a, b) => {
@@ -135,3 +139,6 @@ export function normalizedOffersToBankEntries(
     return aRate - bRate;
   });
 }
+
+export type { VipRateOverride } from "./vip";
+export { applyVipOverridesToBankEntries, bestMarketRateByBank } from "./vip";

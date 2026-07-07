@@ -115,4 +115,7 @@ export {
   ALLOWED_BANK_IDS,
   rankOffersByScenario,
   normalizedOffersToBankEntries,
+  applyVipOverridesToBankEntries,
+  bestMarketRateByBank,
 } from "./matching";
+export type { VipRateOverride } from "./matching";

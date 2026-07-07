@@ -19,6 +19,7 @@ export function AdminNav({ role, displayName }: { role: Role; displayName: strin
   const isPosts = pathname.startsWith("/admin/posts");
   const isLeads = pathname.startsWith("/admin/leads");
   const isSubs = pathname.startsWith("/admin/subscribers");
+  const isRates = pathname.startsWith("/admin/rates");
   const isSettings = pathname.startsWith("/admin/settings");
 
   return (
@@ -44,6 +45,14 @@ export function AdminNav({ role, displayName }: { role: Role; displayName: strin
               </Link>
               <Link href="/admin/subscribers" className={navClass(isSubs)} aria-current={isSubs ? "page" : undefined}>
                 Odběratelé
+              </Link>
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Nástroje</p>
+            <div className="flex flex-wrap gap-1 text-sm font-semibold">
+              <Link href="/admin/rates" className={navClass(isRates)} aria-current={isRates ? "page" : undefined}>
+                VIP sazby
               </Link>
             </div>
           </div>

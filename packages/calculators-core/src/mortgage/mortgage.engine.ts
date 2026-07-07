@@ -204,6 +204,7 @@ export function getOffersWithBanks(
       rate,
       apr: bank.apr,
       monthlyPayment: Math.round(monthlyPayment),
+      isVip: bank.isVip,
     };
   });
 }

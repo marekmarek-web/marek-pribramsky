@@ -32,6 +32,10 @@ export interface BankEntry {
   source?: string;
   sourceUrl?: string;
   fetchedAt?: string;
+  /** Manuální sazba nižší než kurzy.cz */
+  isVip?: boolean;
+  /** Tržní sazba z kurzy.cz pro srovnání */
+  marketRate?: number;
 }
 
 export interface ProductSubType {
@@ -58,4 +62,5 @@ export interface BankOffer {
   rate: number;
   apr?: number;
   monthlyPayment: number;
+  isVip?: boolean;
 }

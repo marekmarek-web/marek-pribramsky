@@ -33,9 +33,11 @@ import {
 } from "@/lib/calculators/mortgage/mortgage.engine";
 import type { MortgageState } from "@/lib/calculators/mortgage/mortgage.types";
 import type { BankEntry } from "@/lib/calculators/mortgage/mortgage.types";
-import type { NormalizedOffer } from "@/lib/calculators/mortgage/rates";
+import type { NormalizedOffer, VipRateOverride } from "@/lib/calculators/mortgage/rates";
 import {
   ALLOWED_BANK_IDS,
+  applyVipOverridesToBankEntries,
+  bestMarketRateByBank,
   normalizedOffersToBankEntries,
   rankOffersByScenario,
 } from "@/lib/calculators/mortgage/rates";
@@ -55,6 +57,8 @@ export function MortgageCalculatorPage() {
     ltvLock: 90,
   });
   const [liveRates, setLiveRates] = useState<NormalizedOffer[] | null>(null);
+  const [vipOverrides, setVipOverrides] = useState<VipRateOverride[]>([]);
+  const [vipActive, setVipActive] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [leadBankName, setLeadBankName] = useState<string | null>(null);
   const defaultAllowedBanks = useMemo(
@@ -69,15 +73,20 @@ export function MortgageCalculatorPage() {
         const response = await fetch(`/api/calculators/rates?type=${state.product}`, {
           method: "GET",
           cache: "no-store",
+          credentials: "include",
           signal: ctrl.signal,
         });
         if (!response.ok) return;
         const payload = (await response.json()) as {
           ok: boolean;
           rates?: NormalizedOffer[];
+          vipOverrides?: VipRateOverride[];
+          vipActive?: boolean;
         };
         if (payload.ok && Array.isArray(payload.rates)) {
           setLiveRates(payload.rates);
+          setVipOverrides(Array.isArray(payload.vipOverrides) ? payload.vipOverrides : []);
+          setVipActive(Boolean(payload.vipActive));
         }
       } catch {
         // static fallback
@@ -98,9 +107,18 @@ export function MortgageCalculatorPage() {
       mode: state.type,
     } as const;
     const ranked = rankOffersByScenario(liveRates, scenario);
-    const normalized = normalizedOffersToBankEntries(ranked, state.product);
+    const marketByBank = bestMarketRateByBank(ranked, state.product);
+    let normalized = normalizedOffersToBankEntries(ranked, state.product);
+    if (vipOverrides.length > 0) {
+      normalized = applyVipOverridesToBankEntries(
+        normalized,
+        vipOverrides,
+        marketByBank,
+        state.product,
+      );
+    }
     return normalized.length > 0 ? normalized : defaultAllowedBanks;
-  }, [liveRates, state, defaultAllowedBanks]);
+  }, [liveRates, state, defaultAllowedBanks, vipOverrides]);
 
   const result = useMemo(() => calculateResult(state, rankedBanks), [state, rankedBanks]);
   const offers = useMemo(() => getOffersWithBanks(state, rankedBanks), [state, rankedBanks]);
@@ -182,6 +200,7 @@ export function MortgageCalculatorPage() {
             fetchedAt={ratesMeta?.fetchedAt}
             source={ratesMeta?.source}
             sourceUrl={ratesMeta?.sourceUrl}
+            vipActive={vipActive}
             onRequestOffer={(bankName) => openLead(bankName)}
           />
         </div>
