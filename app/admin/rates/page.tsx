@@ -59,7 +59,8 @@ export default async function AdminRatesPage({ searchParams }: Props) {
         <div>
           <h1 className="text-2xl font-bold text-brand-text">VIP sazby kalkulačky</h1>
           <p className="text-sm text-brand-muted mt-1">
-            Vlastní sazby pro hypotéky a úvěry — zobrazí se v kalkulačce po přihlášení.
+            Vlastní VIP obchodník sazby pro hypotéky a úvěry — zobrazí se v kalkulačce po přihlášení
+            a mají přednost před denním refreshem kurzy.cz.
           </p>
         </div>
         <Link href="/admin" className="text-sm font-semibold text-brand-navy hover:text-brand-cyan">

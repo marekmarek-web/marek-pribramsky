@@ -1,7 +1,43 @@
 import { describe, expect, it } from "vitest";
 import { BANKS_DATA } from "../../mortgage.config";
 import type { BankEntry } from "../../mortgage.types";
-import { applyVipOverridesToBankEntries } from "../vip";
+import {
+  applyVipOverridesToBankEntries,
+  filterActiveVipOverrides,
+  isVipOverrideActive,
+} from "../vip";
+
+describe("isVipOverrideActive", () => {
+  it("returns true when validUntil is null or undefined", () => {
+    expect(isVipOverrideActive(null)).toBe(true);
+    expect(isVipOverrideActive(undefined)).toBe(true);
+  });
+
+  it("returns true on the last valid day", () => {
+    const now = new Date("2026-07-11T10:00:00");
+    expect(isVipOverrideActive("2026-07-11", now)).toBe(true);
+  });
+
+  it("returns false after validUntil day", () => {
+    const now = new Date("2026-07-12T00:00:01");
+    expect(isVipOverrideActive("2026-07-11", now)).toBe(false);
+  });
+});
+
+describe("filterActiveVipOverrides", () => {
+  it("removes expired overrides", () => {
+    const now = new Date("2026-07-12T00:00:01");
+    const result = filterActiveVipOverrides(
+      [
+        { providerId: "kb", nominalRate: 4.5, validUntil: "2026-07-11" },
+        { providerId: "cs", nominalRate: 4.8, validUntil: "2026-12-31" },
+        { providerId: "rb", nominalRate: 5.0 },
+      ],
+      now,
+    );
+    expect(result.map((r) => r.providerId)).toEqual(["cs", "rb"]);
+  });
+});
 
 describe("applyVipOverridesToBankEntries", () => {
   const baseEntries: BankEntry[] = BANKS_DATA.map((b) => ({
@@ -9,7 +45,7 @@ describe("applyVipOverridesToBankEntries", () => {
     marketRate: b.baseRate,
   }));
 
-  it("marks override lower than market as VIP", () => {
+  it("marks active override as VIP regardless of market rate", () => {
     const market = new Map([["kb", 5.19]]);
     const result = applyVipOverridesToBankEntries(
       baseEntries,
@@ -24,7 +60,7 @@ describe("applyVipOverridesToBankEntries", () => {
     expect(kb?.source).toBe("override");
   });
 
-  it("does not mark override equal or higher than market as VIP", () => {
+  it("marks override higher than market as VIP too", () => {
     const market = new Map([["kb", 5.19]]);
     const result = applyVipOverridesToBankEntries(
       baseEntries,
@@ -33,7 +69,21 @@ describe("applyVipOverridesToBankEntries", () => {
       "mortgage",
     );
     const kb = result.find((e) => e.id === "kb");
-    expect(kb?.isVip).toBe(false);
+    expect(kb?.baseRate).toBe(5.5);
+    expect(kb?.isVip).toBe(true);
+  });
+
+  it("ignores expired overrides", () => {
+    const market = new Map([["kb", 5.19]]);
+    const result = applyVipOverridesToBankEntries(
+      baseEntries,
+      [{ providerId: "kb", nominalRate: 4.49, validUntil: "2020-01-01" }],
+      market,
+      "mortgage",
+    );
+    const kb = result.find((e) => e.id === "kb");
+    expect(kb?.isVip).toBeFalsy();
+    expect(kb?.baseRate).not.toBe(4.49);
   });
 
   it("returns entries unchanged when no overrides", () => {

@@ -32,10 +32,12 @@ export interface BankEntry {
   source?: string;
   sourceUrl?: string;
   fetchedAt?: string;
-  /** Manuální sazba nižší než kurzy.cz */
+  /** Aktivní VIP obchodník sazba — má přednost před kurzy.cz */
   isVip?: boolean;
   /** Tržní sazba z kurzy.cz pro srovnání */
   marketRate?: number;
+  /** ISO datum platnosti VIP sazby (YYYY-MM-DD) */
+  validUntil?: string;
 }
 
 export interface ProductSubType {

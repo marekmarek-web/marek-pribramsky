@@ -1,4 +1,5 @@
 import type { VipRateOverride } from "@/lib/calculators/mortgage/rates";
+import { filterActiveVipOverrides } from "@/lib/calculators/mortgage/rates";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { isServiceRoleConfigured } from "@/lib/supabase/env";
 
@@ -7,9 +8,20 @@ export type StoredVipRate = {
   provider_id: string;
   nominal_rate: number;
   apr: number | null;
+  valid_until: string | null;
 };
 
 type DbVipRow = StoredVipRate;
+
+function rowToOverride(row: DbVipRow): VipRateOverride & { productType: "mortgage" | "loan" } {
+  return {
+    providerId: row.provider_id,
+    nominalRate: Number(row.nominal_rate),
+    apr: row.apr != null ? Number(row.apr) : undefined,
+    validUntil: row.valid_until,
+    productType: row.product_type,
+  };
+}
 
 export async function getUserVipRates(userId: string): Promise<
   Array<VipRateOverride & { productType: "mortgage" | "loan" }>
@@ -20,17 +32,12 @@ export async function getUserVipRates(userId: string): Promise<
     const admin = createAdminSupabaseClient();
     const { data, error } = await admin
       .from("mortgage_vip_rates")
-      .select("product_type, provider_id, nominal_rate, apr")
+      .select("product_type, provider_id, nominal_rate, apr, valid_until")
       .eq("user_id", userId);
 
     if (error || !data) return [];
 
-    return (data as DbVipRow[]).map((row) => ({
-      providerId: row.provider_id,
-      nominalRate: Number(row.nominal_rate),
-      apr: row.apr != null ? Number(row.apr) : undefined,
-      productType: row.product_type,
-    }));
+    return filterActiveVipOverrides((data as DbVipRow[]).map(rowToOverride));
   } catch {
     return [];
   }
@@ -43,7 +50,12 @@ export async function getUserVipRatesForProduct(
   const all = await getUserVipRates(userId);
   return all
     .filter((r) => r.productType === productType)
-    .map(({ providerId, nominalRate, apr }) => ({ providerId, nominalRate, apr }));
+    .map(({ providerId, nominalRate, apr, validUntil }) => ({
+      providerId,
+      nominalRate,
+      apr,
+      validUntil,
+    }));
 }
 
 export async function saveUserVipRates(
@@ -74,6 +86,7 @@ export async function saveUserVipRates(
         provider_id: r.providerId,
         nominal_rate: r.nominalRate,
         apr: r.apr ?? null,
+        valid_until: r.validUntil ?? null,
       }));
 
     if (rows.length === 0) return { ok: true };
@@ -94,7 +107,7 @@ export async function listStoredVipRates(userId: string): Promise<StoredVipRate[
     const admin = createAdminSupabaseClient();
     const { data } = await admin
       .from("mortgage_vip_rates")
-      .select("product_type, provider_id, nominal_rate, apr")
+      .select("product_type, provider_id, nominal_rate, apr, valid_until")
       .eq("user_id", userId)
       .order("provider_id");
 

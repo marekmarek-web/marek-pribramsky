@@ -141,4 +141,9 @@ export function normalizedOffersToBankEntries(
 }
 
 export type { VipRateOverride } from "./vip";
-export { applyVipOverridesToBankEntries, bestMarketRateByBank } from "./vip";
+export {
+  applyVipOverridesToBankEntries,
+  bestMarketRateByBank,
+  filterActiveVipOverrides,
+  isVipOverrideActive,
+} from "./vip";

@@ -55,7 +55,8 @@ export function MortgageBankOffers({
             VIP
           </span>
           <span>
-            Zobrazujeme vaše VIP sazby. Nabídky označené VIP jsou nižší než aktuální trh (kurzy.cz).
+            Zobrazujeme vaše VIP obchodník sazby. Mají přednost před aktuálním trhem (kurzy.cz),
+            dokud nevyprší jejich platnost.
           </span>
         </div>
       ) : null}
@@ -175,7 +176,8 @@ function BankOfferCard({
           </span>
           {offer.isVip && offer.bank.marketRate != null ? (
             <div className="text-[11px] text-amber-700 mt-0.5 font-semibold">
-              Trh {formatRate(offer.bank.marketRate)} · VIP sleva
+              Trh {formatRate(offer.bank.marketRate)}
+              {offer.rate < offer.bank.marketRate - 0.001 ? " · VIP sleva" : " · VIP sazba"}
             </div>
           ) : null}
           {offer.apr != null ? (

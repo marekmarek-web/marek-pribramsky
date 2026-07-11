@@ -9,6 +9,7 @@ import {
   ALLOWED_BANK_IDS,
   CANONICAL_BANK_META,
 } from "@/lib/calculators/mortgage/rates/matching";
+import { isVipOverrideActive } from "@/lib/calculators/mortgage/rates";
 
 type ProductType = "mortgage" | "loan";
 
@@ -21,6 +22,7 @@ type SavedRate = {
   provider_id: string;
   nominal_rate: number;
   apr: number | null;
+  valid_until: string | null;
 };
 
 export function VipRatesForm({
@@ -36,6 +38,7 @@ export function VipRatesForm({
   const savedByBank = new Map(savedRates.map((r) => [r.provider_id, r]));
 
   const [preview, setPreview] = useState<Record<string, string>>({});
+  const [validUntilPreview, setValidUntilPreview] = useState<Record<string, string>>({});
 
   const label = productType === "mortgage" ? "hypotéky" : "úvěry";
 
@@ -44,11 +47,13 @@ export function VipRatesForm({
       <input type="hidden" name="product_type" value={productType} />
 
       <p className="text-sm text-brand-muted leading-relaxed">
-        Zadejte vlastní sazby pro {label}. Sazby nižší než aktuální kurzy.cz se v kalkulačce označí{" "}
+        Zadejte vlastní VIP obchodník sazby pro {label}. Aktivní VIP sazba má přednost před
+        denním refreshem kurzy.cz a v kalkulačce se označí{" "}
         <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">
           VIP
         </span>{" "}
-        badge. Prázdné pole = použije se tržní sazba.
+        badge. Volitelně nastavte datum platnosti — po vypršení se znovu použije tržní sazba.
+        Prázdné pole sazby = použije se tržní sazba.
       </p>
 
       <div className="overflow-x-auto rounded-xl border border-brand-border">
@@ -59,6 +64,7 @@ export function VipRatesForm({
               <th className="px-4 py-3 font-bold">Kurzy.cz</th>
               <th className="px-4 py-3 font-bold">Vaše sazba (%)</th>
               <th className="px-4 py-3 font-bold">RPSN (%)</th>
+              <th className="px-4 py-3 font-bold">Platí do</th>
               <th className="px-4 py-3 font-bold">Stav</th>
             </tr>
           </thead>
@@ -67,9 +73,17 @@ export function VipRatesForm({
               const saved = savedByBank.get(bankId);
               const market = marketByBank.get(bankId);
               const inputVal = preview[bankId] ?? (saved ? String(saved.nominal_rate) : "");
+              const validUntilVal =
+                validUntilPreview[bankId] ??
+                (saved?.valid_until ? saved.valid_until.slice(0, 10) : "");
               const parsed = inputVal.trim() ? Number(inputVal.replace(",", ".")) : null;
-              const isVip =
-                parsed != null && market != null && Number.isFinite(parsed) && parsed < market - 0.001;
+              const hasRate = parsed != null && Number.isFinite(parsed);
+              const isActiveVip =
+                hasRate && isVipOverrideActive(validUntilVal || saved?.valid_until);
+              const isExpired =
+                hasRate &&
+                !isVipOverrideActive(validUntilVal || saved?.valid_until) &&
+                Boolean(validUntilVal || saved?.valid_until);
 
               return (
                 <tr key={bankId} className="hover:bg-slate-50/80">
@@ -103,11 +117,25 @@ export function VipRatesForm({
                     />
                   </td>
                   <td className="px-4 py-3">
-                    {isVip ? (
+                    <input
+                      type="date"
+                      name={`valid_until_${bankId}`}
+                      defaultValue={saved?.valid_until ? saved.valid_until.slice(0, 10) : ""}
+                      onChange={(e) =>
+                        setValidUntilPreview((p) => ({ ...p, [bankId]: e.target.value }))
+                      }
+                      className="px-3 py-2 rounded-lg border border-brand-border focus:ring-2 focus:ring-brand-cyan focus:border-transparent text-sm"
+                      title="Prázdné = platí do ruční změny"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    {isActiveVip ? (
                       <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 shadow-sm">
                         VIP
                       </span>
-                    ) : parsed != null && Number.isFinite(parsed) ? (
+                    ) : isExpired ? (
+                      <span className="text-xs font-semibold text-red-600">Expirovaná</span>
+                    ) : hasRate ? (
                       <span className="text-xs text-brand-muted">Vlastní</span>
                     ) : (
                       <span className="text-xs text-brand-muted">Tržní</span>

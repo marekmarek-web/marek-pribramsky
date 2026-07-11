@@ -117,5 +117,7 @@ export {
   normalizedOffersToBankEntries,
   applyVipOverridesToBankEntries,
   bestMarketRateByBank,
+  filterActiveVipOverrides,
+  isVipOverrideActive,
 } from "./matching";
 export type { VipRateOverride } from "./matching";
