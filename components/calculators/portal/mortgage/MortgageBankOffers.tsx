@@ -186,26 +186,26 @@ function BankOfferCard({
         </div>
       </div>
 
-      <div className="mt-auto pt-3 border-t border-slate-100 flex items-end justify-between gap-3 flex-wrap sm:flex-nowrap">
-        <div className="min-w-0 flex-1">
+      <div className="mt-auto pt-3 border-t border-slate-100 flex flex-col gap-3">
+        <div>
           <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">
             Splátka
           </span>
-          <span className="inline-flex flex-nowrap items-baseline gap-x-1.5 font-black text-xl text-slate-900 leading-none whitespace-nowrap">
-            <span>{formatCurrency(offer.monthlyPayment)}</span>
-            <span className="text-[0.9em] font-bold text-slate-700 shrink-0">Kč</span>
+          <span className="font-black text-xl text-slate-900 leading-none tabular-nums">
+            {formatCurrency(offer.monthlyPayment)}{" "}
+            <span className="text-[0.9em] font-bold text-slate-700">Kč</span>
           </span>
         </div>
         {onRequestOffer != null ? (
           <button
             type="button"
             onClick={() => onRequestOffer(offer.bank.name)}
-            className="min-h-[44px] min-w-[44px] shrink-0 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all text-sm touch-manipulation"
+            className="w-full min-h-[44px] shrink-0 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all text-sm touch-manipulation"
           >
             Chci nabídku
           </button>
         ) : (
-          <div className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 shrink-0 flex-shrink-0" aria-hidden>
+          <div className="w-10 h-10 self-end rounded-full bg-slate-50 flex items-center justify-center text-slate-400 shrink-0" aria-hidden>
             <ChevronRight size={14} />
           </div>
         )}
