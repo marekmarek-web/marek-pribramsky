@@ -22,10 +22,10 @@ export function isVipOverrideActive(
   return now <= end;
 }
 
-export function filterActiveVipOverrides(
-  overrides: VipRateOverride[],
+export function filterActiveVipOverrides<T extends VipRateOverride>(
+  overrides: T[],
   now = new Date(),
-): VipRateOverride[] {
+): T[] {
   return overrides.filter((o) => isVipOverrideActive(o.validUntil, now));
 }
 
