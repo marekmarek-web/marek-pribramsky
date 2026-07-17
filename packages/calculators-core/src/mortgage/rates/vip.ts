@@ -47,7 +47,10 @@ export function bestMarketRateByBank(
   return result;
 }
 
-/** Sloučí manuální VIP sazby do bank entries; aktivní override má přednost před trhem. */
+/**
+ * Sloučí manuální VIP sazby do bank entries.
+ * Aktivní override VŽDY přepíše tržní sazbu z kurzy.cz/static — nikdy naopak.
+ */
 export function applyVipOverridesToBankEntries(
   entries: BankEntry[],
   overrides: VipRateOverride[],

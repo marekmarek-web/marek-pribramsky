@@ -83,6 +83,11 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // VIP sazby jsou uživatelské — nikdy nesmí skončit ve veřejné CDN cache.
+        source: "/api/calculators/vip-rates",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+      {
         source: "/auth/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },

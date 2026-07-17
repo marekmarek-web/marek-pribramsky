@@ -46,6 +46,7 @@ export async function saveVipRatesAction(formData: FormData) {
 
   revalidatePath("/hypotecnikalkulacka");
   revalidatePath("/admin/rates");
+  revalidatePath("/api/calculators/vip-rates");
   redirect(`/admin/rates?saved=1&tab=${productType}`);
 }
 
@@ -60,5 +61,6 @@ export async function clearVipRatesAction(formData: FormData) {
 
   revalidatePath("/hypotecnikalkulacka");
   revalidatePath("/admin/rates");
+  revalidatePath("/api/calculators/vip-rates");
   redirect(`/admin/rates?cleared=1&tab=${productType}`);
 }
