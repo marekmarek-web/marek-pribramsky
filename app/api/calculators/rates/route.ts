@@ -4,8 +4,6 @@ import {
   getMortgageRates,
   kurzyRatesEdgeCacheSMaxAgeSeconds,
 } from "@/lib/calculators/mortgage/rates";
-import { getEditorSessionOrNull } from "@/lib/admin/get-editor-session";
-import { getUserVipRatesForProduct } from "@/lib/vip-rates";
 import { createIpRateLimiter, getClientIp } from "@/lib/security/rateLimit";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +15,12 @@ const checkRate = createIpRateLimiter({
   prefix: "calc-rates",
 });
 
+/**
+ * Veřejné tržní sazby (kurzy.cz / static).
+ * VIP sazby jsou záměrně oddělené v `/api/calculators/vip-rates` —
+ * dříve `public` CDN cache vracela anonymní odpověď bez VIP a přepisovala
+ * manuální sazby z nastavení tržními hodnotami z kurzy.cz.
+ */
 export async function GET(request: Request) {
   const ip = getClientIp(request);
   const limited = await checkRate(ip);
@@ -33,12 +37,6 @@ export async function GET(request: Request) {
 
   const rates = productType === "loan" ? await getLoanRates() : await getMortgageRates();
 
-  const session = await getEditorSessionOrNull();
-  let vipOverrides: Awaited<ReturnType<typeof getUserVipRatesForProduct>> = [];
-  if (session) {
-    vipOverrides = await getUserVipRatesForProduct(session.user.id, productType);
-  }
-
   const sMax = kurzyRatesEdgeCacheSMaxAgeSeconds();
 
   return NextResponse.json(
@@ -46,12 +44,13 @@ export async function GET(request: Request) {
       ok: true,
       rates,
       type: productType,
-      vipActive: vipOverrides.length > 0,
-      vipOverrides,
+      // VIP patří jen do privátního endpointu — nikdy do veřejné CDN cache.
+      vipActive: false,
+      vipOverrides: [],
     },
     {
       headers: {
-        // Browser revalidates immediately; CDN edge cache stays short vs scrape TTL.
+        // Pouze tržní sazby — bezpečné pro krátkou edge cache.
         "Cache-Control": `public, max-age=0, s-maxage=${sMax}, stale-while-revalidate=600`,
       },
     },

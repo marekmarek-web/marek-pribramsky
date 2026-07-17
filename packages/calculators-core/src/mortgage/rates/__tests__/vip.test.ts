@@ -90,4 +90,24 @@ describe("applyVipOverridesToBankEntries", () => {
     const result = applyVipOverridesToBankEntries(baseEntries, [], new Map(), "mortgage");
     expect(result).toEqual(baseEntries);
   });
+
+  it("never lets market/kurzy rate overwrite an active VIP override", () => {
+    const marketFromKurzy = new Map([
+      ["kb", 5.34],
+      ["rb", 5.04],
+    ]);
+    const result = applyVipOverridesToBankEntries(
+      baseEntries.map((e) =>
+        e.id === "kb" ? { ...e, baseRate: 5.34, marketRate: 5.34, source: "kurzy-cz" as const } : e,
+      ),
+      [{ providerId: "kb", nominalRate: 4.89 }],
+      marketFromKurzy,
+      "mortgage",
+    );
+    const kb = result.find((e) => e.id === "kb");
+    expect(kb?.baseRate).toBe(4.89);
+    expect(kb?.isVip).toBe(true);
+    expect(kb?.marketRate).toBe(5.34);
+    expect(kb?.source).toBe("override");
+  });
 });

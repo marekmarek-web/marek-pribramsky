@@ -68,35 +68,75 @@ export function MortgageCalculatorPage() {
 
   useEffect(() => {
     const ctrl = new AbortController();
+    // Při změně produktu ihned zruš předchozí VIP, ať se nesmíchají hypotéky/úvěry.
+    setVipOverrides([]);
+    setVipActive(false);
+
     (async () => {
       try {
-        const response = await fetch(`/api/calculators/rates?type=${state.product}`, {
-          method: "GET",
-          cache: "no-store",
-          credentials: "include",
-          signal: ctrl.signal,
-        });
-        if (!response.ok) return;
-        const payload = (await response.json()) as {
-          ok: boolean;
-          rates?: NormalizedOffer[];
-          vipOverrides?: VipRateOverride[];
-          vipActive?: boolean;
-        };
-        if (payload.ok && Array.isArray(payload.rates)) {
-          setLiveRates(payload.rates);
-          setVipOverrides(Array.isArray(payload.vipOverrides) ? payload.vipOverrides : []);
-          setVipActive(Boolean(payload.vipActive));
+        // Tržní sazby (veřejné) a VIP (privátní) musí jít odděleně —
+        // dříve CDN cache na /rates vracela odpověď bez VIP a přepsala manuální sazby.
+        const [ratesResponse, vipResponse] = await Promise.all([
+          fetch(`/api/calculators/rates?type=${state.product}`, {
+            method: "GET",
+            cache: "no-store",
+            signal: ctrl.signal,
+          }),
+          fetch(`/api/calculators/vip-rates?type=${state.product}`, {
+            method: "GET",
+            cache: "no-store",
+            credentials: "include",
+            signal: ctrl.signal,
+          }),
+        ]);
+
+        if (ctrl.signal.aborted) return;
+
+        if (ratesResponse.ok) {
+          const ratesPayload = (await ratesResponse.json()) as {
+            ok: boolean;
+            rates?: NormalizedOffer[];
+          };
+          if (ratesPayload.ok && Array.isArray(ratesPayload.rates)) {
+            setLiveRates(ratesPayload.rates);
+          }
+        }
+
+        if (vipResponse.ok) {
+          const vipPayload = (await vipResponse.json()) as {
+            ok: boolean;
+            vipOverrides?: VipRateOverride[];
+            vipActive?: boolean;
+          };
+          if (vipPayload.ok) {
+            setVipOverrides(Array.isArray(vipPayload.vipOverrides) ? vipPayload.vipOverrides : []);
+            setVipActive(Boolean(vipPayload.vipActive));
+          }
         }
       } catch {
-        // static fallback
+        // static fallback — tržní sazby; VIP se neaplikují
       }
     })();
     return () => ctrl.abort();
   }, [state.product]);
 
   const rankedBanks = useMemo<BankEntry[] | undefined>(() => {
-    if (!liveRates || liveRates.length === 0) return defaultAllowedBanks;
+    if (!liveRates || liveRates.length === 0) {
+      // I bez live kurzy.cz musí manuální VIP přepsat statický fallback.
+      if (vipOverrides.length === 0) return defaultAllowedBanks;
+      const marketByBank = new Map(
+        defaultAllowedBanks.map((b) => [
+          b.id,
+          state.product === "mortgage" ? b.baseRate : (b.loanRate ?? b.baseRate),
+        ]),
+      );
+      return applyVipOverridesToBankEntries(
+        defaultAllowedBanks,
+        vipOverrides,
+        marketByBank,
+        state.product,
+      );
+    }
     const scenario = {
       productType: state.product,
       subtype: state.product === "mortgage" ? state.mortgageType : state.loanType,
@@ -107,9 +147,11 @@ export function MortgageCalculatorPage() {
       mode: state.type,
     } as const;
     const ranked = rankOffersByScenario(liveRates, scenario);
+    // Tržní mapa výhradně z kurzy/static — nikdy z VIP override.
     const marketByBank = bestMarketRateByBank(ranked, state.product);
     let normalized = normalizedOffersToBankEntries(ranked, state.product);
     if (vipOverrides.length > 0) {
+      // Manuální VIP má vždy přednost před kurzy.cz.
       normalized = applyVipOverridesToBankEntries(
         normalized,
         vipOverrides,

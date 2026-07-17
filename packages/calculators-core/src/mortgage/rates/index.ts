@@ -19,7 +19,10 @@ export function kurzyRatesCacheTtlMs(): number {
   return resolveKurzyRatesCacheHours() * 60 * 60 * 1000;
 }
 
-/** Krátká edge cache u `/api/calculators/rates` — oddělená od intervalu scrapu. */
+/**
+ * Krátká edge cache u veřejného `/api/calculators/rates` (jen tržní sazby).
+ * VIP sazby jdou přes `/api/calculators/vip-rates` s `private, no-store`.
+ */
 export function kurzyRatesEdgeCacheSMaxAgeSeconds(): number {
   return 300;
 }
